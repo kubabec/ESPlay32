@@ -47,17 +47,62 @@ void Connect4::touchInput(int x, int y)
 
 void Connect4::update()
 {
+    if(gameState == BALL_FALLING) {
+        currentFallingBall.moveBy(0, 5);
+        if (currentFallingBall.getY() == targetYFallingBall) {
+            if(wasPlayerOneTurn) {
+                gameState = PLAYER_2_TURN;
+                wasPlayerOneTurn = false;
+            }
+            else {
+                gameState = PLAYER_1_TURN;
+                wasPlayerOneTurn = true;
+            }
+        }
+    }
+    whoWon = checkIfGameFinished();
+    if (whoWon != 0 && gameState != BALL_FALLING) {
+        gameState = CONNECT_4_OVER;
+    }
 
 }
 
 void Connect4::render(DisplayProvider &display)
 {
 //    display.fillRect(10, 10, 200, 200, TFT_WHITE);
-    if (!isBgDrawn) {
-        drawGameboardBg(display);
+    if (gameState != CONNECT_4_OVER) {
+        if (!isBgDrawn) {
+            drawGameboardBg(display);
+        }
+        currentFallingBall.draw(display);
+        display.setTextSize(1);
+        if(wasPlayerOneTurn) {
+            display.setTextColor(TFT_YELLOW, getBackgroundColor());
+        }
+        else {
+            display.setTextColor(TFT_WHITE, getBackgroundColor());
+        }
+        display.drawString("Player 1", 350, 100);
+        if(wasPlayerOneTurn) {
+            display.setTextColor(TFT_WHITE, getBackgroundColor());
+        }
+        else {
+            display.setTextColor(TFT_YELLOW, getBackgroundColor());
+        }
+        display.drawString("Player 2", 350, 140);
     }
-    for (auto& ball : ballVector) {
-        ball.draw(display);
+    else {
+        if (whoWon == 1) {
+            display.fillScreen(TFT_BLACK);
+            display.drawString("Player 1 won!", 150, 140);
+        }
+        else if (whoWon == 2) {
+            display.fillScreen(TFT_BLACK);
+            display.drawString("Player 2 won!", 150, 140);
+        }
+        else {
+            display.drawString("error", 150, 140);
+        }
     }
 }
 
@@ -78,12 +123,20 @@ uint16_t Connect4::getBackgroundColor()
 
 void Connect4::touchCallback(int touchID)
 {
-//    ballVector.push_back(Character2D(35 + touchID * (horizontalFieldWidth + 5), 30, (horizontalFieldWidth / 2) - 2));
     if (gameState == PLAYER_1_TURN || gameState == PLAYER_2_TURN) {
         uint8_t targetRowNumber = gameBoard.makeMove((gameState == PLAYER_1_TURN), touchID);
-        ballVector.push_back(Character2D(35 + touchID * (horizontalFieldWidth + 5),
-                                         30 + (targetRowNumber * 40),
-                                         (horizontalFieldWidth / 2) - 2));
+        if (targetRowNumber != 255) {
+            if (gameState == PLAYER_1_TURN) {
+                currentFallingBall.setColor(TFT_CYAN);
+            }
+            else {
+                currentFallingBall.setColor(TFT_RED);
+            }
+            currentFallingBall.move(35 + touchID * (horizontalFieldWidth + 5), 25);
+            currentFallingBall.setLastXandY(500, 500);
+            targetYFallingBall = 20 + (targetRowNumber * 40);
+            gameState = BALL_FALLING;
+        }
     }
 }
 
@@ -91,10 +144,15 @@ void Connect4::drawGameboardBg(DisplayProvider &display)
 {
     int currentFieldX = 10;
     for(int i = 0; i < horizontalFieldsCount + 1; i++) {
-        display.fillRect(currentFieldX, 80, 5, 220, TFT_RED);
+        display.fillRect(currentFieldX, 40, 5, 260, TFT_WHITE);
         currentFieldX += horizontalFieldWidth + 5;
     }
     isBgDrawn = true;
+}
+
+uint8_t Connect4::checkIfGameFinished()
+{
+    return gameBoard.checkGameOver();
 }
 
 GameBoardData::GameBoardData(uint8_t numColumns, uint8_t numRows)
@@ -122,8 +180,98 @@ uint8_t GameBoardData::makeMove(bool isPlayer1Turn, uint8_t touchedColumn)
     uint8_t emptyFieldID = getFirstEmptyField(touchedColumn);
     if (emptyFieldID != 255) {
         gameField2DArray[touchedColumn][emptyFieldID].assignField(isPlayer1Turn);
+        return rows - emptyFieldID;
     }
-    return rows - emptyFieldID;
+    return 255;
+}
+
+bool GameBoardData::checkIfGameFinished()
+{
+    bool isWin = false;
+    isWin |= checkIfVerticalWin();
+//    isWin |= checkIfDiagonalWin();
+//    isWin |= checkIfHorizontalWin();
+    return isWin;
+}
+
+bool GameBoardData::checkIfVerticalWin()
+{
+    for (int col = 0; col < columns; col++) {
+        for (int row = 0; row < (rows + 1) - 4; row++) {
+            if (gameField2DArray[col][row].isTakenByPlayer1() &&
+                gameField2DArray[col][row + 1].isTakenByPlayer1() &&
+                gameField2DArray[col][row + 2].isTakenByPlayer1() &&
+                gameField2DArray[col][row + 3].isTakenByPlayer1()) {
+                didPlayerOneWin = true;
+                return true;
+            }
+            if (gameField2DArray[col][row].isTakenByPlayer2() &&
+                gameField2DArray[col][row + 1].isTakenByPlayer2() &&
+                gameField2DArray[col][row + 2].isTakenByPlayer2() &&
+                gameField2DArray[col][row + 3].isTakenByPlayer2()) {
+                didPlayerOneWin = false;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool GameBoardData::checkIfDiagonalWin()
+{
+    for (int col = 0; col < columns; col++) {
+        for (int row = 0; row < (rows + 1) - 4; row++) {
+            if (gameField2DArray[col][row].isTakenByPlayer1() &&
+                gameField2DArray[col + 1][row + 1].isTakenByPlayer1() &&
+                gameField2DArray[col + 2][row + 2].isTakenByPlayer1() &&
+                gameField2DArray[col + 3][row + 3].isTakenByPlayer1()) {
+                return true;
+            }
+            if (gameField2DArray[col][row].isTakenByPlayer2() &&
+                gameField2DArray[col + 1][row + 1].isTakenByPlayer2() &&
+                gameField2DArray[col + 2][row + 2].isTakenByPlayer2() &&
+                gameField2DArray[col + 3][row + 3].isTakenByPlayer2()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+uint8_t GameBoardData::checkGameOver()
+{
+    if (checkIfGameFinished()) {
+        if (didPlayerOneWin) {
+            return 1;
+        }
+        else {
+            return 2;
+        }
+    }
+    else {
+        return 0;
+    }
+}
+
+bool GameBoardData::checkIfHorizontalWin()
+{
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < (col + 1) - 4; col++) {
+            if (gameField2DArray[col][row].isTakenByPlayer1() &&
+                gameField2DArray[col + 1][row].isTakenByPlayer1() &&
+                gameField2DArray[col + 2][row].isTakenByPlayer1() &&
+                gameField2DArray[col + 3][row].isTakenByPlayer1()) {
+                return true;
+            }
+            if (gameField2DArray[col][row].isTakenByPlayer2() &&
+                gameField2DArray[col + 1][row].isTakenByPlayer2() &&
+                gameField2DArray[col + 2][row].isTakenByPlayer2() &&
+                gameField2DArray[col + 3][row].isTakenByPlayer2()) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 uint8_t GameBoardData::getFirstEmptyField(uint8_t columnID)
@@ -157,4 +305,14 @@ void GameField::assignField(bool isPlayer1)
     else {
         myState = TAKEN_BY_PLAYER_2;
     }
+}
+
+bool GameField::isTakenByPlayer1()
+{
+    return myState == TAKEN_BY_PLAYER_1;
+}
+
+bool GameField::isTakenByPlayer2()
+{
+    return myState == TAKEN_BY_PLAYER_2;
 }
