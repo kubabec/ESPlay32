@@ -272,3 +272,9 @@ bool PortableOS::deactivateAppTextMode()
     return PortableOS::topOverlay.deactivateAppTextMode();
 }
 
+void PortableOS::udpMessageRecieved(MessageUDP& msg) {
+    if (currentRunningAppPtr != nullptr) {
+        currentRunningAppPtr->udpDataReceived(msg.getPayload());
+    }
+}
+ 

@@ -15,6 +15,10 @@ void Pong::start(int w, int h)
     ball.setCharacterMoveRanges(0-ball.getSize()*2 - 2, 0, w+ball.getSize()*2+2, h);
 }
 
+void Pong::udpDataReceived(std::vector<uint8_t> data) {
+
+}
+
 void Pong::input(InputType input)
 {
     // switch (input) {

@@ -3,6 +3,7 @@
 #define NUMBER_OF_APPS 1
 #include <targetDatatypes.hpp>
 #include <os/displayprovider.hpp>
+#include <vector>
 
 class TFT_eSPI;
 
@@ -43,6 +44,7 @@ class RuntimeApplication {
     virtual void end() = 0;
     virtual String getAppNameString() = 0;
     virtual uint16_t getBackgroundColor() = 0;
+    virtual void udpDataReceived(std::vector<uint8_t> data) = 0;
 };
 
 #endif

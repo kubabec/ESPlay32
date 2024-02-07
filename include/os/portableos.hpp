@@ -10,7 +10,7 @@
 #include <app/games/connect4.h>
 #include <app/settingsapp.hpp>
 #include <os/drivers/touchinputdriver.hpp>
-
+#include <networkTools/messageUDP.hpp>
 
 #ifdef EMULATOR
     #include "../devicescreenemulator.h"
@@ -67,6 +67,8 @@ class PortableOS{
     // On top-bar text activation
     static bool activateAppTextMode(String appText, uint32_t textColor, uint8_t timeout = 0);
     static bool deactivateAppTextMode();
+
+    static void udpMessageRecieved(MessageUDP& msg);
 };
 
 

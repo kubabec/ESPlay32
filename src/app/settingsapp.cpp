@@ -22,6 +22,10 @@ Settings::Settings() {
     colorSelectionMenu->registerChoiceDonePollValue(&colorSelection);
 }
 
+void Settings::udpDataReceived(std::vector<uint8_t> data) {
+
+}
+
 Settings::~Settings() {
     delete settingsMainMenu;
     delete colorSelectionMenu;

@@ -1,14 +1,24 @@
 #include <os/portableos.hpp>
 #include <os/drivers/keyboarddriver.hpp>
 #include <os/drivers/touchinputdriver.hpp>
+#include <networkTools/uartCommunicator.hpp>
+#include <networkTools/messageUDP.hpp>
 
 #define MS_50 50
 #define MS_200 200
 
+void uartUdpRouterTask() 
+{
+    UARTCommunicator::task();
+    DispatcherUART::task();
+}
 
 // Initial arduino function
 void setup()
 {
+    DispatcherUART::readIncommingMessagesBuffer = UARTCommunicator::getReceivedMessagesBufferReference;
+    UARTCommunicator::init();
+
     // Initialize PortableOS
     PortableOS::init();
 
@@ -70,6 +80,7 @@ void loop()
     // Process keyboard
     KeyboardDriver::task();
     TouchInputDriver::task();
+    uartUdpRouterTask();
 
     // Process 25ms timer event
     if (millis() - timer10 >= 10) {

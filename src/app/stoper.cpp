@@ -24,6 +24,10 @@ void Stoper::input(InputType input){
     }
 }
 
+void Stoper::udpDataReceived(std::vector<uint8_t> data) {
+
+}
+
 void Stoper::longPressInput(InputType input)
 {
 
