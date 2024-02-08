@@ -69,6 +69,10 @@ class PortableOS{
     static bool deactivateAppTextMode();
 
     static void udpMessageRecieved(MessageUDP& msg);
+
+
+    // OS API TEST
+    static bool sendUDP(MessageUDP& data);
 };
 
 

@@ -277,4 +277,9 @@ void PortableOS::udpMessageRecieved(MessageUDP& msg) {
         currentRunningAppPtr->udpDataReceived(msg.getPayload());
     }
 }
+
+bool PortableOS::sendUDP(MessageUDP& data)
+{
+
+}
  
