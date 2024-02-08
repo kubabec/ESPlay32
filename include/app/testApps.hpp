@@ -286,6 +286,8 @@ class TouchTestApp : public RuntimeApplication {
 
     }
 
+    void udpDataReceived(std::vector<uint8_t> data) {}
+
     virtual String getAppNameString() override
     {
         return "Touch test";

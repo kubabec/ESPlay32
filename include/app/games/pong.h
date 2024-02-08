@@ -120,6 +120,7 @@ public:
     void update();
     void render(DisplayProvider &display);
     void end();
+    void udpDataReceived(std::vector<uint8_t> data);
     String getAppNameString();
     uint16_t getBackgroundColor();
 };

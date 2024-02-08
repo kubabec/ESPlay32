@@ -714,3 +714,6 @@ uint16_t PongLauncher::getBackgroundColor()
     }
     return pongGamePtr->getBackgroundColor();
 }
+
+
+void PongLauncher::udpDataReceived(std::vector<uint8_t> data) {}
