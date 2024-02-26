@@ -297,4 +297,140 @@ class TouchTestApp : public RuntimeApplication {
     }
 };
 
+
+class UDPSendTestApp : public RuntimeApplication {
+    bool needsUpdate = true;
+
+    int packagesSent = 0;
+    int packagesReceived = 0;
+    int cyclicsToGo = 100;
+    public:
+    
+    UDPSendTestApp(){
+
+    }
+    virtual void start(int w, int h) override {
+    }
+    virtual void input(InputType input) override {
+    }
+    virtual void longPressInput(InputType input) override{}
+    virtual void longPressRelease(InputType input) override{}
+    virtual void analogInput(int x, int y) override {
+    }
+
+    virtual void touchInput(int x, int y) override {
+
+    }
+
+    virtual void update() override{
+
+        if(cyclicsToGo == 0)
+        {
+            static uint8_t keepAliveData[8] = {0};  
+            MessageUDP udpKeepAliveMessage(51, (MessageUDP::IPAddr){192,168,1,255}, 9001, keepAliveData, 8);
+
+            OS_API::sendUdpMessage(udpKeepAliveMessage);
+
+            static bool isLevelRising = true;
+            static bool isFlowRising = true;
+
+            // Prepare UDP header + payload
+            static uint8_t udpData[16] = {0};
+            unsigned id = 3;
+            unsigned sender = 1;
+            static int level = 5;
+            static float flow = 1.f;
+            memcpy(&udpData[0], &id, 4);
+            memcpy(&udpData[4], &sender, 4);
+            memcpy(&udpData[8], &level, 4);
+            memcpy(&udpData[12], &flow, 4);
+            MessageUDP udpMessage(51, (MessageUDP::IPAddr){192,168,1,255}, 9001, udpData, 16);
+
+            OS_API::sendUdpMessage(udpMessage);
+
+            if(isLevelRising)
+            {
+                if(level <= 35)
+                {
+                    level += 2;
+                }else
+                {
+                    isLevelRising = false;
+                }
+            }else
+            {
+                if(level > 0)
+                {
+                    level -= 2;
+                }else
+                {
+                    isLevelRising = true;
+                }
+            }
+
+
+            if(isFlowRising)
+            {
+                if(flow <= 24)
+                {
+                    flow += 2.3f;
+                }else
+                {
+                    isFlowRising = false;
+                }
+            }else{
+                if(flow > 0)
+                {
+                    flow -= 1.4f;
+                }else
+                {
+                    isFlowRising = true;
+                }
+            }
+
+
+            cyclicsToGo = 21;          
+
+            packagesSent ++;      
+            needsUpdate = true;
+        }
+            cyclicsToGo--;
+
+    }
+    virtual void render(DisplayProvider& display) override{
+        if(needsUpdate)
+        {
+            display.fillScreen(getBackgroundColor());
+            display.setTextSize(1);
+            display.setTextColor(TFT_BLACK, getBackgroundColor());
+
+            display.drawString("UDP Package testing ", 70, 30);  
+
+            display.drawString("Packages sent : " + String(packagesSent), 70, 70);  
+            display.drawString("Packages received : " + String(packagesReceived), 70, 110);  
+
+            needsUpdate = false;
+        }
+    }
+    virtual void end() override{
+
+    }
+
+    void udpDataReceived(int messageID, std::vector<uint8_t> data) {
+        packagesReceived ++;
+        needsUpdate = true;
+
+    }
+
+    virtual String getAppNameString() override
+    {
+        return "Touch test";
+    }
+    uint16_t getBackgroundColor(){
+        return TFT_WHITE;
+    }
+};
+
+
+
 #endif

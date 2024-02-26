@@ -15,7 +15,8 @@ typedef enum {
     CONNECT_4,
     SOME_OTHER_APP,
 //    MENU_TEST_APP,
-    TOUCH_TEST_APP,
+    UDP_SEND_TEST_APP,
+//    TOUCH_TEST_APP,
     SETTINGS,
     NONE
 }RuntimeApplications;
