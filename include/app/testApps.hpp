@@ -424,7 +424,7 @@ class UDPSendTestApp : public RuntimeApplication {
 
     virtual String getAppNameString() override
     {
-        return "Touch test";
+        return "UDP Test App";
     }
     uint16_t getBackgroundColor(){
         return TFT_WHITE;
