@@ -38,7 +38,7 @@ class Settings : public RuntimeApplication
     virtual void end() override;
     virtual String getAppNameString() override;
     virtual uint16_t getBackgroundColor() override;
-    void udpDataReceived(std::vector<uint8_t> data);
+    void udpDataReceived(int messageID, std::vector<uint8_t> data);
 };
 
 

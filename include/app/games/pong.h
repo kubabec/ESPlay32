@@ -67,7 +67,7 @@ public:
     virtual void end() override;
     virtual String getAppNameString() override;
     virtual uint16_t getBackgroundColor() override;
-    void udpDataReceived(std::vector<uint8_t> data);
+    void udpDataReceived(int messageID, std::vector<uint8_t> data);
 private:
     int8_t submenuSelection = -1;
     BouncePlatform platformLeft{10, 100, 20, 70, false};
@@ -120,7 +120,7 @@ public:
     void update();
     void render(DisplayProvider &display);
     void end();
-    void udpDataReceived(std::vector<uint8_t> data);
+    void udpDataReceived(int messageID, std::vector<uint8_t> data);
     String getAppNameString();
     uint16_t getBackgroundColor();
 };

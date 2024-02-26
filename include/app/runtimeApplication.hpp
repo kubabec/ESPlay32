@@ -44,7 +44,7 @@ class RuntimeApplication {
     virtual void end() = 0;
     virtual String getAppNameString() = 0;
     virtual uint16_t getBackgroundColor() = 0;
-    virtual void udpDataReceived(std::vector<uint8_t> data) = 0;
+    virtual void udpDataReceived(int messageID, std::vector<uint8_t> data) = 0;
 };
 
 #endif

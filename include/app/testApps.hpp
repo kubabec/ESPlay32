@@ -92,7 +92,7 @@ class SomeOtherApp : public RuntimeApplication {
 
     virtual void longPressInput(InputType input) override{}
     virtual void longPressRelease(InputType input) override{}
-    void udpDataReceived(std::vector<uint8_t> data) {}
+    void udpDataReceived(int messageID, std::vector<uint8_t> data) {}
 
     virtual void analogInput(int x, int y) override {
         if(y > 5)
@@ -286,7 +286,7 @@ class TouchTestApp : public RuntimeApplication {
 
     }
 
-    void udpDataReceived(std::vector<uint8_t> data) {}
+    void udpDataReceived(int messageID, std::vector<uint8_t> data) {}
 
     virtual String getAppNameString() override
     {

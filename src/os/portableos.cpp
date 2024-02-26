@@ -274,7 +274,7 @@ bool PortableOS::deactivateAppTextMode()
 
 void PortableOS::udpMessageRecieved(MessageUDP& msg) {
     if (currentRunningAppPtr != nullptr) {
-        currentRunningAppPtr->udpDataReceived(msg.getPayload());
+        currentRunningAppPtr->udpDataReceived(msg.getId(), msg.getPayload());
     }
 }
 

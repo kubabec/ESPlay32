@@ -22,7 +22,7 @@ Settings::Settings() {
     colorSelectionMenu->registerChoiceDonePollValue(&colorSelection);
 }
 
-void Settings::udpDataReceived(std::vector<uint8_t> data) {
+void Settings::udpDataReceived(int messageID, std::vector<uint8_t> data) {
 
 }
 

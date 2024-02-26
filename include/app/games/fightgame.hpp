@@ -34,7 +34,7 @@ class FightGame :public RuntimeApplication {
     String getAppNameString() override;
 
     uint16_t getBackgroundColor();
-    void udpDataReceived(std::vector<uint8_t> data);
+    void udpDataReceived(int messageID, std::vector<uint8_t> data);
 
     private:
     Character2D player{150, 100, 7};

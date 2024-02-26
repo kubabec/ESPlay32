@@ -69,7 +69,7 @@ public:
     void end();
     String getAppNameString();
     uint16_t getBackgroundColor();
-    void udpDataReceived(std::vector<uint8_t> data);
+    void udpDataReceived(int messageID, std::vector<uint8_t> data);
 private:
     void touchCallback(int touchID);
     void drawGameboardBg(DisplayProvider &display);

@@ -53,7 +53,7 @@ void FightGame::input(InputType input) {
     }
 }
 
-void FightGame::udpDataReceived(std::vector<uint8_t> data) {
+void FightGame::udpDataReceived(int messageID, std::vector<uint8_t> data) {
 
 }
 

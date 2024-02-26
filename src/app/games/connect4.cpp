@@ -40,7 +40,7 @@ void Connect4::analogInput(int x, int y)
 
 }
 
-void Connect4::udpDataReceived(std::vector<uint8_t> data) {
+void Connect4::udpDataReceived(int messageID, std::vector<uint8_t> data) {
 
 }
 
