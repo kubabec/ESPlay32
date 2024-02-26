@@ -12,6 +12,7 @@
 #include <os/drivers/touchinputdriver.hpp>
 #include <networkTools/messageUDP.hpp>
 #include <networkTools/uartCommunicator.hpp>
+#include <os/mainloadingscreen.h>
 
 #ifdef EMULATOR
     #include "../devicescreenemulator.h"

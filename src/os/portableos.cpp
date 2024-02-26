@@ -23,6 +23,17 @@ void PortableOS::init(){
 
     // Register callback to let Menu object run any application in the future
     mainMenu.registerChoiceDoneCallback(&mainMenuChoice);
+
+
+    MainLoadingScreen::init();
+    display.fillScreen(160040);
+    while(!MainLoadingScreen::update())
+    {
+        MainLoadingScreen::render(display);
+        delay(5);
+    }
+    delay(300);
+    display.fillScreen(TFT_BLACK);
 }
 
 void PortableOS::osTask10ms()
