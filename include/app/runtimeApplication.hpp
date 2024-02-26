@@ -3,6 +3,7 @@
 #define NUMBER_OF_APPS 1
 #include <targetDatatypes.hpp>
 #include <os/displayprovider.hpp>
+#include <app/osapi.hpp>
 #include <vector>
 
 class TFT_eSPI;

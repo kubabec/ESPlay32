@@ -77,7 +77,6 @@ void Stoper::update(){
 #endif
     }
     
-
     #ifdef EMULATOR
     lastUpdate = 1 ;//millis();
     #else

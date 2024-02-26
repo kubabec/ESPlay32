@@ -1,5 +1,6 @@
 #include <os/portableos.hpp>
 
+
 std::vector<String> appNames = {"Stoper", "Fight Game", "Pong", "Connect 4", "Color Picker", "Touch test app", "Ustawienia"};
 
 // Create static objects instances
@@ -17,7 +18,7 @@ void PortableOS::init(){
 #ifdef EMULATOR
     display.generateScene();
 #else
-    TouchInputDriver::setTftAccess(display.tftDirectAccess());
+        TouchInputDriver::setTftAccess(display.tftDirectAccess());
 #endif
 
     // Register callback to let Menu object run any application in the future
@@ -280,6 +281,15 @@ void PortableOS::udpMessageRecieved(MessageUDP& msg) {
 
 bool PortableOS::sendUDP(MessageUDP& data)
 {
+    MessageUART transmisionMsg(UDP_OUTGOING_PACKAGE);
+    data.resetByteIterationCount();
+    while(data.switchToNextByte())
+    {
+        transmisionMsg.pushData(data.getCurrentByte());
+    }
 
+    UARTCommunicator::transmit(transmisionMsg);
+
+    return true;
 }
  
