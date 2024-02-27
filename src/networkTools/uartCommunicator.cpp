@@ -1,10 +1,12 @@
 #include <networkTools/uartCommunicator.hpp>
+#include <HardwareSerial.h>
 
 std::vector<MessageUART> UARTCommunicator::receivedMessages;
 
 void UARTCommunicator::init()
 {
-    Serial2.begin(115200, SERIAL_8N1, RX2, TX2);
+    Serial2.begin(115200, SERIAL_8N1, 13, 12);
+   
 }
 
 void UARTCommunicator::task()
@@ -17,10 +19,24 @@ void UARTCommunicator::task()
     }
 
     if(receiveByteVector.size() > 0){
+        Serial.println("Number of received bytes : " + String(receiveByteVector.size()));
         // Push received message to receive buffer
         MessageUART receivedMessage = MessageUART::fromUint8Vector(receiveByteVector);
+
+        for(auto& oneByte : receiveByteVector)
+        {
+            Serial.print(String((uint8_t)oneByte) + " ");
+            
+        }
+        Serial.println();
+
         if(receivedMessage.isValid()){
             receivedMessages.push_back(receivedMessage); 
+            Serial.println("Received valid message");
+        }
+        else
+        {
+            Serial.println("Received INVALID message!");
         }
 
         // TEST --------------
@@ -47,7 +63,6 @@ void UARTCommunicator::transmit(MessageUART& message)
 
     /* Flush the message */
     Serial2.flush();
-
 
     // TEST --------------
     // std::vector<uint8_t> receiveByteVector;

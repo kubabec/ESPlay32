@@ -293,12 +293,10 @@ void PortableOS::udpMessageRecieved(MessageUDP& msg) {
 bool PortableOS::sendUDP(MessageUDP& data)
 {
     MessageUART transmisionMsg(UDP_OUTGOING_PACKAGE);
-    data.resetByteIterationCount();
     while(data.switchToNextByte())
     {
         transmisionMsg.pushData(data.getCurrentByte());
     }
-
     UARTCommunicator::transmit(transmisionMsg);
 
     return true;

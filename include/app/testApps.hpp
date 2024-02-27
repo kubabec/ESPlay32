@@ -303,7 +303,7 @@ class UDPSendTestApp : public RuntimeApplication {
 
     int packagesSent = 0;
     int packagesReceived = 0;
-    int cyclicsToGo = 100;
+    int cyclicsToGo = 400;
     public:
     
     UDPSendTestApp(){
@@ -389,7 +389,7 @@ class UDPSendTestApp : public RuntimeApplication {
             }
 
 
-            cyclicsToGo = 21;          
+            cyclicsToGo = 25;          
 
             packagesSent ++;      
             needsUpdate = true;

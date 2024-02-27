@@ -12,9 +12,6 @@ void KeyboardDriver::init()
     pinMode(KEY_B_PIN, INPUT);
     pinMode(KEY_D_PIN, INPUT);
 
-    pinMode(12, OUTPUT);
-    pinMode(13, OUTPUT);
-
     KeyboardDriver::buttons[0].btnType = BUTTON_A;
     KeyboardDriver::buttons[0].btnPin = KEY_A_PIN;
     KeyboardDriver::buttons[0].btnName = 'A';

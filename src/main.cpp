@@ -16,14 +16,15 @@ void uartUdpRouterTask()
 // Initial arduino function
 void setup()
 {
+    // Start serial communication
+    Serial.begin(115200);
+    // Serial2.begin(115200, SERIAL_8N1, 13, 12);
+
     DispatcherUART::readIncommingMessagesBuffer = UARTCommunicator::getReceivedMessagesBufferReference;
     UARTCommunicator::init();
 
     // Initialize PortableOS
     PortableOS::init();
-
-    // Start serial communication
-    Serial.begin(115200);
 
     // Initialize keyboardDriver
     KeyboardDriver::init();
@@ -31,6 +32,7 @@ void setup()
     // Initialize touch input driver
     TouchInputDriver::init();
     
+
 }
 
 // Use serial read characters instead of hardware input
