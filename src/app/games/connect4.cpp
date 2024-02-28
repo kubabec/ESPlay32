@@ -198,50 +198,6 @@ bool GameBoardData::checkIfGameFinished()
     return isWin;
 }
 
-bool GameBoardData::checkIfVerticalWin()
-{
-    for (int col = 0; col < columns; col++) {
-        for (int row = 0; row < (rows + 1) - 4; row++) {
-            if (gameField2DArray[col][row].isTakenByPlayer1() &&
-                gameField2DArray[col][row + 1].isTakenByPlayer1() &&
-                gameField2DArray[col][row + 2].isTakenByPlayer1() &&
-                gameField2DArray[col][row + 3].isTakenByPlayer1()) {
-                didPlayerOneWin = true;
-                return true;
-            }
-            if (gameField2DArray[col][row].isTakenByPlayer2() &&
-                gameField2DArray[col][row + 1].isTakenByPlayer2() &&
-                gameField2DArray[col][row + 2].isTakenByPlayer2() &&
-                gameField2DArray[col][row + 3].isTakenByPlayer2()) {
-                didPlayerOneWin = false;
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-bool GameBoardData::checkIfDiagonalWin()
-{
-    for (int col = 0; col < columns; col++) {
-        for (int row = 0; row < (rows + 1) - 4; row++) {
-            if (gameField2DArray[col][row].isTakenByPlayer1() &&
-                gameField2DArray[col + 1][row + 1].isTakenByPlayer1() &&
-                gameField2DArray[col + 2][row + 2].isTakenByPlayer1() &&
-                gameField2DArray[col + 3][row + 3].isTakenByPlayer1()) {
-                return true;
-            }
-            if (gameField2DArray[col][row].isTakenByPlayer2() &&
-                gameField2DArray[col + 1][row + 1].isTakenByPlayer2() &&
-                gameField2DArray[col + 2][row + 2].isTakenByPlayer2() &&
-                gameField2DArray[col + 3][row + 3].isTakenByPlayer2()) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 uint8_t GameBoardData::checkGameOver()
 {
     if (checkIfGameFinished()) {
@@ -271,6 +227,48 @@ bool GameBoardData::checkIfHorizontalWin()
                 gameField2DArray[col + 1][row].isTakenByPlayer2() &&
                 gameField2DArray[col + 2][row].isTakenByPlayer2() &&
                 gameField2DArray[col + 3][row].isTakenByPlayer2()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool GameBoardData::checkIfVerticalWin()
+{
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < (col + 1) - 4; col++) {
+            if (gameField2DArray[col][row].isTakenByPlayer1() &&
+                gameField2DArray[col][row + 1].isTakenByPlayer1() &&
+                gameField2DArray[col][row + 2].isTakenByPlayer1() &&
+                gameField2DArray[col][row + 3].isTakenByPlayer1()) {
+                return true;
+            }
+            if (gameField2DArray[col][row].isTakenByPlayer2() &&
+                gameField2DArray[col][row + 1].isTakenByPlayer2() &&
+                gameField2DArray[col][row + 2].isTakenByPlayer2() &&
+                gameField2DArray[col][row + 3].isTakenByPlayer2()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool GameBoardData::checkIfDiagonalWin()
+{
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < (col + 1) - 4; col++) {
+            if (gameField2DArray[col][row].isTakenByPlayer1() &&
+                gameField2DArray[col + 1][row + 1].isTakenByPlayer1() &&
+                gameField2DArray[col + 2][row + 2].isTakenByPlayer1() &&
+                gameField2DArray[col + 3][row + 3].isTakenByPlayer1()) {
+                return true;
+            }
+            if (gameField2DArray[col][row].isTakenByPlayer2() &&
+                gameField2DArray[col + 1][row + 1].isTakenByPlayer2() &&
+                gameField2DArray[col + 2][row + 2].isTakenByPlayer2() &&
+                gameField2DArray[col + 3][row + 3].isTakenByPlayer2()) {
                 return true;
             }
         }
