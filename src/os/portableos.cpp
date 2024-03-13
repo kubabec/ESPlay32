@@ -1,7 +1,7 @@
 #include <os/portableos.hpp>
 
 
-std::vector<String> appNames = {"Stoper", "Fight Game", "Pong", "Connect 4", "Color Picker", "UDP test app", "Ustawienia"};
+std::vector<String> appNames = {"Stoper", "Fight Game", "Pong", "Connect 4", "Led communicator", "Color Picker", "UDP test app", "Ustawienia"};
 
 // Create static objects instances
 DisplayProvider PortableOS::display = DisplayProvider();
@@ -192,6 +192,10 @@ void PortableOS::mainMenuChoice(int8_t choice)
             case CONNECT_4:
                 TouchInputDriver::enableTouch();
                 currentRunningAppPtr = new Connect4();
+                newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+            break;
+            case LED_COMMUNICATION:
+                currentRunningAppPtr = new LedCommunicator();
                 newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;
             case SOME_OTHER_APP: // color picker
