@@ -24,8 +24,8 @@ void BoolButton::switchButton() {
 
 void BoolButton::draw(DisplayProvider &display) {
     if (!isRectangleDrawn) {
-        display.fillRect(x - 2, y - 2, w + 2, h + 2, TFT_BLUE);
-        display.fillRect(x - 1, y - 1, w + 1, h + 1, TFT_WHITE);
+        display.fillRect(x - 2, y - 2, w + 4, h + 4, TFT_BLUE);
+        display.fillRect(x - 1, y - 1, w + 2, h + 2, TFT_WHITE);
 
         isRectangleDrawn = true;
     }
@@ -69,7 +69,7 @@ void BoolButton::update(){
 }
 
 void BoolButton::touchInput(int x, int y) {
-    if (isEnablingAnimationStarted || isDisablingAnimationStarted) {
+    if (!isEnablingAnimationStarted || !isDisablingAnimationStarted) {
         hitbox.touchInput(x, y);
     }
 }
