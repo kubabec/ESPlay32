@@ -13,6 +13,7 @@ class BoolButton {
     void switchButton();
     bool isEnablingAnimationStarted = false;
     bool isRenderNeeded = true;
+    bool isRectangleDrawn = false;
     uint16_t disabledX, enabledX;
 
     Character2D buttonIcon{x, y, h};

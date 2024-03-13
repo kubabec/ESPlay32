@@ -7,6 +7,7 @@ BoolButton::BoolButton(uint16_t ax, uint16_t ay) : x(ax), y(ay) {
     disabledX = (x + (w / 4));
     enabledX = x + (w / 2 + w / 4);
     buttonIcon.move(disabledX, (y + (h / 2)));
+    buttonIcon.setBgColor(TFT_WHITE);
 }
 
 void BoolButton::switchButton() {  
@@ -17,9 +18,14 @@ void BoolButton::switchButton() {
 }
 
 void BoolButton::draw(DisplayProvider &display) {
+    if (isRectangleDrawn) {
+         display.fillRect(x, y, w, h, TFT_WHITE);
+         isRectangleDrawn = true;
+    }
     if (isRenderNeeded) {
         buttonIcon.draw(display);
-    //     display.fillRect(x, y, w, h, TFT_WHITE);
+        
+       
     // if(isOn) {
     //     display.fillCircle((int32_t)(x + (w / 4)),(int32_t)(y + (h / 2)), (int32_t)(w / 4), TFT_BLACK);
     // }
@@ -35,8 +41,8 @@ void BoolButton::draw(DisplayProvider &display) {
 void BoolButton::update(){
     if(isEnablingAnimationStarted) {
         if(buttonIcon.getX() < enabledX) {
+            buttonIcon.setLastXandY(buttonIcon.getX(), buttonIcon.getY());
             buttonIcon.moveBy(2, 0);
-            buttonIcon.update();
             isRenderNeeded = true;
         }
         else {

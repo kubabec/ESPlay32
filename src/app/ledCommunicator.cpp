@@ -52,5 +52,5 @@ String LedCommunicator::getAppNameString()
 }
 
 uint16_t LedCommunicator::getBackgroundColor(){
-    return TFT_LIGHTGREY;
+    return TFT_BLACK;
 }
