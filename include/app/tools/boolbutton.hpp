@@ -16,7 +16,7 @@ class BoolButton {
     bool isRectangleDrawn = false;
     uint16_t disabledX, enabledX;
 
-    Character2D buttonIcon{x, y, h};
+    Character2D buttonIcon{-100, -100, h};
     public:
     BoolButton(uint16_t ax, uint16_t ay);
     void draw(DisplayProvider& display);
