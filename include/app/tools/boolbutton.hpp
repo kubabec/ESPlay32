@@ -12,11 +12,12 @@ class BoolButton {
     TouchInputProxy hitbox;
     void switchButton();
     bool isEnablingAnimationStarted = false;
+    bool isDisablingAnimationStarted = false;
     bool isRenderNeeded = true;
     bool isRectangleDrawn = false;
     uint16_t disabledX, enabledX;
 
-    Character2D buttonIcon{-100, -100, h};
+    Character2D buttonIcon{-100, -100, h / 2};
     public:
     BoolButton(uint16_t ax, uint16_t ay);
     void draw(DisplayProvider& display);

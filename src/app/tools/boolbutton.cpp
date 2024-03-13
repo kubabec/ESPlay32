@@ -16,13 +16,18 @@ void BoolButton::switchButton() {
     if (!isOn) {
         isEnablingAnimationStarted = true;
     }
+    else {
+        isDisablingAnimationStarted = true;
+    }
     isOn = !isOn;
 }
 
 void BoolButton::draw(DisplayProvider &display) {
     if (!isRectangleDrawn) {
-         display.fillRect(x, y, w, h, TFT_WHITE);
-         isRectangleDrawn = true;
+        display.fillRect(x - 2, y - 2, w + 2, h + 2, TFT_BLUE);
+        display.fillRect(x - 1, y - 1, w + 1, h + 1, TFT_WHITE);
+
+        isRectangleDrawn = true;
     }
     if (isRenderNeeded) {
         buttonIcon.draw(display);
@@ -50,10 +55,21 @@ void BoolButton::update(){
         else {
             isEnablingAnimationStarted = false;
         }
-        
+    }
+    if(isDisablingAnimationStarted) {
+        if(buttonIcon.getX() > disabledX) {
+            buttonIcon.setLastXandY(buttonIcon.getX(), buttonIcon.getY());
+            buttonIcon.moveBy(-2, 0);
+            isRenderNeeded = true;
+        }
+        else {
+            isDisablingAnimationStarted = false;
+        }
     }
 }
 
 void BoolButton::touchInput(int x, int y) {
-    hitbox.touchInput(x, y);
+    if (isEnablingAnimationStarted || isDisablingAnimationStarted) {
+        hitbox.touchInput(x, y);
+    }
 }
