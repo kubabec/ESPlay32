@@ -4,21 +4,46 @@
 BoolButton::BoolButton(uint16_t ax, uint16_t ay) : x(ax), y(ay) {
     hitbox.addTouchArea(x, y, w, h,
     std::bind(&BoolButton::switchButton, this));
+    disabledX = (x + (w / 4));
+    enabledX = x + (w / 2 + w / 4);
+    buttonIcon.move(disabledX, (y + (h / 2)));
 }
 
-void BoolButton::switchButton() {
+void BoolButton::switchButton() {  
+    if (!isOn) {
+        isEnablingAnimationStarted = true;
+    }
     isOn = !isOn;
 }
 
 void BoolButton::draw(DisplayProvider &display) {
-    display.fillRect(x, y, w, h, TFT_WHITE);
-    if(isOn) {
-        display.fillCircle((int32_t)(x + (w / 4)),(int32_t)(y + (h / 2)), (int32_t)(w / 2), TFT_BLACK);
-    }
-    else {
-        display.fillCircle(x + (w / 2 + w / 4), y + (h / 2), (int32_t)(w / 2), TFT_BLACK);
+    if (isRenderNeeded) {
+        buttonIcon.draw(display);
+    //     display.fillRect(x, y, w, h, TFT_WHITE);
+    // if(isOn) {
+    //     display.fillCircle((int32_t)(x + (w / 4)),(int32_t)(y + (h / 2)), (int32_t)(w / 4), TFT_BLACK);
+    // }
+    // else {
+    //     display.fillCircle(x + (w / 2 + w / 4), y + (h / 2), (int32_t)(w / 4), TFT_BLACK);
+    // }
+        isRenderNeeded = false;
     }
     
+    
+}
+
+void BoolButton::update(){
+    if(isEnablingAnimationStarted) {
+        if(buttonIcon.getX() < enabledX) {
+            buttonIcon.moveBy(2, 0);
+            buttonIcon.update();
+            isRenderNeeded = true;
+        }
+        else {
+            isEnablingAnimationStarted = false;
+        }
+        
+    }
 }
 
 void BoolButton::touchInput(int x, int y) {

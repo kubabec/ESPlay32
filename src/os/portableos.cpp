@@ -195,6 +195,7 @@ void PortableOS::mainMenuChoice(int8_t choice)
                 newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;
             case LED_COMMUNICATION:
+                TouchInputDriver::enableTouch();
                 currentRunningAppPtr = new LedCommunicator();
                 newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;

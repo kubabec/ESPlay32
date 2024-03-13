@@ -3,6 +3,7 @@
 
 #include <app/tools/touchinputproxy.h>
 #include <os/displayprovider.hpp>
+#include <app/tools/character2d.hpp>
 
 class BoolButton {
     bool isOn = false;
@@ -10,10 +11,16 @@ class BoolButton {
     uint16_t w = 50, h = 25;
     TouchInputProxy hitbox;
     void switchButton();
+    bool isEnablingAnimationStarted = false;
+    bool isRenderNeeded = true;
+    uint16_t disabledX, enabledX;
+
+    Character2D buttonIcon{x, y, h};
     public:
     BoolButton(uint16_t ax, uint16_t ay);
     void draw(DisplayProvider& display);
     void touchInput(int x, int y);
+    void update();
 };
 
 #endif

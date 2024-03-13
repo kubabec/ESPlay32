@@ -35,7 +35,7 @@ void LedCommunicator::touchInput(int x, int y) {
 }
 
 void LedCommunicator::update(){
-
+    testButton.update();
 }
 
 void LedCommunicator::render(DisplayProvider& display){
