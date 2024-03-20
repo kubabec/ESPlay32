@@ -16,10 +16,11 @@ class BoolButton {
     bool isRenderNeeded = true;
     bool isRectangleDrawn = false;
     uint16_t disabledX, enabledX;
+    std::function<void (bool)> callbackOnStatusChange;
 
     Character2D buttonIcon{-100, -100, h / 2};
     public:
-    BoolButton(uint16_t ax, uint16_t ay);
+    BoolButton(uint16_t ax, uint16_t ay, std::function<void (bool)> callback);
     void draw(DisplayProvider& display);
     void touchInput(int x, int y);
     void update();

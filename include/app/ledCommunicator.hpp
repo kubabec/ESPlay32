@@ -2,6 +2,7 @@
 #define LED_COMMUNICATOR_H
 #include <app/runtimeApplication.hpp>
 #include <app/tools/boolbutton.hpp>
+#include <app/tools/slider.hpp>
 
 class LedCommunicator : public RuntimeApplication {
     public:
@@ -19,8 +20,13 @@ class LedCommunicator : public RuntimeApplication {
     virtual String getAppNameString() override;
     virtual uint16_t getBackgroundColor() override;
     void udpDataReceived(int messageID, std::vector<uint8_t> data);
+    void callback(bool isOn);
+    void sliderCallback(int value);
     private:
-    BoolButton testButton{100, 100};
+    BoolButton testButton;
+    Slider testSlider;
+    bool callbackTest = false;
+    bool callbackTestTwo = false;
 };
 
 #endif
