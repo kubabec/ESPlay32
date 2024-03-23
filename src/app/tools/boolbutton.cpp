@@ -6,10 +6,10 @@ BoolButton::BoolButton(uint16_t ax, uint16_t ay, std::function<void (bool)> acal
     hitbox.addTouchArea(x, y, w, h, std::bind(&BoolButton::switchButton, this));
     disabledX = (x + (w / 4));
     enabledX = x + (w / 2 + w / 4);
-    buttonIcon.setColor(TFT_RED);
+    buttonIcon.setColor(TFT_BLACK);
     buttonIcon.move(disabledX, (y + (h / 2)));
     buttonIcon.setLastXandY(buttonIcon.getX(), buttonIcon.getY());
-    buttonIcon.setBgColor(TFT_WHITE);
+    buttonIcon.setBgColor(TFT_LIGHTGREY);
 }
 
 void BoolButton::switchButton() {  
@@ -21,12 +21,27 @@ void BoolButton::switchButton() {
     }
     isOn = !isOn;
     callbackOnStatusChange(isOn);
+
+    if(isOn)
+    {
+        buttonIcon.setBgColor(TFT_GREENYELLOW);
+        buttonIcon.setColor(1500);
+    }else{
+        buttonIcon.setBgColor(TFT_LIGHTGREY);
+        buttonIcon.setColor(TFT_BLACK);
+    }
+    isRectangleDrawn = false;
 }
 
 void BoolButton::draw(DisplayProvider &display) {
     if (!isRectangleDrawn) {
         display.fillRect(x - 2, y - 2, w + 4, h + 4, TFT_BLUE);
-        display.fillRect(x - 1, y - 1, w + 2, h + 2, TFT_WHITE);
+        if(isOn){
+            display.fillRect(x - 1, y - 1, w + 2, h + 2, TFT_GREENYELLOW);
+        }else
+        {
+            display.fillRect(x - 1, y - 1, w + 2, h + 2, TFT_LIGHTGREY);
+        }
 
         isRectangleDrawn = true;
     }

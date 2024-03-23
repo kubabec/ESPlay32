@@ -6,12 +6,6 @@ RangedTouchArea::RangedTouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t
 
 }
 
-RangedTouchArea::RangedTouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t ah, int aMaxValue, std::function<void (int, int)> a_onTouchCallback, int aidentifier)
-:x(ax), y(ay), w(aw), h(ah), maxValue(aMaxValue), onTouchCommonCallback(a_onTouchCallback), identifier(aidentifier)
-{
-
-}
-
 uint16_t RangedTouchArea::getX()
 {
     return x;
@@ -34,10 +28,7 @@ uint16_t RangedTouchArea::getHeight()
 
 void RangedTouchArea::runCallback()
 {
-    if(identifier != -1) {
-        onTouchCommonCallback(identifier, value);
-    }
-    else {
+    if(onTouchCallback){
         onTouchCallback(value);
     }
 }
@@ -45,7 +36,12 @@ void RangedTouchArea::runCallback()
 bool RangedTouchArea::touchInput(int ax, int ay)
 {
     if (ax >= x && ax <= (x + w) && ay >= y && ay <= (y + h)) {
-        value = (ax - x) / w * maxValue;
+        // Serial.println(String(ax));
+        // Serial.println(String(x));
+        // Serial.println(String(w));
+        // Serial.println(String(maxValue));
+        value = ((float)(ax - x) / (float)w) * (float)maxValue;
+        // Serial.println(String(value));
         runCallback();
         return true;
     }

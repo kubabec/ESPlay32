@@ -5,7 +5,9 @@
 #include <app/tools/slider.hpp>
 
 class LedCommunicator : public RuntimeApplication {
+    std::vector<Slider*> touchSliders;
     public:
+
     
     LedCommunicator();
     virtual void start(int w, int h) override;
@@ -21,12 +23,13 @@ class LedCommunicator : public RuntimeApplication {
     virtual uint16_t getBackgroundColor() override;
     void udpDataReceived(int messageID, std::vector<uint8_t> data);
     void callback(bool isOn);
-    void sliderCallback(int value);
+    void sliderCallback(int sliderId, int value);
     private:
-    BoolButton testButton;
-    Slider testSlider;
-    bool callbackTest = false;
-    bool callbackTestTwo = false;
+    bool isRenderNeeded = true;
+    BoolButton buttonEn1, buttonEn2;
+    Slider slider1, slider2, slider3, slider4, slider5, slider6;
+
+
 };
 
 #endif

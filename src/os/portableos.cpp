@@ -1,7 +1,7 @@
 #include <os/portableos.hpp>
 
 
-std::vector<String> appNames = {"Stoper", "Fight Game", "Pong", "Connect 4", "Led communicator", "Color Picker", "UDP test app", "Ustawienia"};
+std::vector<String> appNames = {"Led communicator", "Stoper", "Fight Game", "Pong", "Connect 4", "Color Picker", "UDP test app", "Ustawienia"};
 
 // Create static objects instances
 DisplayProvider PortableOS::display = DisplayProvider();
@@ -25,14 +25,14 @@ void PortableOS::init(){
     mainMenu.registerChoiceDoneCallback(&mainMenuChoice);
 
 
-    MainLoadingScreen::init();
-    display.fillScreen(160040);
-    while(!MainLoadingScreen::update())
-    {
-        MainLoadingScreen::render(display);
-        delay(5);
-    }
-    delay(300);
+    // MainLoadingScreen::init();
+    // display.fillScreen(160040);
+    // while(!MainLoadingScreen::update())
+    // {
+    //     MainLoadingScreen::render(display);
+    //     delay(5);
+    // }
+    // delay(300);
     display.fillScreen(TFT_BLACK);
 }
 
