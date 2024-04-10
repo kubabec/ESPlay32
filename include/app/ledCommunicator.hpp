@@ -4,6 +4,16 @@
 #include <app/tools/boolbutton.hpp>
 #include <app/tools/slider.hpp>
 
+typedef struct {
+    uint8_t r, g, b;
+}LedColor;
+
+typedef struct {
+    uint8_t brightness = 100;
+    LedColor ledZero;
+    LedColor ledOne;
+}LedMessageContent;
+
 class LedCommunicator : public RuntimeApplication {
     std::vector<Slider*> touchSliders;
     public:
@@ -22,13 +32,14 @@ class LedCommunicator : public RuntimeApplication {
     virtual String getAppNameString() override;
     virtual uint16_t getBackgroundColor() override;
     void udpDataReceived(int messageID, std::vector<uint8_t> data);
+    void updateLedShieldData();
     void callback(bool isOn);
     void sliderCallback(int sliderId, int value);
     private:
     bool isRenderNeeded = true;
     BoolButton buttonEn1, buttonEn2;
     Slider slider1, slider2, slider3, slider4, slider5, slider6;
-
+    LedMessageContent messageContent;
 
 };
 

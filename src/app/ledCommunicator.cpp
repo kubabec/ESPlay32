@@ -4,11 +4,11 @@ LedCommunicator::LedCommunicator() :
 buttonEn1(85, 250, std::bind(&LedCommunicator::callback, this, std::placeholders::_1)),
 buttonEn2(355, 250, std::bind(&LedCommunicator::callback, this, std::placeholders::_1)),
 slider1(30, 50,  1, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
-slider2(30, 120,  1, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
-slider3(30, 190,  1, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
-slider4(300, 50,  1, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
-slider5(300, 120,  1, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
-slider6(300, 190,  1, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2))
+slider2(30, 120,  2, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
+slider3(30, 190,  3, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
+slider4(300, 50,  4, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
+slider5(300, 120,  5, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
+slider6(300, 190,  6, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2))
 {
     touchSliders.push_back(&slider1);
     touchSliders.push_back(&slider2);
@@ -16,47 +16,8 @@ slider6(300, 190,  1, std::bind(&LedCommunicator::sliderCallback, this, std::pla
     touchSliders.push_back(&slider4);
     touchSliders.push_back(&slider5);
     touchSliders.push_back(&slider6);
-    // touchSliders.push_back(
-    //     std::move(Slider(
-    //         50, // x
-    //         150,  // y
-    //         2,  // Identifier
-    //         std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1))));
-
-    // touchSliders.push_back(
-    //     Slider(
-    //         50, // x
-    //         150,  // y
-    //         2,  // Identifier
-    //         std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)));
-
-    // touchSliders.push_back(
-    //     Slider(
-    //         50, // x
-    //         250,  // y
-    //         3,  // Identifier
-    //         std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)));
-
-    // touchSliders.push_back(
-    //     Slider(
-    //         250, // x
-    //         50,  // y
-    //         4,  // Identifier
-    //         std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)));
-
-    // touchSliders.push_back(
-    //     Slider(
-    //         250, // x
-    //         150,  // y
-    //         5,  // Identifier
-    //         std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)));
-
-    // touchSliders.push_back(
-    //     Slider(
-    //         250, // x
-    //         250,  // y
-    //         6,  // Identifier
-    //         std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)));
+    messageContent.ledZero = {69, 69, 69};
+    messageContent.ledOne = {42, 69, 27};
 }
 
 void LedCommunicator::start(int w, int h){
@@ -69,6 +30,12 @@ void LedCommunicator::input(InputType input){
 
 void LedCommunicator::udpDataReceived(int messageID, std::vector<uint8_t> data) {
 
+}
+
+void LedCommunicator::updateLedShieldData() {
+    MessageUDP updateMessage(150, {192, 168, 0, 255}, 9001);
+    updateMessage.pushData((byte*)&messageContent, sizeof(messageContent));
+    OS_API::sendUdpMessage(updateMessage);
 }
 
 void LedCommunicator::longPressInput(InputType input)
@@ -151,4 +118,28 @@ void LedCommunicator::callback(bool isOn) {
 
 void LedCommunicator::sliderCallback(int sliderId, int value) {
     //Serial.println("Received value : " + String(value) + " from slider ID " + String(sliderIdentifier));
+    switch(sliderId) {
+        case 1:
+            messageContent.ledZero.r = value;
+        break;
+        case 2:
+            messageContent.ledZero.g = value;
+        break;
+        case 3:
+            messageContent.ledZero.b = value;
+        break;
+        case 4:
+            messageContent.ledOne.r = value;
+        break;
+        case 5:
+            messageContent.ledOne.g = value;
+        break;
+        case 6:
+            messageContent.ledOne.b = value;
+        break;
+        default:
+
+        break;
+    }
+    updateLedShieldData();
 }
