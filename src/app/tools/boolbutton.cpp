@@ -2,7 +2,7 @@
 
 
 
-BoolButton::BoolButton(uint16_t ax, uint16_t ay, std::function<void (bool)> acallback) : x(ax), y(ay), callbackOnStatusChange(acallback) {
+BoolButton::BoolButton(uint16_t ax, uint16_t ay, uint16_t aid, std::function<void (int, bool)> acallback) : x(ax), y(ay), id(aid), callbackOnStatusChange(acallback) {
     hitbox.addTouchArea(x, y, w, h, std::bind(&BoolButton::switchButton, this));
     disabledX = (x + (w / 4));
     enabledX = x + (w / 2 + w / 4);
@@ -20,7 +20,7 @@ void BoolButton::switchButton() {
         isDisablingAnimationStarted = true;
     }
     isOn = !isOn;
-    callbackOnStatusChange(isOn);
+    callbackOnStatusChange(id, isOn);
 
     if(isOn)
     {
@@ -88,4 +88,8 @@ void BoolButton::touchInput(int x, int y) {
     if (!isEnablingAnimationStarted && !isDisablingAnimationStarted) {
         hitbox.touchInput(x, y);
     }
+}
+
+uint16_t BoolButton::getId() {
+    return id;
 }

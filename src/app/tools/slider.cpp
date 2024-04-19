@@ -10,7 +10,7 @@ callbackOnStatusChange(acallback),
 hitbox(x, y, w, h, 255, std::bind(&Slider::sliderValueChange, this, std::placeholders::_1))
 {
     buttonIcon.setColor(TFT_BLUE);
-    buttonIcon.move(ax, (y + (h / 2)));
+    buttonIcon.move(ax + w, (y + (h / 2)));
     buttonIcon.setLastXandY(buttonIcon.getX(), buttonIcon.getY());
     buttonIcon.setBgColor(TFT_BLACK);
 }

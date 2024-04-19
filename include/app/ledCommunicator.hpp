@@ -32,15 +32,16 @@ class LedCommunicator : public RuntimeApplication {
     virtual String getAppNameString() override;
     virtual uint16_t getBackgroundColor() override;
     void udpDataReceived(int messageID, std::vector<uint8_t> data);
-    void updateLedShieldData();
-    void callback(bool isOn);
+    void updateLedShieldData(LedMessageContent& msg);
+    void callback(int buttonId, bool isOn);
     void sliderCallback(int sliderId, int value);
     private:
     bool isRenderNeeded = true;
     BoolButton buttonEn1, buttonEn2;
-    Slider slider1, slider2, slider3, slider4, slider5, slider6;
+    Slider slider1, slider2, slider3, slider4, slider5, slider6, brightnessSlider;
     LedMessageContent messageContent;
 
+    bool isOneOff = true, isSndOff = true;
 };
 
 #endif

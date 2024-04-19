@@ -1,14 +1,15 @@
 #include <app/ledCommunicator.hpp>
 
 LedCommunicator::LedCommunicator() : 
-buttonEn1(85, 250, std::bind(&LedCommunicator::callback, this, std::placeholders::_1)),
-buttonEn2(355, 250, std::bind(&LedCommunicator::callback, this, std::placeholders::_1)),
+buttonEn1(85, 250, 1, std::bind(&LedCommunicator::callback, this, std::placeholders::_1, std::placeholders::_2)),
+buttonEn2(355, 250, 2, std::bind(&LedCommunicator::callback, this, std::placeholders::_1, std::placeholders::_2)),
 slider1(30, 50,  1, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
 slider2(30, 120,  2, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
 slider3(30, 190,  3, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
 slider4(300, 50,  4, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
 slider5(300, 120,  5, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
-slider6(300, 190,  6, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2))
+slider6(300, 190,  6, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2)),
+brightnessSlider(155, 250,  7, std::bind(&LedCommunicator::sliderCallback, this, std::placeholders::_1, std::placeholders::_2))
 {
     touchSliders.push_back(&slider1);
     touchSliders.push_back(&slider2);
@@ -16,8 +17,9 @@ slider6(300, 190,  6, std::bind(&LedCommunicator::sliderCallback, this, std::pla
     touchSliders.push_back(&slider4);
     touchSliders.push_back(&slider5);
     touchSliders.push_back(&slider6);
-    messageContent.ledZero = {69, 69, 69};
-    messageContent.ledOne = {42, 69, 27};
+    touchSliders.push_back(&brightnessSlider);
+    messageContent.ledZero = {255, 255, 255};
+    messageContent.ledOne = {255, 255, 255};
 }
 
 void LedCommunicator::start(int w, int h){
@@ -32,9 +34,9 @@ void LedCommunicator::udpDataReceived(int messageID, std::vector<uint8_t> data) 
 
 }
 
-void LedCommunicator::updateLedShieldData() {
-    MessageUDP updateMessage(150, {192, 168, 0, 255}, 9001);
-    updateMessage.pushData((byte*)&messageContent, sizeof(messageContent));
+void LedCommunicator::updateLedShieldData(LedMessageContent& msg) {
+    MessageUDP updateMessage(150, {192, 168, 43, 255}, 9001);
+    updateMessage.pushData((byte*)&msg, sizeof(msg));
     OS_API::sendUdpMessage(updateMessage);
 }
 
@@ -112,8 +114,21 @@ uint16_t LedCommunicator::getBackgroundColor(){
     return TFT_BLACK;
 }
 
-void LedCommunicator::callback(bool isOn) {
-
+void LedCommunicator::callback(int buttonId, bool isOn) {
+    if (buttonId == 1) {
+        isOneOff = !isOn;
+    }
+    else if (buttonId == 2) {
+        isSndOff = !isOn;
+    }
+    LedMessageContent finalMessage = messageContent;
+    if(isOneOff) {
+        finalMessage.ledZero = {0};
+    }
+    if(isSndOff) {
+        finalMessage.ledOne = {0};
+    }
+    updateLedShieldData(finalMessage);
 }
 
 void LedCommunicator::sliderCallback(int sliderId, int value) {
@@ -137,9 +152,23 @@ void LedCommunicator::sliderCallback(int sliderId, int value) {
         case 6:
             messageContent.ledOne.b = value;
         break;
+        case 7:
+            messageContent.brightness = (uint8_t)((float)value / 2.55f);
+            if(messageContent.brightness <= 10) {
+                messageContent.brightness = 0;
+            }
+        break;
+        
         default:
 
         break;
     }
-    updateLedShieldData();
+    LedMessageContent finalMessage = messageContent;
+    if(isOneOff) {
+        finalMessage.ledZero = {0};
+    }
+    if(isSndOff) {
+        finalMessage.ledOne = {0};
+    }
+    updateLedShieldData(finalMessage);
 }

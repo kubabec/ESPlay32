@@ -12,7 +12,7 @@ TopOverlay PortableOS::topOverlay = TopOverlay();
 int PortableOS::fpsCounter = 0;
 uint8_t PortableOS::appTextTimeout = 0;
 long PortableOS::appTextTimeoutMs = 0;
-uint32_t PortableOS::systemColors[3] = {TFT_GREENYELLOW, TFT_BLACK, 0x00ED75};
+uint32_t PortableOS::systemColors[3] = {TFT_GREENYELLOW, TFT_BLACK, TFT_WHITE};
 
 void PortableOS::init(){
 #ifdef EMULATOR
