@@ -133,24 +133,31 @@ void LedCommunicator::callback(int buttonId, bool isOn) {
 
 void LedCommunicator::sliderCallback(int sliderId, int value) {
     //Serial.println("Received value : " + String(value) + " from slider ID " + String(sliderIdentifier));
+    int newValue = 0;
+    if(value <= 15) {
+        newValue = 0;
+    }
+    else {
+        newValue = value;
+    }
     switch(sliderId) {
         case 1:
-            messageContent.ledZero.r = value;
+            messageContent.ledZero.r = newValue;
         break;
         case 2:
-            messageContent.ledZero.g = value;
+            messageContent.ledZero.g = newValue;
         break;
         case 3:
-            messageContent.ledZero.b = value;
+            messageContent.ledZero.b = newValue;
         break;
         case 4:
-            messageContent.ledOne.r = value;
+            messageContent.ledOne.r = newValue;
         break;
         case 5:
-            messageContent.ledOne.g = value;
+            messageContent.ledOne.g = newValue;
         break;
         case 6:
-            messageContent.ledOne.b = value;
+            messageContent.ledOne.b = newValue;
         break;
         case 7:
             messageContent.brightness = (uint8_t)((float)value / 2.55f);
