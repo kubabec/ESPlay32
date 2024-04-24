@@ -297,13 +297,25 @@ void PortableOS::udpMessageRecieved(MessageUDP& msg) {
 
 bool PortableOS::sendUDP(MessageUDP& data)
 {
-    MessageUART transmisionMsg(UDP_OUTGOING_PACKAGE);
+    MessageUART transmissionMsg(UDP_OUTGOING_PACKAGE);
     while(data.switchToNextByte())
     {
-        transmisionMsg.pushData(data.getCurrentByte());
+        transmissionMsg.pushData(data.getCurrentByte());
     }
-    UARTCommunicator::transmit(transmisionMsg);
+    UARTCommunicator::transmit(transmissionMsg);
 
     return true;
+}
+
+void PortableOS::connectToNetwork(std::string ssid, std::string password) {
+    MessageUART transmissionSsid(CONNECT_TO_NETWORK_SSID);
+    MessageUART transmissionPassword(CONNECT_TO_NETWORK_PASSWORD);
+
+    transmissionSsid.pushData(ssid);
+    transmissionPassword.pushData(password);
+
+    UARTCommunicator::transmit(transmissionSsid);
+    delay(5);
+    UARTCommunicator::transmit(transmissionPassword);
 }
  

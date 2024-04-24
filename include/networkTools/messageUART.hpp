@@ -7,11 +7,14 @@ enum MessageID : uint8_t
 {
     REQUEST_ACTION = 74, /* Action on co-controler requested */
     ACTION_RESPONSE, /* Response to requested action */
-    CONNECT_TO_NETWORK, /* Request WiFi connection to specified network */
+    CONNECT_TO_NETWORK_SSID, /* Request WiFi connection to specified network */
+    CONNECT_TO_NETWORK_PASSWORD, 
+    GET_NETWORK_STATUS,
     CREATE_AP, /* Request access point creation */
     SLAVE_TO_MASTER_MSG, /* Information from co-controler to main device */
     UDP_OUTGOING_PACKAGE, /* Data requested to be sent via UDP */
     UDP_INCOMMING_PACKAGE, /* Data received from the network via UDP */
+    WIFI_CONNECTION_LOST,
     INVALID, /* Wrong message content */
     UNKNOWN /* Uninitialized */
 };
@@ -40,6 +43,7 @@ public:
 
     bool pushData(uint8_t data);
     bool pushData(uint8_t* arr, size_t size);
+    bool pushData(std::string& data);
 
     size_t getSize();
     bool isValid();

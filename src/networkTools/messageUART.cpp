@@ -106,6 +106,14 @@ bool MessageUART::pushData(uint8_t* arr, size_t size)
     return true;
 }
 
+bool MessageUART::pushData(std::string& data) {
+    for(int i = 0; i < data.size(); ++i) {
+        dataBuffer.push_back(data.at(i));
+    }
+    updateTotalSize();
+    return true;
+}
+
 size_t MessageUART::getSize()
 {
     return totalSize;

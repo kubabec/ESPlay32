@@ -76,6 +76,8 @@ class PortableOS{
 
     // OS API TEST
     static bool sendUDP(MessageUDP& data);
+
+    static void connectToNetwork(std::string ssid, std::string password);
 };
 
 
