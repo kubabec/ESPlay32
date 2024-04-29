@@ -1,7 +1,7 @@
 #ifndef OBSTACLE_H
 #define OBSTACLE_H
-#include <os/displayprovider.hpp>
-#include <app/tools/vector2d.hpp>
+#include "os/displayprovider.hpp"
+#include "app/tools/vector2d.hpp"
 
 typedef enum{
     Rectangle,

@@ -1,9 +1,9 @@
 #ifndef CHARACTER2D_H
 #define CHARACTER2D_H
 #include "targetDatatypes.hpp"
-#include <os/displayprovider.hpp>
-#include <app/tools/vector2d.hpp>
-#include <app/tools/obstacle.hpp>
+#include "os/displayprovider.hpp"
+#include "app/tools/vector2d.hpp"
+#include "app/tools/obstacle.hpp"
 #include <vector>
 
 typedef enum {

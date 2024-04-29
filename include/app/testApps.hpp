@@ -1,7 +1,7 @@
 #ifndef TESTAPPS_H
 #define TESTAPPS_H
-#include <app/runtimeApplication.hpp>
-#include <os/menu.hpp>
+#include "app/runtimeApplication.hpp"
+#include "os/menu.hpp"
 
 
 // class DummyApp : public RuntimeApplication {

@@ -1,7 +1,7 @@
 #ifndef PONG_H
 #define PONG_H
 
-#include <os/menu.hpp>
+#include "os/menu.hpp"
 
 typedef enum {
     GAME_PLAYING,

@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
-#include <app/stoper.hpp>
-#include <os/displayprovider.hpp>
+#include "app/stoper.hpp"
+#include "os/displayprovider.hpp"
 #include "targetDatatypes.hpp"
 #include <vector>
 

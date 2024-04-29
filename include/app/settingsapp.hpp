@@ -1,7 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
-#include <app/runtimeApplication.hpp>
-#include <os/menu.hpp>
+#include "app/runtimeApplication.hpp"
+#include "os/menu.hpp"
 
 
 class Settings : public RuntimeApplication

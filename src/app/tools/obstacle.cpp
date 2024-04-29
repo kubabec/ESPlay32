@@ -1,5 +1,5 @@
-#include <app/tools/obstacle.hpp>
-#include <app/tools/character2d.hpp>
+#include "app/tools/obstacle.hpp"
+#include "app/tools/character2d.hpp"
 #include "os/portableos.hpp"
 
 Obstacle::Obstacle(float ax, float ay, int aw, int ah):x(ax), y(ay), type(Rectangle), w(aw), h(ah){

@@ -1,9 +1,9 @@
 #ifndef CONNECT4_H
 #define CONNECT4_H
 
-#include <app/runtimeApplication.hpp>
-#include <app/tools/touchinputproxy.h>
-#include <app/tools/character2d.hpp>
+#include "app/runtimeApplication.hpp"
+#include "app/tools/touchinputproxy.h"
+#include "app/tools/character2d.hpp"
 
 typedef enum {
     PLAYER_1_TURN,

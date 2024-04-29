@@ -1,4 +1,4 @@
-#include <os/mainloadingscreen.h>
+#include "os/mainloadingscreen.h"
 
 bool MainLoadingScreen::isLoaded = false;
 AnimatedLetter MainLoadingScreen::textArray[8];

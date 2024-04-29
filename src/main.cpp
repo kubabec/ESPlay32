@@ -1,8 +1,8 @@
-#include <os/portableos.hpp>
-#include <os/drivers/keyboarddriver.hpp>
-#include <os/drivers/touchinputdriver.hpp>
-#include <networkTools/uartCommunicator.hpp>
-#include <networkTools/messageUDP.hpp>
+#include "os/portableos.hpp"
+#include "os/drivers/keyboarddriver.hpp"
+#include "os/drivers/touchinputdriver.hpp"
+#include "networkTools/uartCommunicator.hpp"
+#include "networkTools/messageUDP.hpp"
 
 #define MS_50 50
 #define MS_200 200

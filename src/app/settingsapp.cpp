@@ -1,5 +1,5 @@
-#include <app/settingsapp.hpp>
-#include <os/portableos.hpp>
+#include "app/settingsapp.hpp"
+#include "os/portableos.hpp"
 
 std::vector<String> menuOptions = {"Kolor zaznaczenia", "Kolor tla", "Kolor motywu"};
 std::vector<String> colors = {"Niebieski", "Zielony", "Pomaranczowy", "Czarny", "Bialy", "Czerwony"};

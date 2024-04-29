@@ -1,5 +1,5 @@
-#include <networkTools/uartCommunicator.hpp>
-#include <HardwareSerial.h>
+#include "networkTools/uartCommunicator.hpp"
+#include "HardwareSerial.h"
 
 std::vector<MessageUART> UARTCommunicator::receivedMessages;
 

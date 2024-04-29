@@ -1,7 +1,7 @@
 #ifndef ITEM2D_H
 #define ITEM2D_H
-#include <app/tools/character2d.hpp>
-#include <os/displayprovider.hpp>
+#include "app/tools/character2d.hpp"
+#include "os/displayprovider.hpp"
 
 typedef enum {
     FOOD,

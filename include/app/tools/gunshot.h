@@ -1,7 +1,7 @@
 #ifndef GUNSHOT_H
 #define GUNSHOT_H
-#include <app/tools/vector2d.hpp>
-#include <os/displayprovider.hpp>
+#include "app/tools/vector2d.hpp"
+#include "os/displayprovider.hpp"
 
 class GunShot
 {

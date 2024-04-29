@@ -1,9 +1,9 @@
 #ifndef RUNTIMEAPPLICATION_H
 #define RUNTIMEAPPLICATION_H
 #define NUMBER_OF_APPS 1
-#include <targetDatatypes.hpp>
-#include <os/displayprovider.hpp>
-#include <app/osapi.hpp>
+#include "targetDatatypes.hpp"
+#include "os/displayprovider.hpp"
+#include "app/osapi.hpp"
 #include <vector>
 
 class TFT_eSPI;

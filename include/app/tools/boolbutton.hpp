@@ -1,9 +1,9 @@
 #ifndef BOOL_BUTTON
 #define BOOL_BUTTON
 
-#include <app/tools/touchinputproxy.h>
-#include <os/displayprovider.hpp>
-#include <app/tools/character2d.hpp>
+#include "app/tools/touchinputproxy.h"
+#include "os/displayprovider.hpp"
+#include "app/tools/character2d.hpp"
 
 class BoolButton {
     bool isOn = false;

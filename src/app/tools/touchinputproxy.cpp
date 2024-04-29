@@ -1,4 +1,4 @@
-#include <app/tools/touchinputproxy.h>
+#include "app/tools/touchinputproxy.h"
 
 TouchInputProxy::TouchInputProxy()
 {

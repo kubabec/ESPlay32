@@ -1,9 +1,9 @@
 #ifndef SLIDER
 #define SLIDER
 
-#include <app/tools/rangedTouchArea.hpp>
-#include <os/displayprovider.hpp>
-#include <app/tools/character2d.hpp>
+#include "app/tools/rangedTouchArea.hpp"
+#include "os/displayprovider.hpp"
+#include "app/tools/character2d.hpp"
 
 class Slider {
     bool isOn = false;

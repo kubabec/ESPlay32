@@ -1,6 +1,6 @@
 #ifndef MESSAGE_I2C_H
 #define MESSAGE_I2C_H
-#include <Arduino.h>
+#include "Arduino.h"
 #include <vector>
 
 enum MessageID : uint8_t
