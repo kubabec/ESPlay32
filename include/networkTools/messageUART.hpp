@@ -15,6 +15,7 @@ enum MessageID : uint8_t
     UDP_OUTGOING_PACKAGE, /* Data requested to be sent via UDP */
     UDP_INCOMMING_PACKAGE, /* Data received from the network via UDP */
     WIFI_CONNECTION_LOST,
+    SUBSYSTEM_STATUS,
     INVALID, /* Wrong message content */
     UNKNOWN /* Uninitialized */
 };

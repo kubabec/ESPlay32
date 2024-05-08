@@ -212,6 +212,10 @@ void DispatcherUART::task()
                     }
                     break;
 
+                    case SUBSYSTEM_STATUS:
+                    {
+                        
+                    }
 
                     // case INVALID:
                     //     if(DispatcherUART::onInvalidCallback != nullptr)

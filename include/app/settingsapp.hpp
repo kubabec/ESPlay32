@@ -11,16 +11,19 @@ class Settings : public RuntimeApplication
         SETTINGS_MENU,
         SETTINGS_SELECTION_COLOR_MENU,
         SETTINGS_BG_COLOR_MENU,
-        SETTINGS_MOTIVE_COLOR_MENU
+        SETTINGS_MOTIVE_COLOR_MENU,
+        SETTINGS_NETWORK_CONNECTION_MENU
     };
 
     SettingState currentState = SETTINGS_MENU;
 
     Menu* settingsMainMenu = nullptr;
     Menu* colorSelectionMenu = nullptr;
+    Menu* networkConnectionMenu = nullptr;
 
     int8_t submenuSelection = -1;
     int8_t colorSelection = -1;
+    int8_t networkSelection = -1;
 
     void checkSelections();
 
