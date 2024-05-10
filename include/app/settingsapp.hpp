@@ -9,6 +9,7 @@ class Settings : public RuntimeApplication
     enum SettingState
     {
         SETTINGS_MENU,
+        SETTINGS_SUBSYSTEM_INSPECTOR,
         SETTINGS_SELECTION_COLOR_MENU,
         SETTINGS_BG_COLOR_MENU,
         SETTINGS_MOTIVE_COLOR_MENU,
@@ -24,6 +25,8 @@ class Settings : public RuntimeApplication
     int8_t submenuSelection = -1;
     int8_t colorSelection = -1;
     int8_t networkSelection = -1;
+
+    SubsystemOverview currentOverview;
 
     void checkSelections();
 

@@ -13,6 +13,13 @@ int PortableOS::fpsCounter = 0;
 uint8_t PortableOS::appTextTimeout = 0;
 long PortableOS::appTextTimeoutMs = 0;
 uint32_t PortableOS::systemColors[3] = {TFT_GREENYELLOW, TFT_BLACK, TFT_WHITE};
+SubsystemStatusData PortableOS::currentSubsystemStatus = {
+    .isWiFiConnectedFlag = false,
+    .wasWiFiRequestedFlag = false,
+    .lastConnectedSSID = "none",
+    .lastConnectedPassword = "none"
+};
+bool PortableOS::isSubsystemComunicating = false;
 
 void PortableOS::init(){
 #ifdef EMULATOR
@@ -45,6 +52,7 @@ void PortableOS::osTask10ms()
         {
             mainMenu.forceRefresh();
         }
+        mainMenu.update();
         mainMenu.render(display);
     }
     else {
@@ -295,6 +303,14 @@ void PortableOS::udpMessageRecieved(MessageUDP& msg) {
     }
 }
 
+void PortableOS::subsystemStatusReceived(SubsystemStatusData& data)
+{
+    memcpy(&currentSubsystemStatus, &data, sizeof(data));
+    isSubsystemComunicating = true;
+
+    Serial.print("=");
+}
+
 bool PortableOS::sendUDP(MessageUDP& data)
 {
     MessageUART transmissionMsg(UDP_OUTGOING_PACKAGE);
@@ -319,3 +335,12 @@ void PortableOS::connectToNetwork(std::string ssid, std::string password) {
     UARTCommunicator::transmit(transmissionPassword);
 }
  
+
+const SubsystemOverview PortableOS::getSubsystemOverview()
+{
+    SubsystemOverview retVal;
+    retVal.data = currentSubsystemStatus;
+    retVal.isCommunicating = isSubsystemComunicating;
+
+    return retVal;
+}

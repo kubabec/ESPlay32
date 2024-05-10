@@ -14,6 +14,7 @@
 #include "networkTools/messageUDP.hpp"
 #include "networkTools/uartCommunicator.hpp"
 #include "os/mainloadingscreen.h"
+#include "os/osDatatypes.hpp"
 
 #ifdef EMULATOR
     #include "../devicescreenemulator.h"
@@ -42,6 +43,9 @@ class PortableOS{
     static uint8_t appTextTimeout;
     static long appTextTimeoutMs;
 
+
+    static SubsystemStatusData currentSubsystemStatus;
+    static bool isSubsystemComunicating;
     public:
     // TFT display instance
     static DisplayProvider display;
@@ -72,12 +76,13 @@ class PortableOS{
     static bool deactivateAppTextMode();
 
     static void udpMessageRecieved(MessageUDP& msg);
+    static void subsystemStatusReceived(SubsystemStatusData& data);
 
 
     // OS API TEST
     static bool sendUDP(MessageUDP& data);
-
     static void connectToNetwork(std::string ssid, std::string password);
+    static const SubsystemOverview getSubsystemOverview();
 };
 
 

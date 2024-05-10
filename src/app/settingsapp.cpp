@@ -1,7 +1,7 @@
 #include "app/settingsapp.hpp"
 #include "os/portableos.hpp"
 
-std::vector<String> menuOptions = {"Kolor zaznaczenia", "Kolor tla", "Kolor motywu", "Polacz do sieci"};
+std::vector<String> menuOptions = {"Subsystem inspector","Kolor zaznaczenia", "Kolor tla", "Kolor motywu", "Polacz do sieci"};
 std::vector<String> colors = {"Niebieski", "Zielony", "Pomaranczowy", "Czarny", "Bialy", "Czerwony"};
 std::vector<String> networks = {"UPC5284544", "Kuba", "nie, po prostu nie"};
 
@@ -42,16 +42,18 @@ void Settings::checkSelections()
        
         Serial.println("wrong case");
         currentState = (SettingState)(submenuSelection+1);
-        if(currentState == SETTINGS_NETWORK_CONNECTION_MENU) {
-            networkConnectionMenu->requestActivation();
+        if(currentState != SETTINGS_SUBSYSTEM_INSPECTOR){
+            if(currentState == SETTINGS_NETWORK_CONNECTION_MENU) {
+                networkConnectionMenu->requestActivation();
+            }
+            else{
+                colorSelectionMenu->requestActivation();
+            }
+            
+            submenuSelection = -1;
+            colorSelection = -1;
+            networkSelection = -1;
         }
-        else{
-            colorSelectionMenu->requestActivation();
-        }
-        
-        submenuSelection = -1;
-        colorSelection = -1;
-        networkSelection = -1;
     }
 
     if(colorSelection != -1 &&(currentState != SETTINGS_MENU && currentState != SETTINGS_NETWORK_CONNECTION_MENU))
@@ -86,7 +88,7 @@ void Settings::checkSelections()
                 OS_API::connectToNetwork("monke", "banana");
             break;
             case 1: // Kuba
-                OS_API::connectToNetwork("supa", "mario");
+                OS_API::connectToNetwork("Orange_Swiatlowod_DA2C", "2FYXFG6MAGVZ");
             break;
             case 2: // nie, po prostu nie
                 OS_API::connectToNetwork("123", "456");
@@ -110,17 +112,19 @@ void Settings::start(int w, int h){
 }
 
 void Settings::input(InputType input){ 
-    if(currentState == SETTINGS_MENU)
-    {
-        if(settingsMainMenu != nullptr)
+    if(currentState != SETTINGS_SUBSYSTEM_INSPECTOR){
+        if(currentState == SETTINGS_MENU)
         {
-            settingsMainMenu->input(input);
+            if(settingsMainMenu != nullptr)
+            {
+                settingsMainMenu->input(input);
+            }
+        }else if (currentState == SETTINGS_NETWORK_CONNECTION_MENU) {
+            networkConnectionMenu->input(input);
+        }else
+        {
+            colorSelectionMenu->input(input);
         }
-    }else if (currentState == SETTINGS_NETWORK_CONNECTION_MENU) {
-        networkConnectionMenu->input(input);
-    }else
-    {
-        colorSelectionMenu->input(input);
     }
 
 }
@@ -137,17 +141,19 @@ void Settings::longPressRelease(InputType input)
 }
 
 void Settings::analogInput(int x, int y) {
-    if(currentState == SETTINGS_MENU)
-    {
-        if(settingsMainMenu != nullptr)
+    if(currentState != SETTINGS_SUBSYSTEM_INSPECTOR){
+        if(currentState == SETTINGS_MENU)
         {
-            settingsMainMenu->analogInput(x,y);
+            if(settingsMainMenu != nullptr)
+            {
+                settingsMainMenu->analogInput(x,y);
+            }
+        }else if (currentState == SETTINGS_NETWORK_CONNECTION_MENU) {
+            networkConnectionMenu->analogInput(x, y);
+        }else
+        {
+            colorSelectionMenu->analogInput(x, y);
         }
-    }else if (currentState == SETTINGS_NETWORK_CONNECTION_MENU) {
-        networkConnectionMenu->analogInput(x, y);
-    }else
-    {
-        colorSelectionMenu->analogInput(x, y);
     }
 }
 
@@ -156,7 +162,21 @@ void Settings::touchInput(int x, int y) {
 }
 
 void Settings::update(){
+    settingsMainMenu->update();
+    colorSelectionMenu->update();
+    networkConnectionMenu->update();
+
     checkSelections();
+    if(currentState == SETTINGS_SUBSYSTEM_INSPECTOR)
+    {
+        static long timer200 = 0;
+
+        if(millis() - timer200 > 200){
+            currentOverview = OS_API::getSubsystemOverview();
+            timer200 = millis();
+        }
+        
+    }
 }
 
 void Settings::render(DisplayProvider& display){
@@ -168,7 +188,32 @@ void Settings::render(DisplayProvider& display){
         }
     }else if(currentState == SETTINGS_NETWORK_CONNECTION_MENU) {
         networkConnectionMenu->render(display);
-    }else
+    }else if(currentState == SETTINGS_SUBSYSTEM_INSPECTOR)
+    {
+        static long timer200 = 0;
+
+        if(millis() - timer200 > 200){
+            display.fillScreen(TFT_DARKGREY);
+            display.setTextColor(TFT_BLACK, TFT_DARKGREY);
+            display.drawString("isCommunicating : ", 20, 20);
+            display.drawString(String(currentOverview.isCommunicating), 290, 20);
+
+            display.drawString("connection requested : ", 20, 50);
+            display.drawString(String(currentOverview.data.wasWiFiRequestedFlag), 290, 50);
+
+            display.drawString("WiFi connected : ", 20, 80);
+            display.drawString(String(currentOverview.data.isWiFiConnectedFlag), 290, 80);
+
+            display.drawString("SSID : ", 20, 110);
+            display.drawString(String(currentOverview.data.lastConnectedSSID), 100, 110);
+
+            display.drawString("Password : ", 20, 140);
+            display.drawString(String(currentOverview.data.lastConnectedPassword), 150, 140);
+
+            timer200 = millis();
+        }
+    }
+    else
     {
         colorSelectionMenu->render(display);
     }

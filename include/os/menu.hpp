@@ -3,6 +3,7 @@
 #include "app/stoper.hpp"
 #include "os/displayprovider.hpp"
 #include "targetDatatypes.hpp"
+#include <queue>
 #include <vector>
 
 struct HorizontalLineParameters
@@ -10,9 +11,17 @@ struct HorizontalLineParameters
     int y;
 };
 
+enum MenuInputRequest
+{
+    MENU_INPUT_UP,
+    MENU_INPUT_DOWN,
+    MENU_INPUT_SELECT
+};
+
 class Menu {
     std::vector<String> menuElements;
     bool activationRequested = false;
+    std::queue<MenuInputRequest> pendingRequests;
 
     public:
     // Constructor

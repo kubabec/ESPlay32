@@ -1,6 +1,9 @@
 #include "networkTools/dispatcherUART.hpp"
 #include "os/portableos.hpp"
 
+
+SubsystemStatusData extractSubsystemData(MessageUART& uartMessage);
+
 // #include "udpAdapter.hpp"
 
 // std::function<void()> DispatcherUART::onRequestActionCallback = callbacks::onRequestActionCallback;
@@ -11,7 +14,7 @@
 
 
 /* Callback executed when there is UDP message received by UDPAdapter to be forwarded via UART */
-std::function<void(MessageUDP&)> DispatcherUART::onUdpIncommingPackageCallback = callbacks::onUdpIncommingPackageCallback;
+//std::function<void(MessageUDP&)> DispatcherUART::onUdpIncommingPackageCallback = callbacks::onUdpIncommingPackageCallback;
 
 // std::function<void()> DispatcherUART::onInvalidCallback = callbacks::onInvalidCallback;
 // std::function<void()> DispatcherUART::onUnknownCallback = callbacks::onUnknownCallback;
@@ -214,7 +217,9 @@ void DispatcherUART::task()
 
                     case SUBSYSTEM_STATUS:
                     {
-                        
+                        //Serial.print("|");
+                        SubsystemStatusData receivedSubsystemData = extractSubsystemData(message);
+                        PortableOS::subsystemStatusReceived(receivedSubsystemData);
                     }
 
                     // case INVALID:
@@ -254,4 +259,56 @@ MessageUDP DispatcherUART::extractMessageUDP(MessageUART& uartMessage)
     }
 
     return MessageUDP{-1, MessageUDP::IPAddr{0,0,0,0}, -1};
+}
+
+SubsystemStatusData extractSubsystemData(MessageUART& uartMessage)
+{
+    std::vector<uint8_t>& subsystemDataAsByteVecRef = uartMessage.getPayload();
+    uint16_t controlSize = 0;
+    SubsystemStatusData receivedData;
+    
+    memcpy(&receivedData.isWiFiConnectedFlag, &subsystemDataAsByteVecRef.at(0), sizeof(receivedData.isWiFiConnectedFlag));
+    uint16_t offset = 0 + sizeof(receivedData.isWiFiConnectedFlag);
+
+    memcpy(&receivedData.wasWiFiRequestedFlag, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.wasWiFiRequestedFlag));
+    offset += sizeof(receivedData.wasWiFiRequestedFlag);
+
+    memcpy(&receivedData.ssidLength, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ssidLength));
+    offset += sizeof(receivedData.ssidLength);
+
+    memcpy(&receivedData.passwordLength, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.passwordLength));
+    offset += sizeof(receivedData.passwordLength);
+
+    // Copy ssid string
+    // String ssid = String(&subsystemDataAsByteVecRef.at(offset), receivedData.ssidLength);
+    // offset += receivedData.ssidLength;
+
+    // String password = String(&subsystemDataAsByteVecRef.at(offset), receivedData.passwordLength);
+    // offset += receivedData.passwordLength;
+
+
+    memcpy(&receivedData.ipOctet1, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet1));
+    offset += sizeof(receivedData.ipOctet1);
+
+    memcpy(&receivedData.ipOctet2, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet2));
+    offset += sizeof(receivedData.ipOctet2);
+
+    memcpy(&receivedData.ipOctet3, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet3));
+    offset += sizeof(receivedData.ipOctet3);
+
+    memcpy(&receivedData.ipOctet4, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet4));
+
+    // receivedData.lastConnectedSSID = ssid;
+    // receivedData.lastConnectedPassword = password;
+   // memcpy(&receivedData.passwordLength, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.passwordLength));
+
+
+
+    // if(subsystemDataAsByteVecRef.size() == sizeof(SubsystemStatusData))
+    // {
+    //     memcpy(&retVal, &subsystemDataAsByteVecRef.at(0), subsystemDataAsByteVecRef.size());
+    // }
+
+
+    return receivedData;
 }

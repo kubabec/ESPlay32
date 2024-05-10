@@ -166,6 +166,57 @@ void Menu::render(DisplayProvider& display) {
 }
 
 void Menu::update() {
+    // There are some requests waiting to be processed
+    if(pendingRequests.size() > 0)
+    {
+        // We only allow new input when we do not have animation pending
+        if(!refreshInProgress()){
+            MenuInputRequest request = pendingRequests.front();
+            pendingRequests.pop();
+            // Select NEXT
+            if(request == MENU_INPUT_DOWN){
+                // Check if change is possible
+                if((selectedChoice + 1) != menuElements.size())
+                {
+                    // Update selectedChoice to next value
+                    selectedChoice = (selectedChoice + 1);
+                    // Activate animation
+                    isNextSelectedAnimation = true;
+                    // we need to refresh scene
+                    needsRefresh = true;
+                }
+            }
+
+            // Select PREVIOUS
+            if(request == MENU_INPUT_UP)
+            {
+                // Check if change is possible
+                if(selectedChoice != 0)
+                {
+                    // Update selectedChoice to previous value
+                    selectedChoice = (selectedChoice - 1);
+                    // Activate animation
+                    isPreviousSelectedAnimation = true;
+                    // We need to refresh
+                    needsRefresh = true;
+                }
+            }
+
+            // Check if callback is registered
+            if(request == MENU_INPUT_SELECT && choiceDoneCallback != nullptr)
+            {
+                // choice done callback
+                choiceDoneCallback(selectedChoice);
+            }
+
+            // Check if callback is registered
+            if(request == MENU_INPUT_SELECT && choicePoll != nullptr)
+            {
+                // choice done callback
+                *choicePoll = selectedChoice;
+            }
+        }
+    }
 
 }
 
@@ -175,85 +226,109 @@ void Menu::forceRefresh()
 }
 
 void Menu::input(InputType menuInput) {
-    // We only allow new input when we do not have animation pending
-    if(!refreshInProgress()){
-        // Select NEXT
-        if(menuInput == BUTTON_C){
-            // Check if change is possible
-            if((selectedChoice + 1) != menuElements.size())
-            {
-                // Update selectedChoice to next value
-                selectedChoice = (selectedChoice + 1);
-                // Activate animation
-                isNextSelectedAnimation = true;
-                // we need to refresh scene
-                needsRefresh = true;
-            }
-        }
-
-        // Select PREVIOUS
-        if(menuInput == BUTTON_A)
-        {
-            // Check if change is possible
-            if(selectedChoice != 0)
-            {
-                // Update selectedChoice to previous value
-                selectedChoice = (selectedChoice - 1);
-                // Activate animation
-                isPreviousSelectedAnimation = true;
-                // We need to refresh
-                needsRefresh = true;
-            }
-        }
-
-        // Check if callback is registered
-        if(menuInput == BUTTON_K && choiceDoneCallback != nullptr)
-        {
-            // choice done callback
-            choiceDoneCallback(selectedChoice);
-        }
-
-        // Check if callback is registered
-        if(menuInput == BUTTON_K && choicePoll != nullptr)
-        {
-            // choice done callback
-            *choicePoll = selectedChoice;
-        }
+    switch(menuInput)
+    {
+        case BUTTON_C:
+            pendingRequests.push(MENU_INPUT_DOWN);
+            break;
+        case BUTTON_A:
+            pendingRequests.push(MENU_INPUT_UP);
+            break;
+        case BUTTON_K:
+            pendingRequests.push(MENU_INPUT_SELECT);
+            break;
+        default: break;
     }
+
+    // // We only allow new input when we do not have animation pending
+    // if(!refreshInProgress()){
+    //     // Select NEXT
+    //     if(menuInput == BUTTON_C){
+    //         // Check if change is possible
+    //         if((selectedChoice + 1) != menuElements.size())
+    //         {
+    //             // Update selectedChoice to next value
+    //             selectedChoice = (selectedChoice + 1);
+    //             // Activate animation
+    //             isNextSelectedAnimation = true;
+    //             // we need to refresh scene
+    //             needsRefresh = true;
+    //         }
+    //     }
+
+    //     // Select PREVIOUS
+    //     if(menuInput == BUTTON_A)
+    //     {
+    //         // Check if change is possible
+    //         if(selectedChoice != 0)
+    //         {
+    //             // Update selectedChoice to previous value
+    //             selectedChoice = (selectedChoice - 1);
+    //             // Activate animation
+    //             isPreviousSelectedAnimation = true;
+    //             // We need to refresh
+    //             needsRefresh = true;
+    //         }
+    //     }
+
+    //     // Check if callback is registered
+    //     if(menuInput == BUTTON_K && choiceDoneCallback != nullptr)
+    //     {
+    //         // choice done callback
+    //         choiceDoneCallback(selectedChoice);
+    //     }
+
+    //     // Check if callback is registered
+    //     if(menuInput == BUTTON_K && choicePoll != nullptr)
+    //     {
+    //         // choice done callback
+    //         *choicePoll = selectedChoice;
+    //     }
+    // }
 }
 
 void Menu::analogInput(int x, int y) {
-    if(!refreshInProgress()) {
-        if (y <= -7) {
-            if((selectedChoice + 1) !=  menuElements.size())
-            {
-                // Update selectedChoice to next value
-                selectedChoice = (selectedChoice + 1);
-                // Activate animation
-                isNextSelectedAnimation = true;
-                // we need to refresh scene
-                needsRefresh = true;
-            }
-        }
-        else if (y >= 7) {
-            if(selectedChoice != 0)
-            {
-                // Update selectedChoice to previous value
-                selectedChoice = (selectedChoice - 1);
-                // Activate animation
-                isPreviousSelectedAnimation = true;
-                // We need to refresh
-                needsRefresh = true;
-            }
-        }
-        if (x == 10 && choiceDoneCallback != nullptr) {
-            // choce done callback
-            choiceDoneCallback(selectedChoice);
-        }
+    if(y <= -7){
+        pendingRequests.push(MENU_INPUT_DOWN);
+    }else if (y >= 7) {
+        pendingRequests.push(MENU_INPUT_UP);
+    }
 
-        if (x == 10 && choicePoll != nullptr) {
-            // choce done callback
-            *choicePoll = selectedChoice;
-        }
-    } 
+    if(x >= 8){
+        pendingRequests.push(MENU_INPUT_SELECT);
+    }
+
+    // if(!refreshInProgress()) {
+    //     if (y <= -7) {
+    //         if((selectedChoice + 1) !=  menuElements.size())
+    //         {
+    //             // Update selectedChoice to next value
+    //             selectedChoice = (selectedChoice + 1);
+    //             // Activate animation
+    //             isNextSelectedAnimation = true;
+    //             // we need to refresh scene
+    //             needsRefresh = true;
+    //         }
+    //     }
+    //     else if (y >= 7) {
+    //         if(selectedChoice != 0)
+    //         {
+    //             // Update selectedChoice to previous value
+    //             selectedChoice = (selectedChoice - 1);
+    //             // Activate animation
+    //             isPreviousSelectedAnimation = true;
+    //             // We need to refresh
+    //             needsRefresh = true;
+    //         }
+    //     }
+    //     if (x == 10 && choiceDoneCallback != nullptr) {
+    //         // choce done callback
+    //         choiceDoneCallback(selectedChoice);
+    //     }
+
+    //     if (x == 10 && choicePoll != nullptr) {
+    //         // choce done callback
+    //         *choicePoll = selectedChoice;
+    //     }
+    // } 
 }

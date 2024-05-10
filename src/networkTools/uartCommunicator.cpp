@@ -19,20 +19,20 @@ void UARTCommunicator::task()
     }
 
     if(receiveByteVector.size() > 0){
-        Serial.println("Number of received bytes : " + String(receiveByteVector.size()));
+        //Serial.println("Number of received bytes : " + String(receiveByteVector.size()));
         // Push received message to receive buffer
         MessageUART receivedMessage = MessageUART::fromUint8Vector(receiveByteVector);
 
-        for(auto& oneByte : receiveByteVector)
-        {
-            Serial.print(String((uint8_t)oneByte) + " ");
+        // for(auto& oneByte : receiveByteVector)
+        // {
+        //     Serial.print(String((uint8_t)oneByte) + " ");
             
-        }
-        Serial.println();
+        // }
+        // Serial.println();
 
         if(receivedMessage.isValid()){
             receivedMessages.push_back(receivedMessage); 
-            Serial.println("Received valid message");
+            //Serial.println("Received valid message");
         }
         else
         {
