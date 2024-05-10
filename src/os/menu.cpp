@@ -288,47 +288,48 @@ void Menu::input(InputType menuInput) {
 }
 
 void Menu::analogInput(int x, int y) {
-    if(y <= -7){
-        pendingRequests.push(MENU_INPUT_DOWN);
-    }else if (y >= 7) {
-        pendingRequests.push(MENU_INPUT_UP);
-    }
+    // if(y <= -7){
+    //     pendingRequests.push(MENU_INPUT_DOWN);
+    // }else if (y >= 7) {
+    //     pendingRequests.push(MENU_INPUT_UP);
+    // }
 
-    if(x >= 8){
-        pendingRequests.push(MENU_INPUT_SELECT);
-    }
+    // if(x >= 8){
+    //     pendingRequests.push(MENU_INPUT_SELECT);
+    // }
 
-    // if(!refreshInProgress()) {
-    //     if (y <= -7) {
-    //         if((selectedChoice + 1) !=  menuElements.size())
-    //         {
-    //             // Update selectedChoice to next value
-    //             selectedChoice = (selectedChoice + 1);
-    //             // Activate animation
-    //             isNextSelectedAnimation = true;
-    //             // we need to refresh scene
-    //             needsRefresh = true;
-    //         }
-    //     }
-    //     else if (y >= 7) {
-    //         if(selectedChoice != 0)
-    //         {
-    //             // Update selectedChoice to previous value
-    //             selectedChoice = (selectedChoice - 1);
-    //             // Activate animation
-    //             isPreviousSelectedAnimation = true;
-    //             // We need to refresh
-    //             needsRefresh = true;
-    //         }
-    //     }
-    //     if (x == 10 && choiceDoneCallback != nullptr) {
-    //         // choce done callback
-    //         choiceDoneCallback(selectedChoice);
-    //     }
 
-    //     if (x == 10 && choicePoll != nullptr) {
-    //         // choce done callback
-    //         *choicePoll = selectedChoice;
-    //     }
-    // } 
+    if(!refreshInProgress()) {
+        if (y <= -7) {
+            if((selectedChoice + 1) !=  menuElements.size())
+            {
+                // Update selectedChoice to next value
+                selectedChoice = (selectedChoice + 1);
+                // Activate animation
+                isNextSelectedAnimation = true;
+                // we need to refresh scene
+                needsRefresh = true;
+            }
+        }
+        else if (y >= 7) {
+            if(selectedChoice != 0)
+            {
+                // Update selectedChoice to previous value
+                selectedChoice = (selectedChoice - 1);
+                // Activate animation
+                isPreviousSelectedAnimation = true;
+                // We need to refresh
+                needsRefresh = true;
+            }
+        }
+        if (x == 10 && choiceDoneCallback != nullptr) {
+            // choce done callback
+            choiceDoneCallback(selectedChoice);
+        }
+
+        if (x == 10 && choicePoll != nullptr) {
+            // choce done callback
+            *choicePoll = selectedChoice;
+        }
+    } 
 }
