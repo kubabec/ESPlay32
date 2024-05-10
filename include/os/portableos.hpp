@@ -9,7 +9,7 @@
 #include "app/games/pong.h"
 #include "app/games/connect4.h"
 #include "app/ledCommunicator.hpp"
-#include "app/settingsapp.hpp"
+#include "app/settings/settingsMainApp.hpp"
 #include "os/drivers/touchinputdriver.hpp"
 #include "networkTools/messageUDP.hpp"
 #include "networkTools/uartCommunicator.hpp"
@@ -45,6 +45,7 @@ class PortableOS{
 
 
     static SubsystemStatusData currentSubsystemStatus;
+    static NetworkCredentials currentConnectedNetworkCredentials;
     static bool isSubsystemComunicating;
     public:
     // TFT display instance
@@ -77,6 +78,8 @@ class PortableOS{
 
     static void udpMessageRecieved(MessageUDP& msg);
     static void subsystemStatusReceived(SubsystemStatusData& data);
+    static void networkSsidReceived(String& ssid);
+    static void networkPasswordReceived(String& password);
 
 
     // OS API TEST

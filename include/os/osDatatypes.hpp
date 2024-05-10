@@ -5,10 +5,6 @@
 typedef struct {
     bool isWiFiConnectedFlag;
     bool wasWiFiRequestedFlag;
-    uint8_t ssidLength;
-    uint8_t passwordLength;
-    String lastConnectedSSID;
-    String lastConnectedPassword;
     uint8_t ipOctet1;
     uint8_t ipOctet2;
     uint8_t ipOctet3;
@@ -16,8 +12,14 @@ typedef struct {
 }SubsystemStatusData;
 
 typedef struct {
+    String ssid;
+    String password;
+}NetworkCredentials;
+
+typedef struct {
     bool isCommunicating = false;
     SubsystemStatusData data;
+    NetworkCredentials credentials;
 }SubsystemOverview;
 
 

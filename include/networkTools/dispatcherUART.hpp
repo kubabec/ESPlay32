@@ -8,6 +8,7 @@
 
 class DispatcherUART {
         static MessageUDP extractMessageUDP(MessageUART& uartMessage);
+        static std::string extractStringFromPayload(MessageUART& uartMessage);
 
     public:
         // static std::function<void()> onRequestActionCallback;

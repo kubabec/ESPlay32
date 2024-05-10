@@ -1,38 +1,19 @@
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef WIFI_LIST_CONNECTOR_H
+#define WIFI_LIST_CONNECTOR_H
 #include "app/runtimeApplication.hpp"
 #include "os/menu.hpp"
 
-
-class Settings : public RuntimeApplication
+class WiFiListConnector : public RuntimeApplication
 {
-    enum SettingState
-    {
-        SETTINGS_MENU,
-        SETTINGS_SUBSYSTEM_INSPECTOR,
-        SETTINGS_SELECTION_COLOR_MENU,
-        SETTINGS_BG_COLOR_MENU,
-        SETTINGS_MOTIVE_COLOR_MENU,
-        SETTINGS_NETWORK_CONNECTION_MENU
-    };
 
-    SettingState currentState = SETTINGS_MENU;
-
-    Menu* settingsMainMenu = nullptr;
-    Menu* colorSelectionMenu = nullptr;
     Menu* networkConnectionMenu = nullptr;
-
-    int8_t submenuSelection = -1;
-    int8_t colorSelection = -1;
     int8_t networkSelection = -1;
 
-    SubsystemOverview currentOverview;
-
-    void checkSelections();
-
+    bool isLoaded = false;
+    bool connectionRequested = false;
     public:
-    Settings();
-    ~Settings();
+    WiFiListConnector();
+    ~WiFiListConnector();
     virtual void start(int w, int h) override;
     virtual void input(InputType input) override;
     virtual void longPressInput(InputType input) override;

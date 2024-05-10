@@ -1,7 +1,7 @@
 #include "os/portableos.hpp"
 
 
-std::vector<String> appNames = {"Led communicator", "Stoper", "Fight Game", "Pong", "Connect 4", "Color Picker", "UDP test app", "Ustawienia"};
+std::vector<String> appNames = {"Ustawienia", "Led communicator", "Stoper", "Fight Game", "Pong", "Connect 4", "Color Picker", "UDP test app"};
 
 // Create static objects instances
 DisplayProvider PortableOS::display = DisplayProvider();
@@ -12,13 +12,12 @@ TopOverlay PortableOS::topOverlay = TopOverlay();
 int PortableOS::fpsCounter = 0;
 uint8_t PortableOS::appTextTimeout = 0;
 long PortableOS::appTextTimeoutMs = 0;
-uint32_t PortableOS::systemColors[3] = {TFT_GREENYELLOW, TFT_BLACK, TFT_WHITE};
+uint32_t PortableOS::systemColors[3] = {TFT_GREENYELLOW, TFT_BLACK, TFT_SKYBLUE};
 SubsystemStatusData PortableOS::currentSubsystemStatus = {
     .isWiFiConnectedFlag = false,
-    .wasWiFiRequestedFlag = false,
-    .lastConnectedSSID = "none",
-    .lastConnectedPassword = "none"
+    .wasWiFiRequestedFlag = false
 };
+NetworkCredentials PortableOS::currentConnectedNetworkCredentials;
 bool PortableOS::isSubsystemComunicating = false;
 
 void PortableOS::init(){
@@ -311,6 +310,18 @@ void PortableOS::subsystemStatusReceived(SubsystemStatusData& data)
     Serial.print("=");
 }
 
+void PortableOS::networkSsidReceived(String& ssid)
+{
+    currentConnectedNetworkCredentials.ssid = ssid;
+}
+
+void PortableOS::networkPasswordReceived(String& password)
+{
+    currentConnectedNetworkCredentials.password = password;
+}
+
+
+
 bool PortableOS::sendUDP(MessageUDP& data)
 {
     MessageUART transmissionMsg(UDP_OUTGOING_PACKAGE);
@@ -341,6 +352,7 @@ const SubsystemOverview PortableOS::getSubsystemOverview()
     SubsystemOverview retVal;
     retVal.data = currentSubsystemStatus;
     retVal.isCommunicating = isSubsystemComunicating;
+    retVal.credentials = currentConnectedNetworkCredentials;
 
     return retVal;
 }

@@ -9,6 +9,7 @@
 class TFT_eSPI;
 
 typedef enum {
+    SETTINGS,
     LED_COMMUNICATION,
     STOPER,
     FIGHT_GAME,
@@ -18,7 +19,6 @@ typedef enum {
 //    MENU_TEST_APP,
     UDP_SEND_TEST_APP,
 //    TOUCH_TEST_APP,
-    SETTINGS,
     NONE
 }RuntimeApplications;
 

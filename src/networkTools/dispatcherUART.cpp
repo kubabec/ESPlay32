@@ -221,6 +221,21 @@ void DispatcherUART::task()
                         SubsystemStatusData receivedSubsystemData = extractSubsystemData(message);
                         PortableOS::subsystemStatusReceived(receivedSubsystemData);
                     }
+                    break;
+
+                    case SUBSYSTEM_STATUS_SSID:
+                    {
+                        String ssid(extractStringFromPayload(message).c_str());
+                        PortableOS::networkSsidReceived(ssid);
+                    }
+                    break;
+
+                    case SUBSYSTEM_STATUS_PASSWORD:
+                    {
+                        String password(extractStringFromPayload(message).c_str());
+                        PortableOS::networkPasswordReceived(password);
+                    }
+                    break;
 
                     // case INVALID:
                     //     if(DispatcherUART::onInvalidCallback != nullptr)
@@ -266,49 +281,55 @@ SubsystemStatusData extractSubsystemData(MessageUART& uartMessage)
     std::vector<uint8_t>& subsystemDataAsByteVecRef = uartMessage.getPayload();
     uint16_t controlSize = 0;
     SubsystemStatusData receivedData;
+
+    memcpy(&receivedData, &subsystemDataAsByteVecRef.at(0), sizeof(SubsystemStatusData));
     
-    memcpy(&receivedData.isWiFiConnectedFlag, &subsystemDataAsByteVecRef.at(0), sizeof(receivedData.isWiFiConnectedFlag));
-    uint16_t offset = 0 + sizeof(receivedData.isWiFiConnectedFlag);
+//     memcpy(&receivedData.isWiFiConnectedFlag, &subsystemDataAsByteVecRef.at(0), sizeof(receivedData.isWiFiConnectedFlag));
+//     uint16_t offset = 0 + sizeof(receivedData.isWiFiConnectedFlag);
 
-    memcpy(&receivedData.wasWiFiRequestedFlag, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.wasWiFiRequestedFlag));
-    offset += sizeof(receivedData.wasWiFiRequestedFlag);
-
-    memcpy(&receivedData.ssidLength, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ssidLength));
-    offset += sizeof(receivedData.ssidLength);
-
-    memcpy(&receivedData.passwordLength, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.passwordLength));
-    offset += sizeof(receivedData.passwordLength);
-
-    // Copy ssid string
-    // String ssid = String(&subsystemDataAsByteVecRef.at(offset), receivedData.ssidLength);
-    // offset += receivedData.ssidLength;
-
-    // String password = String(&subsystemDataAsByteVecRef.at(offset), receivedData.passwordLength);
-    // offset += receivedData.passwordLength;
+//     memcpy(&receivedData.wasWiFiRequestedFlag, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.wasWiFiRequestedFlag));
+//     offset += sizeof(receivedData.wasWiFiRequestedFlag);
 
 
-    memcpy(&receivedData.ipOctet1, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet1));
-    offset += sizeof(receivedData.ipOctet1);
+//     // Copy ssid string
+//     // String ssid = String(&subsystemDataAsByteVecRef.at(offset), receivedData.ssidLength);
+//     // offset += receivedData.ssidLength;
 
-    memcpy(&receivedData.ipOctet2, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet2));
-    offset += sizeof(receivedData.ipOctet2);
+//     // String password = String(&subsystemDataAsByteVecRef.at(offset), receivedData.passwordLength);
+//     // offset += receivedData.passwordLength;
 
-    memcpy(&receivedData.ipOctet3, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet3));
-    offset += sizeof(receivedData.ipOctet3);
 
-    memcpy(&receivedData.ipOctet4, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet4));
+//     memcpy(&receivedData.ipOctet1, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet1));
+//     offset += sizeof(receivedData.ipOctet1);
 
-    // receivedData.lastConnectedSSID = ssid;
-    // receivedData.lastConnectedPassword = password;
-   // memcpy(&receivedData.passwordLength, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.passwordLength));
+//     memcpy(&receivedData.ipOctet2, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet2));
+//     offset += sizeof(receivedData.ipOctet2);
+
+//     memcpy(&receivedData.ipOctet3, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet3));
+//     offset += sizeof(receivedData.ipOctet3);
+
+//     memcpy(&receivedData.ipOctet4, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.ipOctet4));
+
+//     // receivedData.lastConnectedSSID = ssid;
+//     // receivedData.lastConnectedPassword = password;
+//    // memcpy(&receivedData.passwordLength, &subsystemDataAsByteVecRef.at(offset), sizeof(receivedData.passwordLength));
 
 
 
-    // if(subsystemDataAsByteVecRef.size() == sizeof(SubsystemStatusData))
-    // {
-    //     memcpy(&retVal, &subsystemDataAsByteVecRef.at(0), subsystemDataAsByteVecRef.size());
-    // }
+//     // if(subsystemDataAsByteVecRef.size() == sizeof(SubsystemStatusData))
+//     // {
+//     //     memcpy(&retVal, &subsystemDataAsByteVecRef.at(0), subsystemDataAsByteVecRef.size());
+//     // }
 
 
     return receivedData;
+}
+
+std::string DispatcherUART::extractStringFromPayload(MessageUART& uartMessage) {
+    std::string str;
+    std::vector<uint8_t>& payloadRef = uartMessage.getPayload();
+    for (auto& character : payloadRef) {
+        str += (char)character;
+    }
+    return str;
 }
