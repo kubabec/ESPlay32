@@ -39,7 +39,7 @@ void Menu::drawSelectionLines(DisplayProvider& display)
     if(isNextSelectedAnimation)
     {
         // Size of single Green line length change
-        const int sizingFactor = 48;
+        const int sizingFactor = 96;
         // Point where black line starts
         static int coverX = 480 - sizingFactor;
         // length of black line covering green one
@@ -86,7 +86,7 @@ void Menu::drawSelectionLines(DisplayProvider& display)
 
         // The same logic for PREVIOUS selection animation
         // Bottom line dissapearing, top line appearing
-        const int sizingFactor = 60;
+        const int sizingFactor = 120;
         static int coverX = 480 - sizingFactor;
         static int blackLineLength = sizingFactor;
         static int newGreenX = 0;

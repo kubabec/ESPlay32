@@ -1,4 +1,4 @@
-#include "os/portableos.hpp"
+#include "os/portableOs.hpp"
 
 
 std::vector<String> appNames = {"Ustawienia", "Led communicator", "Stoper", "Fight Game", "Pong", "Connect 4", "Color Picker", "UDP test app"};
@@ -13,12 +13,23 @@ int PortableOS::fpsCounter = 0;
 uint8_t PortableOS::appTextTimeout = 0;
 long PortableOS::appTextTimeoutMs = 0;
 uint32_t PortableOS::systemColors[3] = {TFT_GREENYELLOW, TFT_BLACK, TFT_SKYBLUE};
-SubsystemStatusData PortableOS::currentSubsystemStatus = {
-    .isWiFiConnectedFlag = false,
-    .wasWiFiRequestedFlag = false
-};
-NetworkCredentials PortableOS::currentConnectedNetworkCredentials;
-bool PortableOS::isSubsystemComunicating = false;
+// SubsystemStatusData PortableOS::currentSubsystemStatus = {
+//     .isWiFiConnectedFlag = false,
+//     .wasWiFiRequestedFlag = false
+// };
+// NetworkCredentials PortableOS::currentConnectedNetworkCredentials;
+// bool PortableOS::isSubsystemComunicating = false;
+SubsystemOverview PortableOS::subsystemOverview;
+    //.isCommunicating = false
+    // .data = { 
+    //     .isWiFiConnectedFlag = false, 
+    //     .isWiFiRequestedFlag = false
+    // },
+    // .credentials = { 
+    //     .ssid = "none",
+    //     .password = "none"
+    // }
+SubsystemMonitorService PortableOS::subsystemMonitor(&subsystemOverview);
 
 void PortableOS::init(){
 #ifdef EMULATOR
@@ -44,6 +55,8 @@ void PortableOS::init(){
 
 void PortableOS::osTask10ms()
 {
+    internalServicesTask();
+
     // Depending if Menu is active
     if (isMainMenuActive) {
         // Render Menu
@@ -84,6 +97,12 @@ void PortableOS::osTask10ms()
 
     // Count FPS
     fpsCounter++;
+}
+
+void PortableOS::internalServicesTask()
+{
+    subsystemMonitor.update();
+
 }
 
 void PortableOS::osTask1s()
@@ -300,24 +319,38 @@ void PortableOS::udpMessageRecieved(MessageUDP& msg) {
     if (currentRunningAppPtr != nullptr) {
         currentRunningAppPtr->udpDataReceived(msg.getId(), msg.getPayload());
     }
+
+    // Notify subsystemMonitor that slave is communicating
+    subsystemMonitor.subsystemStatusReceived();
 }
 
 void PortableOS::subsystemStatusReceived(SubsystemStatusData& data)
 {
-    memcpy(&currentSubsystemStatus, &data, sizeof(data));
-    isSubsystemComunicating = true;
+    memcpy(&subsystemOverview.data, &data, sizeof(data));
+    subsystemOverview.isCommunicating = true;
 
-    Serial.print("=");
+    // Notify subsystemMonitor that slave is communicating
+    subsystemMonitor.subsystemStatusReceived();
+
+    //Serial.print("=");
 }
 
 void PortableOS::networkSsidReceived(String& ssid)
 {
-    currentConnectedNetworkCredentials.ssid = ssid;
+    //currentConnectedNetworkCredentials.ssid = ssid;
+    subsystemOverview.credentials.ssid = ssid;
+
+    // Notify subsystemMonitor that slave is communicating
+    subsystemMonitor.subsystemStatusReceived();
 }
 
 void PortableOS::networkPasswordReceived(String& password)
 {
-    currentConnectedNetworkCredentials.password = password;
+    //currentConnectedNetworkCredentials.password = password;
+    subsystemOverview.credentials.password = password;
+
+    // Notify subsystemMonitor that slave is communicating
+    subsystemMonitor.subsystemStatusReceived();
 }
 
 
@@ -325,6 +358,7 @@ void PortableOS::networkPasswordReceived(String& password)
 bool PortableOS::sendUDP(MessageUDP& data)
 {
     MessageUART transmissionMsg(UDP_OUTGOING_PACKAGE);
+    data.resetByteIterationCount();
     while(data.switchToNextByte())
     {
         transmissionMsg.pushData(data.getCurrentByte());
@@ -332,6 +366,22 @@ bool PortableOS::sendUDP(MessageUDP& data)
     UARTCommunicator::transmit(transmissionMsg);
 
     return true;
+}
+
+bool PortableOS::sendBroadcast(MessageUDP& data)
+{
+    Serial.println("Sending broadcast");
+    MessageUDP::IPAddr ipRef = data.getIPAddress();
+    Serial.println("IP checked");
+    ipRef.element1 = subsystemOverview.data.ipOctet1;
+    ipRef.element2 = subsystemOverview.data.ipOctet2;
+    ipRef.element3 = subsystemOverview.data.ipOctet3;
+    ipRef.element4 = 255;
+    
+    data.setIpAddress(ipRef);
+    Serial.println("IP updated");
+    PortableOS::sendUDP(data);
+    Serial.println("Data sent");
 }
 
 void PortableOS::connectToNetwork(std::string ssid, std::string password) {
@@ -349,10 +399,10 @@ void PortableOS::connectToNetwork(std::string ssid, std::string password) {
 
 const SubsystemOverview PortableOS::getSubsystemOverview()
 {
-    SubsystemOverview retVal;
-    retVal.data = currentSubsystemStatus;
-    retVal.isCommunicating = isSubsystemComunicating;
-    retVal.credentials = currentConnectedNetworkCredentials;
+    // SubsystemOverview retVal;
+    // retVal.data = currentSubsystemStatus;
+    // retVal.isCommunicating = isSubsystemComunicating;
+    // retVal.credentials = currentConnectedNetworkCredentials;
 
-    return retVal;
+    return subsystemOverview;
 }

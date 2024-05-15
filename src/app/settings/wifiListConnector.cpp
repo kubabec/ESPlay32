@@ -2,7 +2,7 @@
 #include "os/portableos.hpp"
 
 
-std::vector<String> networks = {"UPC5284544", "Kuba", "nie, po prostu nie"};
+std::vector<String> networks = {"UPC5284544", "Kuba", "Marcel telefon", "Kuba iPhone"};
 
 WiFiListConnector::WiFiListConnector() {
     networkConnectionMenu = new Menu(networks);
@@ -63,6 +63,9 @@ void WiFiListConnector::update(){
             break;
             case 2: // nie, po prostu nie
                 OS_API::connectToNetwork("123", "456");
+            break;
+            case 3: // nie, po prostu nie
+                OS_API::connectToNetwork("iPhone (Kuba)", "esplay32");
             break;
             default:
             break;

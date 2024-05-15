@@ -16,6 +16,10 @@
 #include "os/mainloadingscreen.h"
 #include "os/osDatatypes.hpp"
 
+// Services
+#include "os/services/subsystemMonitor.hpp"
+
+
 #ifdef EMULATOR
     #include "../devicescreenemulator.h"
 #endif
@@ -44,15 +48,21 @@ class PortableOS{
     static long appTextTimeoutMs;
 
 
-    static SubsystemStatusData currentSubsystemStatus;
-    static NetworkCredentials currentConnectedNetworkCredentials;
-    static bool isSubsystemComunicating;
+    // static SubsystemStatusData currentSubsystemStatus;
+    // static NetworkCredentials currentConnectedNetworkCredentials;
+    // static bool isSubsystemComunicating;
+    static SubsystemOverview subsystemOverview;
     public:
     // TFT display instance
     static DisplayProvider display;
 
+    /**** SERVICES *****/
+    static SubsystemMonitorService subsystemMonitor;
+    /**** SERVICES *****/
+
     // Main 25ms task
     static void osTask10ms();
+    static void internalServicesTask();
     // 1s task
     static void osTask1s();
     // OS init function
@@ -84,6 +94,7 @@ class PortableOS{
 
     // OS API TEST
     static bool sendUDP(MessageUDP& data);
+    static bool sendBroadcast(MessageUDP& data);
     static void connectToNetwork(std::string ssid, std::string password);
     static const SubsystemOverview getSubsystemOverview();
 };

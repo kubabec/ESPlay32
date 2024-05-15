@@ -8,7 +8,9 @@ void SubsystemInspector::readSubsystemData()
 
     if(newOverview.isCommunicating == currentOverview.isCommunicating &&
         newOverview.data.isWiFiConnectedFlag == currentOverview.data.isWiFiConnectedFlag &&
-        newOverview.data.wasWiFiRequestedFlag == currentOverview.data.wasWiFiRequestedFlag
+        newOverview.data.wasWiFiRequestedFlag == currentOverview.data.wasWiFiRequestedFlag &&
+        newOverview.credentials.ssid == currentOverview.credentials.ssid &&
+        newOverview.credentials.password == currentOverview.credentials.password
     ){
         isNewOverviewReceived = false;
     }else 
@@ -121,7 +123,12 @@ void SubsystemInspector::render(DisplayProvider& display){
 
         display.drawString("Password : ", 20, 170);
         display.drawString(String(currentOverview.credentials.password), 150, 170);
+
+        display.drawString("IP Address : ", 20, 200);
+        display.drawString(String(currentOverview.data.ipOctet1) + "." + String(currentOverview.data.ipOctet2) + "." + String(currentOverview.data.ipOctet3) + "." + String(currentOverview.data.ipOctet4),
+         155, 200);
     }
+    
 }
 
 void SubsystemInspector::end(){ 
