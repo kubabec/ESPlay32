@@ -56,13 +56,13 @@ void WiFiListConnector::update(){
     if(networkSelection != -1) {
         switch(networkSelection) {
             case 0: // UPC5284544
-                OS_API::connectToNetwork("monke", "banana");
+                OS_API::connectToNetwork("UPC5284544", "ySumyhcePuz8");
             break;
             case 1: // Kuba
                 OS_API::connectToNetwork("Orange_Swiatlowod_DA2C", "2FYXFG6MAGVZ");
             break;
             case 2: // nie, po prostu nie
-                OS_API::connectToNetwork("123", "456");
+                OS_API::connectToNetwork("nie, po prostu nie", "hmmmmmmm");
             break;
             case 3: // nie, po prostu nie
                 OS_API::connectToNetwork("iPhone (Kuba)", "esplay32");

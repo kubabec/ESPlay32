@@ -334,7 +334,7 @@ int MessageUDP::getPort()
     return udpPort;
 }
 
-MessageUDP::IPAddr& MessageUDP::getIPAddress()
+MessageUDP::IPAddr MessageUDP::getIPAddress()
 {
     return ipAddress;
 }

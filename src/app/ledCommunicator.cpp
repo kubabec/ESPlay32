@@ -35,9 +35,9 @@ void LedCommunicator::udpDataReceived(int messageID, std::vector<uint8_t> data) 
 }
 
 void LedCommunicator::updateLedShieldData(LedMessageContent& msg) {
-    MessageUDP updateMessage(150, {192, 168, 43, 255}, 9001);
+    MessageUDP updateMessage(150, {192, 168, 0, 255}, 9001);
     updateMessage.pushData((byte*)&msg, sizeof(msg));
-    //OS_API::sendUdpBroadcastMessage(updateMessage);
+    OS_API::sendUdpBroadcastMessage(updateMessage);
 }
 
 void LedCommunicator::longPressInput(InputType input)

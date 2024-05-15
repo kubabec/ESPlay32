@@ -84,7 +84,7 @@ public:
     std::vector<uint8_t>& getPayload();
 
     int getPort();
-    MessageUDP::IPAddr& getIPAddress();
+    MessageUDP::IPAddr getIPAddress();
 };
 
 

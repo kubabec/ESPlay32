@@ -332,6 +332,8 @@ void PortableOS::subsystemStatusReceived(SubsystemStatusData& data)
     // Notify subsystemMonitor that slave is communicating
     subsystemMonitor.subsystemStatusReceived();
 
+    Serial.println(String(subsystemOverview.data.ipOctet1) + "." + String(subsystemOverview.data.ipOctet2) + "." + String(subsystemOverview.data.ipOctet3) + "." + String(subsystemOverview.data.ipOctet4));
+
     //Serial.print("=");
 }
 
@@ -370,18 +372,16 @@ bool PortableOS::sendUDP(MessageUDP& data)
 
 bool PortableOS::sendBroadcast(MessageUDP& data)
 {
-    Serial.println("Sending broadcast");
     MessageUDP::IPAddr ipRef = data.getIPAddress();
-    Serial.println("IP checked");
     ipRef.element1 = subsystemOverview.data.ipOctet1;
     ipRef.element2 = subsystemOverview.data.ipOctet2;
     ipRef.element3 = subsystemOverview.data.ipOctet3;
     ipRef.element4 = 255;
     
     data.setIpAddress(ipRef);
-    Serial.println("IP updated");
     PortableOS::sendUDP(data);
-    Serial.println("Data sent");
+
+    return true;
 }
 
 void PortableOS::connectToNetwork(std::string ssid, std::string password) {
