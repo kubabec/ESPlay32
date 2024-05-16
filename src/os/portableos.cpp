@@ -418,10 +418,19 @@ bool PortableOS::sendUDP(MessageUDP& data)
 bool PortableOS::sendBroadcast(MessageUDP& data)
 {
     MessageUDP::IPAddr ipRef = data.getIPAddress();
+
     ipRef.element1 = subsystemOverview.data.ipOctet1;
     ipRef.element2 = subsystemOverview.data.ipOctet2;
     ipRef.element3 = subsystemOverview.data.ipOctet3;
-    ipRef.element4 = 255;
+
+    // Workaround for Iphone network
+    if(subsystemOverview.data.ipOctet1 != 172){
+        ipRef.element4 = 255;
+    }
+    else 
+    {
+        ipRef.element4 = 15;
+    }
     
     data.setIpAddress(ipRef);
     PortableOS::sendUDP(data);
@@ -433,8 +442,14 @@ void PortableOS::connectToNetwork(std::string ssid, std::string password) {
     MessageUART transmissionSsid(CONNECT_TO_NETWORK_SSID);
     MessageUART transmissionPassword(CONNECT_TO_NETWORK_PASSWORD);
 
-    transmissionSsid.pushData(ssid);
-    transmissionPassword.pushData(password);
+    String ssidStringTmp(ssid.c_str());
+    String pwdStringTmp(password.c_str());
+
+    StringBuffer ssidTmp(ssidStringTmp);
+    StringBuffer passwordTmp(pwdStringTmp);
+
+    transmissionSsid.pushData((uint8_t*)ssidTmp.getBuffer(), 40);
+    transmissionPassword.pushData((uint8_t*)passwordTmp.getBuffer(), 40);
 
     UARTCommunicator::transmit(transmissionSsid);
     delay(5);

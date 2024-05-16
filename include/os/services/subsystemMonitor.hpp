@@ -8,7 +8,7 @@
 
 class SubsystemMonitorService : RuntimeApplication
 {
-    const uint8_t numberOfTicksToDisconnect = 50;
+    const uint8_t numberOfTicksToDisconnect = 150;
     uint8_t currentTickValue = 0;
 
     SubsystemOverview* subsystemOverviewPtr;
