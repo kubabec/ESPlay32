@@ -90,12 +90,14 @@ class PortableOS{
     static void subsystemStatusReceived(SubsystemStatusData& data);
     static void networkSsidReceived(String& ssid);
     static void networkPasswordReceived(String& password);
+    static void networkDataReceived(NetworkDataUARTMessage& data);
 
 
     // OS API TEST
     static bool sendUDP(MessageUDP& data);
     static bool sendBroadcast(MessageUDP& data);
     static void connectToNetwork(std::string ssid, std::string password);
+    static void disconnectWiFiNetwork();
     static const SubsystemOverview getSubsystemOverview();
 };
 

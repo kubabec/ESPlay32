@@ -3,12 +3,14 @@
 #include "messageUART.hpp"
 #include "messageUDP.hpp"
 #include "uartCallbacks.hpp"
+#include "os/osDatatypes.hpp"
 #include <functional>
 #include <queue>
 
 class DispatcherUART {
         static MessageUDP extractMessageUDP(MessageUART& uartMessage);
         static std::string extractStringFromPayload(MessageUART& uartMessage);
+        static NetworkDataUARTMessage extractNetworkDataFromPayload(MessageUART& uartMessage);
 
     public:
         // static std::function<void()> onRequestActionCallback;

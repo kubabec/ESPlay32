@@ -117,16 +117,19 @@ void SubsystemInspector::render(DisplayProvider& display){
         display.setTextColor(TFT_BLACK, TFT_WHITE);
 
 
+        // Only show when WiFi is connected
+        if(currentOverview.data.isWiFiConnectedFlag){
+            display.drawString("SSID : ", 20, 140);
+            display.drawString(String(currentOverview.credentials.ssid), 100, 140);
 
-        display.drawString("SSID : ", 20, 140);
-        display.drawString(String(currentOverview.credentials.ssid), 100, 140);
+            display.drawString("Password : ", 20, 170);
+            display.drawString(String(currentOverview.credentials.password), 150, 170);
 
-        display.drawString("Password : ", 20, 170);
-        display.drawString(String(currentOverview.credentials.password), 150, 170);
+            display.drawString("IP Address : ", 20, 200);
+            display.drawString(String(currentOverview.data.ipOctet1) + "." + String(currentOverview.data.ipOctet2) + "." + String(currentOverview.data.ipOctet3) + "." + String(currentOverview.data.ipOctet4),
+            155, 200);
 
-        display.drawString("IP Address : ", 20, 200);
-        display.drawString(String(currentOverview.data.ipOctet1) + "." + String(currentOverview.data.ipOctet2) + "." + String(currentOverview.data.ipOctet3) + "." + String(currentOverview.data.ipOctet4),
-         155, 200);
+        }
     }
     
 }

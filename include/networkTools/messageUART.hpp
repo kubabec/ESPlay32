@@ -18,6 +18,8 @@ enum MessageID : uint8_t
     SUBSYSTEM_STATUS,
     SUBSYSTEM_STATUS_SSID,
     SUBSYSTEM_STATUS_PASSWORD,
+    SUBSYSTEM_NETWORK_DATA,
+    NETWORK_DISCONNECT_REQUEST,
     INVALID, /* Wrong message content */
     UNKNOWN /* Uninitialized */
 };

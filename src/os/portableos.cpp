@@ -42,6 +42,38 @@ void PortableOS::init(){
     mainMenu.registerChoiceDoneCallback(&mainMenuChoice);
 
 
+    String dupaStr = "ToJestDupaString";
+    StringBuffer buferTest(dupaStr);
+
+
+    MessageUART message;
+
+    message.pushData((byte*)buferTest.getBuffer(), buferTest.getSize());
+
+
+    StringBuffer receptionBuffer(message.getPayload());
+
+    String receivedStr = receptionBuffer.toString();
+
+    
+    Serial.println("==== Reception String  po: " + receivedStr);
+    Serial.println("==== Reception  po: " + String(receivedStr.length()));
+
+    Serial.println("==== SizeStringa  przed: " + String(dupaStr.length()));
+    Serial.println("==== String  przed: " + dupaStr);
+    // Serial.println("==== String at 16 przed: " + (int)dupaStr.charAt(15));
+
+
+
+    String PoKonwersji = buferTest.toString();
+    Serial.println("======= SizeStringa  po: " + String(PoKonwersji.length()));
+    Serial.println("======= String  po: " + PoKonwersji);
+    //Serial.println("======= String at 16 po: " + (int)PoKonwersji.charAt(15));
+
+
+
+
+
     // MainLoadingScreen::init();
     // display.fillScreen(160040);
     // while(!MainLoadingScreen::update())
@@ -355,6 +387,19 @@ void PortableOS::networkPasswordReceived(String& password)
     subsystemMonitor.subsystemStatusReceived();
 }
 
+void PortableOS::networkDataReceived(NetworkDataUARTMessage& data)
+{
+    StringBuffer ssid(data.ssid);
+    String ssidString = ssid.toString();
+    StringBuffer password(data.password);
+    String passwordString = password.toString();
+
+    //Serial.println("Received network Data : " + ssidString + " , " + passwordString);
+
+    subsystemOverview.credentials.ssid = ssidString;
+    subsystemOverview.credentials.password = passwordString;
+}
+
 
 
 bool PortableOS::sendUDP(MessageUDP& data)
@@ -394,6 +439,12 @@ void PortableOS::connectToNetwork(std::string ssid, std::string password) {
     UARTCommunicator::transmit(transmissionSsid);
     delay(5);
     UARTCommunicator::transmit(transmissionPassword);
+}
+
+void PortableOS::disconnectWiFiNetwork()
+{
+    MessageUART disconnectRequest(NETWORK_DISCONNECT_REQUEST);
+    UARTCommunicator::transmit(disconnectRequest);
 }
  
 

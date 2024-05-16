@@ -1,6 +1,7 @@
 #ifndef OS_DATATYPES_H
 #define OS_DATATYPES_H
 #include <Arduino.h>
+#include "networkTools/stringBuffer.hpp"
 
 typedef struct {
     bool isWiFiConnectedFlag;
@@ -15,6 +16,13 @@ typedef struct {
     String ssid;
     String password;
 }NetworkCredentials;
+
+typedef struct
+{
+    char ssid[STRING_BUFFER_SIZE];
+    char password[STRING_BUFFER_SIZE];
+}NetworkDataUARTMessage;
+
 
 typedef struct {
     bool isCommunicating = false;

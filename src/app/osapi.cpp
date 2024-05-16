@@ -14,3 +14,6 @@ const std::function<void(std::string ssid, std::string password)> OS_API::connec
 
 const std::function<const SubsystemOverview(void)> OS_API::getSubsystemOverview =
     PortableOS::getSubsystemOverview;
+
+const std::function<void(void)> OS_API::disconnectWiFiNetwork =
+    PortableOS::disconnectWiFiNetwork;
