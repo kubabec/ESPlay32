@@ -3,7 +3,7 @@
 #include "app/settings/wifiListConnector.hpp"
 #include "os/portableos.hpp"
 
-std::vector<String> menuOptions = {"Subsystem inspector", "Polacz do sieci", "Kolor zaznaczenia", "Kolor tla", "Kolor motywu"};
+std::vector<String> menuOptions = {"Subsystem inspector", "Polacz do sieci", "Rozlacz z siecia", "Kolor zaznaczenia", "Kolor tla", "Kolor motywu"};
 std::vector<String> colors = {"Niebieski", "Zielony", "Pomaranczowy", "Czarny", "Bialy", "Czerwony"};
 
 uint32_t colorMapping[6]
@@ -55,6 +55,10 @@ void Settings::checkSelections()
                 {
                     currentState = SETTINGS_MENU;
                 }
+                break;
+            case SETTINGS_DISCONNECT_FROM_NETWORK:
+                    OS_API::disconnectWiFiNetwork();
+                    currentState = SETTINGS_MENU;
                 break;
 
             default:

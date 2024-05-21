@@ -237,6 +237,13 @@ void DispatcherUART::task()
                     }
                     break;
 
+                    case SUBSYSTEM_NETWORK_DATA:
+                    {
+                        NetworkDataUARTMessage data =  extractNetworkDataFromPayload(message);
+                        PortableOS::networkDataReceived(data);
+                    }
+                    break;
+
                     // case INVALID:
                     //     if(DispatcherUART::onInvalidCallback != nullptr)
                     //     {
@@ -332,4 +339,15 @@ std::string DispatcherUART::extractStringFromPayload(MessageUART& uartMessage) {
         str += (char)character;
     }
     return str;
+}
+
+NetworkDataUARTMessage DispatcherUART::extractNetworkDataFromPayload(MessageUART& uartMessage)
+{
+    NetworkDataUARTMessage retVal;
+    if(uartMessage.getPayload().size() == (STRING_BUFFER_SIZE*2))
+    {
+        memcpy(&retVal, &uartMessage.getPayload().at(0), uartMessage.getPayload().size());
+    }
+
+    return retVal;
 }
