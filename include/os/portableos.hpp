@@ -9,6 +9,7 @@
 #include "app/games/pong.h"
 #include "app/games/connect4.h"
 #include "app/ledCommunicator.hpp"
+#include "app/updateLogs.hpp"
 #include "app/settings/settingsMainApp.hpp"
 #include "os/drivers/touchinputdriver.hpp"
 #include "networkTools/messageUDP.hpp"

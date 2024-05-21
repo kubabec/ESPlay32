@@ -15,6 +15,7 @@ typedef enum {
     FIGHT_GAME,
     PONG,
     CONNECT_4,
+    UPDATE_LOGS,
     SOME_OTHER_APP,
 //    MENU_TEST_APP,
     UDP_SEND_TEST_APP,
