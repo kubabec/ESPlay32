@@ -17,3 +17,6 @@ const std::function<const SubsystemOverview(void)> OS_API::getSubsystemOverview 
 
 const std::function<void(void)> OS_API::disconnectWiFiNetwork =
     PortableOS::disconnectWiFiNetwork;
+
+const std::function<void(Notification&)> pushNotification =
+    PortableOS::pushNotification;

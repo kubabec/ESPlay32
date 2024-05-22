@@ -30,6 +30,8 @@ SubsystemOverview PortableOS::subsystemOverview;
     //     .password = "none"
     // }
 SubsystemMonitorService PortableOS::subsystemMonitor(&subsystemOverview);
+NotificationService PortableOS::notificationService;
+std::vector<Services*> PortableOS::services; 
 
 void PortableOS::init(){
 #ifdef EMULATOR
@@ -41,39 +43,6 @@ void PortableOS::init(){
     // Register callback to let Menu object run any application in the future
     mainMenu.registerChoiceDoneCallback(&mainMenuChoice);
 
-
-    String dupaStr = "ToJestDupaString";
-    StringBuffer buferTest(dupaStr);
-
-
-    MessageUART message;
-
-    message.pushData((byte*)buferTest.getBuffer(), buferTest.getSize());
-
-
-    StringBuffer receptionBuffer(message.getPayload());
-
-    String receivedStr = receptionBuffer.toString();
-
-    
-    Serial.println("==== Reception String  po: " + receivedStr);
-    Serial.println("==== Reception  po: " + String(receivedStr.length()));
-
-    Serial.println("==== SizeStringa  przed: " + String(dupaStr.length()));
-    Serial.println("==== String  przed: " + dupaStr);
-    // Serial.println("==== String at 16 przed: " + (int)dupaStr.charAt(15));
-
-
-
-    String PoKonwersji = buferTest.toString();
-    Serial.println("======= SizeStringa  po: " + String(PoKonwersji.length()));
-    Serial.println("======= String  po: " + PoKonwersji);
-    //Serial.println("======= String at 16 po: " + (int)PoKonwersji.charAt(15));
-
-
-
-
-
     // MainLoadingScreen::init();
     // display.fillScreen(160040);
     // while(!MainLoadingScreen::update())
@@ -83,49 +52,56 @@ void PortableOS::init(){
     // }
     // delay(300);
     display.fillScreen(TFT_BLACK);
+
+    services.push_back(&notificationService);
 }
 
 void PortableOS::osTask10ms()
 {
     internalServicesTask();
 
-    // Depending if Menu is active
-    if (isMainMenuActive) {
-        // Render Menu
-        if(topOverlay.isHidingAnimationPending())
-        {
-            mainMenu.forceRefresh();
+    if (!notificationService.isContextTakenOver()) {
+            // Depending if Menu is active
+        if (isMainMenuActive) {
+            // Render Menu
+            if(topOverlay.isHidingAnimationPending())
+            {
+                mainMenu.forceRefresh();
+            }
+            mainMenu.update();
+            mainMenu.render(display);
         }
-        mainMenu.update();
-        mainMenu.render(display);
+        else {
+            // Otherwise render and update currently running application
+            currentRunningAppPtr->update();
+            currentRunningAppPtr->render(display);
+
+    #ifndef EMULATOR
+            // Timeouted deactivation of App overlay text
+            if(appTextTimeout > 0)
+            {     
+                if(millis() - appTextTimeoutMs > 1000)
+                {
+                    appTextTimeout --;
+                    appTextTimeoutMs = millis();
+
+                    if(appTextTimeout == 0)
+                    {
+                        topOverlay.deactivateAppTextMode();
+                    }
+                }
+
+            }
+    #endif
+        }
+
+        display.setOverlayMode(true);
+        topOverlay.render(display);
+        display.setOverlayMode(false);
     }
     else {
-        // Otherwise render and update currently running application
-        currentRunningAppPtr->update();
-        currentRunningAppPtr->render(display);
-
-#ifndef EMULATOR
-        // Timeouted deactivation of App overlay text
-        if(appTextTimeout > 0)
-        {     
-            if(millis() - appTextTimeoutMs > 1000)
-            {
-                appTextTimeout --;
-                appTextTimeoutMs = millis();
-
-                if(appTextTimeout == 0)
-                {
-                    topOverlay.deactivateAppTextMode();
-                }
-            }
-
-        }
-#endif
+        notificationService.render();
     }
-
-    display.setOverlayMode(true);
-    topOverlay.render(display);
-    display.setOverlayMode(false);
 
     // Count FPS
     fpsCounter++;
@@ -134,7 +110,7 @@ void PortableOS::osTask10ms()
 void PortableOS::internalServicesTask()
 {
     subsystemMonitor.update();
-
+    notificationService.update();
 }
 
 void PortableOS::osTask1s()
@@ -152,78 +128,90 @@ void PortableOS::osTask1s()
 
 void PortableOS::input(InputType systemInput)
 {
-    // Exception for killing app
-    if(systemInput == BUTTON_F){
-        // We got app running (no menu active and ptr is not nullptr)
-        if(!isMainMenuActive && (currentRunningAppPtr != nullptr) && !topOverlay.isActivationAnimation())
-        {
-            // Request app finish
-            currentRunningAppPtr->end();
-
-            // Set Menu display area
-            display.setAppDisplayArea({0,0,480,320});
-            display.setTextColor(TFT_WHITE, TFT_BLACK);
-            // // Request menu to get activated
-            mainMenu.requestActivation();
-            isMainMenuActive = true;
-            // Release app memory
-            delete currentRunningAppPtr;
-            currentRunningAppPtr = nullptr;
-            topOverlay.deactivate();
-            appTextTimeout = 0;
-
-            if(TouchInputDriver::isTouchEnabled())
+    if (!notificationService.isContextTakenOver()) {
+        // Exception for killing app
+        if(systemInput == BUTTON_F){
+            // We got app running (no menu active and ptr is not nullptr)
+            if(!isMainMenuActive && (currentRunningAppPtr != nullptr) && !topOverlay.isActivationAnimation())
             {
-                TouchInputDriver::disableTouch();
-            }
-        }
-    }else {
-        // Forward input to Menu or App depending on what is active
-        if (isMainMenuActive){
-            if (!topOverlay.isHidingAnimationPending()) {
-                mainMenu.input(systemInput);
-            }
+                // Request app finish
+                currentRunningAppPtr->end();
 
+                // Set Menu display area
+                display.setAppDisplayArea({0,0,480,320});
+                display.setTextColor(TFT_WHITE, TFT_BLACK);
+                // // Request menu to get activated
+                mainMenu.requestActivation();
+                isMainMenuActive = true;
+                // Release app memory
+                delete currentRunningAppPtr;
+                currentRunningAppPtr = nullptr;
+                topOverlay.deactivate();
+                appTextTimeout = 0;
+
+                if(TouchInputDriver::isTouchEnabled())
+                {
+                    TouchInputDriver::disableTouch();
+                }
+            }
         }else {
-            currentRunningAppPtr->input(systemInput);
+            // Forward input to Menu or App depending on what is active
+            if (isMainMenuActive){
+                if (!topOverlay.isHidingAnimationPending()) {
+                    mainMenu.input(systemInput);
+                }
+
+            }else {
+                currentRunningAppPtr->input(systemInput);
+            }
         }
+    }
+    else {
+        notificationService.input(systemInput);
     }
 }
 
 void PortableOS::longPressInput(InputType input)
 {
-    if(currentRunningAppPtr != nullptr){
-        currentRunningAppPtr->longPressInput(input);
+    if (!notificationService.isContextTakenOver()) {
+        if(currentRunningAppPtr != nullptr){
+            currentRunningAppPtr->longPressInput(input);
+        }
     }
 }
 
 void PortableOS::longPressRelease(InputType input)
 {
-    if(currentRunningAppPtr != nullptr){
-        currentRunningAppPtr->longPressRelease(input);
+    if (!notificationService.isContextTakenOver()) {
+        if(currentRunningAppPtr != nullptr){
+            currentRunningAppPtr->longPressRelease(input);
+        }
     }
 }
 
 void PortableOS::analogInput(int x, int y) {
-    if (isMainMenuActive){
-        if (!topOverlay.isHidingAnimationPending()) {
-            mainMenu.analogInput(x, y);
-        }
+    if (!notificationService.isContextTakenOver()) {
+        if (isMainMenuActive){
+            if (!topOverlay.isHidingAnimationPending()) {
+                mainMenu.analogInput(x, y);
+            }
 
-        }
-    else {
-        if(currentRunningAppPtr != nullptr){
-            currentRunningAppPtr->analogInput(x, y);
+            }
+        else {
+            if(currentRunningAppPtr != nullptr){
+                currentRunningAppPtr->analogInput(x, y);
+            }
         }
     }
-
 }
 
 
 void PortableOS::touchInput(int x, int y)
 {
-    if(currentRunningAppPtr != nullptr){
-        currentRunningAppPtr->touchInput(x, y - topOverlay.getHeight());
+    if (!notificationService.isContextTakenOver()) {
+        if(currentRunningAppPtr != nullptr){
+            currentRunningAppPtr->touchInput(x, y - topOverlay.getHeight());
+        }
     }
 }
 
@@ -475,4 +463,8 @@ const SubsystemOverview PortableOS::getSubsystemOverview()
     // retVal.credentials = currentConnectedNetworkCredentials;
 
     return subsystemOverview;
+}
+
+void PortableOS::pushNotification(Notification& notif) {
+    notificationService.pushNotification(notif);
 }

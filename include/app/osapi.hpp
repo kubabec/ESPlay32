@@ -12,6 +12,7 @@ class OS_API
     static const std::function<void(std::string ssid, std::string password)> connectToNetwork;
     static const std::function<void(void)> disconnectWiFiNetwork;
     static const std::function<const SubsystemOverview(void)> getSubsystemOverview;
+    static const std::function<void(Notification&)> pushNotification;
 };
 
 

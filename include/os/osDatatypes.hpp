@@ -30,5 +30,10 @@ typedef struct {
     NetworkCredentials credentials;
 }SubsystemOverview;
 
+typedef struct {
+    String title;
+    String text;
+    uint16_t bgcolor;
+}Notification;
 
 #endif

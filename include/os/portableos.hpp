@@ -19,6 +19,7 @@
 
 // Services
 #include "os/services/subsystemMonitor.hpp"
+#include "os/services/notificationService.hpp"
 
 
 #ifdef EMULATOR
@@ -53,12 +54,16 @@ class PortableOS{
     // static NetworkCredentials currentConnectedNetworkCredentials;
     // static bool isSubsystemComunicating;
     static SubsystemOverview subsystemOverview;
+    
+    static std::vector<Services*> services; 
+
     public:
     // TFT display instance
     static DisplayProvider display;
 
     /**** SERVICES *****/
     static SubsystemMonitorService subsystemMonitor;
+    static NotificationService notificationService;
     /**** SERVICES *****/
 
     // Main 25ms task
@@ -100,6 +105,7 @@ class PortableOS{
     static void connectToNetwork(std::string ssid, std::string password);
     static void disconnectWiFiNetwork();
     static const SubsystemOverview getSubsystemOverview();
+    static void pushNotification(Notification& notif);
 };
 
 
