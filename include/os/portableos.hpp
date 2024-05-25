@@ -38,6 +38,8 @@ class PortableOS{
     // MainMenu instance
     static Menu mainMenu;
     static bool isMainMenuActive;
+    static bool isContextTakenOverMode;
+    static RuntimeApplication* contextOvertaker;
     static TopOverlay topOverlay;
 
     static uint32_t systemColors[3];
@@ -54,9 +56,8 @@ class PortableOS{
     // static NetworkCredentials currentConnectedNetworkCredentials;
     // static bool isSubsystemComunicating;
     static SubsystemOverview subsystemOverview;
+    static bool wasNetworkConnectedNotificationShowed;
     
-    static std::vector<Services*> services; 
-
     public:
     // TFT display instance
     static DisplayProvider display;
@@ -98,6 +99,10 @@ class PortableOS{
     static void networkPasswordReceived(String& password);
     static void networkDataReceived(NetworkDataUARTMessage& data);
 
+
+    // OS Service API
+    static bool contextOvertake(RuntimeApplication* overtaker);
+    static void contextRelease();
 
     // OS API TEST
     static bool sendUDP(MessageUDP& data);

@@ -29,6 +29,13 @@ void Pong::input(InputType input)
     //         //platformRight.moveDown();
     //     break;
     // }
+
+    // Notification emptyNotif {
+    //     .title = "empty",
+    //     .text = "Random text here",
+    //     .bgcolor = TFT_YELLOW
+    // };
+    // OS_API::pushNotification(emptyNotif);
 }
 
 void Pong::longPressInput(InputType input)

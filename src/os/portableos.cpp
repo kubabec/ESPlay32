@@ -7,12 +7,15 @@ std::vector<String> appNames = {"Ustawienia", "Led communicator", "Stoper", "Fig
 DisplayProvider PortableOS::display = DisplayProvider();
 Menu PortableOS::mainMenu = Menu(appNames);
 bool PortableOS::isMainMenuActive = true;
+bool PortableOS::isContextTakenOverMode = false;
+RuntimeApplication* PortableOS::contextOvertaker = nullptr;
 RuntimeApplication* PortableOS::currentRunningAppPtr = nullptr;
 TopOverlay PortableOS::topOverlay = TopOverlay();
 int PortableOS::fpsCounter = 0;
 uint8_t PortableOS::appTextTimeout = 0;
 long PortableOS::appTextTimeoutMs = 0;
 uint32_t PortableOS::systemColors[3] = {TFT_GREENYELLOW, TFT_BLACK, TFT_SKYBLUE};
+bool PortableOS::wasNetworkConnectedNotificationShowed = false;
 // SubsystemStatusData PortableOS::currentSubsystemStatus = {
 //     .isWiFiConnectedFlag = false,
 //     .wasWiFiRequestedFlag = false
@@ -31,7 +34,6 @@ SubsystemOverview PortableOS::subsystemOverview;
     // }
 SubsystemMonitorService PortableOS::subsystemMonitor(&subsystemOverview);
 NotificationService PortableOS::notificationService;
-std::vector<Services*> PortableOS::services; 
 
 void PortableOS::init(){
 #ifdef EMULATOR
@@ -52,16 +54,14 @@ void PortableOS::init(){
     // }
     // delay(300);
     display.fillScreen(TFT_BLACK);
-
-    services.push_back(&notificationService);
 }
 
 void PortableOS::osTask10ms()
 {
     internalServicesTask();
 
-    if (!notificationService.isContextTakenOver()) {
-            // Depending if Menu is active
+    if(!isContextTakenOverMode){
+        // Depending if Menu is active
         if (isMainMenuActive) {
             // Render Menu
             if(topOverlay.isHidingAnimationPending())
@@ -98,9 +98,14 @@ void PortableOS::osTask10ms()
         display.setOverlayMode(true);
         topOverlay.render(display);
         display.setOverlayMode(false);
-    }
-    else {
-        notificationService.render();
+    }else
+    {
+        if(contextOvertaker != nullptr)
+        {
+            display.setOverlayMode(true);
+            contextOvertaker->render(display);
+            display.setOverlayMode(false);
+        }
     }
 
     // Count FPS
@@ -128,7 +133,7 @@ void PortableOS::osTask1s()
 
 void PortableOS::input(InputType systemInput)
 {
-    if (!notificationService.isContextTakenOver()) {
+    if(!isContextTakenOverMode){
         // Exception for killing app
         if(systemInput == BUTTON_F){
             // We got app running (no menu active and ptr is not nullptr)
@@ -165,52 +170,58 @@ void PortableOS::input(InputType systemInput)
                 currentRunningAppPtr->input(systemInput);
             }
         }
-    }
-    else {
-        notificationService.input(systemInput);
+
+    }else 
+    {
+        if(contextOvertaker != nullptr)
+        {
+            contextOvertaker->input(systemInput);
+        }
     }
 }
 
 void PortableOS::longPressInput(InputType input)
 {
-    if (!notificationService.isContextTakenOver()) {
-        if(currentRunningAppPtr != nullptr){
-            currentRunningAppPtr->longPressInput(input);
-        }
+    if(currentRunningAppPtr != nullptr){
+        currentRunningAppPtr->longPressInput(input);
     }
+   
 }
 
 void PortableOS::longPressRelease(InputType input)
 {
-    if (!notificationService.isContextTakenOver()) {
-        if(currentRunningAppPtr != nullptr){
-            currentRunningAppPtr->longPressRelease(input);
-        }
+    if(currentRunningAppPtr != nullptr){
+        currentRunningAppPtr->longPressRelease(input);
     }
+
 }
 
 void PortableOS::analogInput(int x, int y) {
-    if (!notificationService.isContextTakenOver()) {
-        if (isMainMenuActive){
-            if (!topOverlay.isHidingAnimationPending()) {
-                mainMenu.analogInput(x, y);
-            }
+    if (isMainMenuActive){
+        if (!topOverlay.isHidingAnimationPending()) {
+            mainMenu.analogInput(x, y);
+        }
 
-            }
-        else {
-            if(currentRunningAppPtr != nullptr){
-                currentRunningAppPtr->analogInput(x, y);
-            }
+        }
+    else {
+        if(currentRunningAppPtr != nullptr){
+            currentRunningAppPtr->analogInput(x, y);
         }
     }
+
 }
 
 
 void PortableOS::touchInput(int x, int y)
 {
-    if (!notificationService.isContextTakenOver()) {
+    if (!isContextTakenOverMode) {
         if(currentRunningAppPtr != nullptr){
             currentRunningAppPtr->touchInput(x, y - topOverlay.getHeight());
+        }
+    }else
+    {
+        if(contextOvertaker != nullptr){
+            contextOvertaker->touchInput(x, y);
         }
     }
 }
@@ -390,6 +401,20 @@ void PortableOS::networkDataReceived(NetworkDataUARTMessage& data)
 
     subsystemOverview.credentials.ssid = ssidString;
     subsystemOverview.credentials.password = passwordString;
+
+
+    if(!wasNetworkConnectedNotificationShowed && subsystemOverview.data.isWiFiConnectedFlag)
+    {
+        Notification connectedNotification {
+            .title = "WiFi connected!",
+            .text = "You have been connected to " + ssidString,
+            .bgcolor = TFT_GREENYELLOW
+        };
+        OS_API::pushNotification(connectedNotification);
+
+        wasNetworkConnectedNotificationShowed = true;
+    }
+
 }
 
 
@@ -452,6 +477,15 @@ void PortableOS::disconnectWiFiNetwork()
 {
     MessageUART disconnectRequest(NETWORK_DISCONNECT_REQUEST);
     UARTCommunicator::transmit(disconnectRequest);
+
+    Notification networkDisconnected{
+        .title = "Network disconnected",
+        .text = "WiFi network has been disconnected.",
+        .bgcolor = TFT_LIGHTGREY
+    };
+    OS_API::pushNotification(networkDisconnected);
+
+    wasNetworkConnectedNotificationShowed = false;
 }
  
 
@@ -467,4 +501,26 @@ const SubsystemOverview PortableOS::getSubsystemOverview()
 
 void PortableOS::pushNotification(Notification& notif) {
     notificationService.pushNotification(notif);
+}
+
+
+
+bool PortableOS::contextOvertake(RuntimeApplication* overtaker)
+{
+    if(overtaker != nullptr)
+    {
+        contextOvertaker = overtaker;
+        isContextTakenOverMode = true;
+
+        Serial.println("Context Overtaken");
+        return true;
+    }
+
+    return false;
+}
+
+void PortableOS::contextRelease()
+{
+    isContextTakenOverMode = false;
+    contextOvertaker = nullptr;
 }
