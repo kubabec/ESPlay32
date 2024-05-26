@@ -8,11 +8,23 @@
 
 class SubsystemMonitorService : RuntimeApplication
 {
-    const uint8_t numberOfTicksToDisconnect = 70;
-    bool disconnectedPopupSent = false;
+    const uint8_t numberOfTicksToDisconnect = 130;
+    bool subsystemMissingSinceStartup = false;
     uint8_t currentTickValue = 0;
 
+
+    SubsystemStatusData lastSubsystemData = {0};
+    bool lastSubsystemCommunicatingFlag = false;
+    NetworkCredentials lastValidCredentials = {"none","none"};
+
     SubsystemOverview* subsystemOverviewPtr;
+
+    void handleSubsystemDisconnectionIfWasConnectedBefore();
+    void detectSubsystemMissingSinceStartup();
+    void detectNetworkConnection();
+    void handleWiFiDisconnection();
+    void updateSubsystemDataFlags();
+
     public:
     SubsystemMonitorService(SubsystemOverview* subsystemOverview);
     virtual void start(int w, int h) override;
@@ -30,6 +42,7 @@ class SubsystemMonitorService : RuntimeApplication
     virtual void udpDataReceived(int messageID, std::vector<uint8_t> data) override;
 
     void subsystemStatusReceived();
+
 
 };
 

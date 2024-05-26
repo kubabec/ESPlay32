@@ -17,7 +17,7 @@ class NotificationService : public RuntimeApplication{
 
     const int notificationTopPadding = 50; // px
     const int notificationHeight = 200; // px
-    const int notificationWidthIncreaseFactor = 10; // px
+    const int notificationWidthIncreaseFactor = 20; // px
     int notificationSidePadding = 30;
     int notificationCurrentX = notificationSidePadding;
     int notificationCurrentY = notificationTopPadding;

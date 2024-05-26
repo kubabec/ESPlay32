@@ -11,6 +11,7 @@ class WiFiListConnector : public RuntimeApplication
 
     bool isLoaded = false;
     bool connectionRequested = false;
+    bool renderNeeded = true;
     public:
     WiFiListConnector();
     ~WiFiListConnector();

@@ -23,19 +23,29 @@ bool PortableOS::wasNetworkConnectedNotificationShowed = false;
 // NetworkCredentials PortableOS::currentConnectedNetworkCredentials;
 // bool PortableOS::isSubsystemComunicating = false;
 SubsystemOverview PortableOS::subsystemOverview;
-    //.isCommunicating = false
+    // .isCommunicating = false,
     // .data = { 
     //     .isWiFiConnectedFlag = false, 
-    //     .isWiFiRequestedFlag = false
+    //     .isWiFiRequestedFlag = false,
+    //     .ipOctet1 = 0,
+    //     .ipOctet2 = 0,
+    //     .ipOctet3 = 0,
+    //     .ipOctet4 = 0
     // },
-    // .credentials = { 
+    // .credentials =
+    // {
     //     .ssid = "none",
     //     .password = "none"
     // }
+
 SubsystemMonitorService PortableOS::subsystemMonitor(&subsystemOverview);
 NotificationService PortableOS::notificationService;
 
 void PortableOS::init(){
+    subsystemOverview.isCommunicating = false;
+    subsystemOverview.data = { 0};
+    subsystemOverview.credentials = {"none", "none"};
+
 #ifdef EMULATOR
     display.generateScene();
 #else
@@ -52,7 +62,7 @@ void PortableOS::init(){
     //     MainLoadingScreen::render(display);
     //     delay(5);
     // }
-    // delay(300);
+    // delay(200);
     display.fillScreen(TFT_BLACK);
 }
 
@@ -403,17 +413,17 @@ void PortableOS::networkDataReceived(NetworkDataUARTMessage& data)
     subsystemOverview.credentials.password = passwordString;
 
 
-    if(!wasNetworkConnectedNotificationShowed && subsystemOverview.data.isWiFiConnectedFlag)
-    {
-        Notification connectedNotification {
-            .title = "WiFi connected!",
-            .text = "You have been connected to " + ssidString,
-            .bgcolor = TFT_GREENYELLOW
-        };
-        OS_API::pushNotification(connectedNotification);
+    // if(!wasNetworkConnectedNotificationShowed && subsystemOverview.data.isWiFiConnectedFlag)
+    // {
+    //     Notification connectedNotification {
+    //         .title = "WiFi connected!",
+    //         .text = "You have been connected to " + ssidString,
+    //         .bgcolor = TFT_GREENYELLOW
+    //     };
+    //     OS_API::pushNotification(connectedNotification);
 
-        wasNetworkConnectedNotificationShowed = true;
-    }
+    //     wasNetworkConnectedNotificationShowed = true;
+    // }
 
 }
 
@@ -478,14 +488,14 @@ void PortableOS::disconnectWiFiNetwork()
     MessageUART disconnectRequest(NETWORK_DISCONNECT_REQUEST);
     UARTCommunicator::transmit(disconnectRequest);
 
-    Notification networkDisconnected{
-        .title = "Network disconnected",
-        .text = "WiFi network has been disconnected.",
-        .bgcolor = TFT_LIGHTGREY
-    };
-    OS_API::pushNotification(networkDisconnected);
+    // Notification networkDisconnected{
+    //     .title = "Network disconnected",
+    //     .text = "WiFi network has been disconnected.",
+    //     .bgcolor = TFT_LIGHTGREY
+    // };
+    // OS_API::pushNotification(networkDisconnected);
 
-    wasNetworkConnectedNotificationShowed = false;
+    // wasNetworkConnectedNotificationShowed = false;
 }
  
 

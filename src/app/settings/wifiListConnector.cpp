@@ -78,9 +78,13 @@ void WiFiListConnector::update(){
 void WiFiListConnector::render(DisplayProvider& display){
     if(connectionRequested)
     {
-        display.fillScreen(TFT_BLACK);
-        display.setTextColor(TFT_WHITE, TFT_BLACK);
-        display.drawString("Connection in progress... Exit with 'D'", 20, 100);
+        if(renderNeeded){
+            display.fillScreen(TFT_BLACK);
+            display.setTextColor(TFT_WHITE, TFT_BLACK);
+            display.drawString("Connection in progress... Exit with 'D'", 20, 100);
+
+            renderNeeded = false;
+        }
     }else 
     {
         if(!isLoaded)
