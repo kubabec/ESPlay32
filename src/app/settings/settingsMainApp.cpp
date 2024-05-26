@@ -314,6 +314,24 @@ void Settings::render(DisplayProvider& display){
     }
 }
 
+
+void Settings::forceRender(DisplayProvider &display)
+{
+     if(currentState == SETTINGS_MENU)
+    {
+        if(settingsMainMenu != nullptr)
+        {
+            settingsMainMenu->forceRender(display);
+        }
+    }else 
+    {
+        if(subApp != nullptr)
+        {
+            subApp->forceRender(display);
+        }
+    }
+}
+
 void Settings::end(){ 
 
 }

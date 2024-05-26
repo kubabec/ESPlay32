@@ -165,6 +165,33 @@ void Menu::render(DisplayProvider& display) {
     }
 }
 
+void Menu::forceRender(DisplayProvider& display)
+{
+    display.fillScreen(PortableOS::getSystemColor(BG_COLOR));
+    int baseY = firstTextLineY;
+
+    display.setTextSize(1);
+    display.setTextFont(4);
+    // Iterate through names array
+    for (unsigned i = 0; i < menuElements.size() ; i++) {
+        // Display Normal-Style name
+        if(i != selectedChoice)
+        {
+            display.setTextColor(PortableOS::getSystemColor(MOTIVE_COLOR));
+        }
+        // Display Selected-Style name
+        else {
+            display.setTextColor(PortableOS::getSystemColor(SELECTION_COLOR));
+        }
+        display.drawString(menuElements.at(i), 10, baseY);
+        baseY += lineYincremet;
+    }
+    // Update needsRefreshFlag
+    needsRefresh = refreshInProgress();
+
+    drawSelectionLines(display);
+}
+
 void Menu::update() {
     // There are some requests waiting to be processed
     if(pendingRequests.size() > 0)

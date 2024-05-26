@@ -93,6 +93,13 @@ void WiFiListConnector::render(DisplayProvider& display){
     
 }
 
+void WiFiListConnector::forceRender(DisplayProvider &display)
+{
+
+}
+
+
+
 void WiFiListConnector::end(){ 
 
 }

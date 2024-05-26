@@ -189,6 +189,11 @@ void Pong::render(DisplayProvider &display)
 
 }
 
+void Pong::forceRender(DisplayProvider &display)
+{
+
+}
+
 void Pong::end()
 {
 
@@ -691,6 +696,17 @@ void PongLauncher::update()
 }
 
 void PongLauncher::render(DisplayProvider &display)
+{
+    if(pongGamePtr == nullptr) {
+        pongMainMenu.render(display);
+    }
+    else {
+        pongGamePtr->render(display);
+    }
+
+}
+
+void PongLauncher::forceRender(DisplayProvider &display)
 {
     if(pongGamePtr == nullptr) {
         pongMainMenu.render(display);

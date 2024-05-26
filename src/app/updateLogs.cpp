@@ -44,6 +44,11 @@ void UpdateLogs::render(DisplayProvider& display){
     display.drawString("- Update logs", 25, 75);
 }
 
+void UpdateLogs::forceRender(DisplayProvider &display)
+{
+
+}
+
 void UpdateLogs::end(){ 
 
 }

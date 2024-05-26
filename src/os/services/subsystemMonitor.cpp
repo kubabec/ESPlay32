@@ -55,12 +55,15 @@ void SubsystemMonitorService::update(){
         subsystemOverviewPtr->data.ipOctet3 = 0;
         subsystemOverviewPtr->data.ipOctet4 = 0;
 
-        Notification subsystemNotConnectedNotification{
-            .title = "Ethernet slave not connected!",
-            .text = "No connection to secondary ESP32 system",
-            .bgcolor = TFT_RED
-        };
-        OS_API::pushNotification(subsystemNotConnectedNotification);
+        if(!disconnectedPopupSent){
+            Notification subsystemNotConnectedNotification{
+                .title = "Ethernet slave not connected!",
+                .text = "No connection to secondary ESP32 system",
+                .bgcolor = TFT_RED
+            };
+            OS_API::pushNotification(subsystemNotConnectedNotification);
+            disconnectedPopupSent = true;
+        }
     }
 }
 
@@ -69,6 +72,11 @@ void SubsystemMonitorService::subsystemStatusReceived(){
 }
 
 void SubsystemMonitorService::render(DisplayProvider& display){
+    
+}
+
+void SubsystemMonitorService::forceRender(DisplayProvider& display)
+{
     
 }
 

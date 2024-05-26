@@ -110,6 +110,12 @@ void Connect4::render(DisplayProvider &display)
     }
 }
 
+void Connect4::forceRender(DisplayProvider &display)
+{
+
+}
+
+
 void Connect4::end()
 {
 

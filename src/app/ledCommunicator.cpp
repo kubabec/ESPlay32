@@ -101,6 +101,12 @@ void LedCommunicator::render(DisplayProvider& display){
 
 }
 
+void LedCommunicator::forceRender(DisplayProvider &display)
+{
+
+}
+
+
 void LedCommunicator::end(){ 
 
 }

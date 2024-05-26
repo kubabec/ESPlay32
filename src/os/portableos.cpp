@@ -523,4 +523,16 @@ void PortableOS::contextRelease()
 {
     isContextTakenOverMode = false;
     contextOvertaker = nullptr;
+
+    if(isMainMenuActive)
+    {
+        mainMenu.forceRender(display);
+    }else
+    {
+        topOverlay.forceRender(display);
+        if(currentRunningAppPtr != nullptr)
+        {
+            currentRunningAppPtr->forceRender(display);
+        }
+    }
 }

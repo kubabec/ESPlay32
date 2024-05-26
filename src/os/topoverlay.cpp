@@ -229,6 +229,11 @@ void TopOverlay::render(DisplayProvider& display){
     }
 }
 
+void TopOverlay::forceRender(DisplayProvider& display)
+{
+    
+}
+
 void TopOverlay::setOverlayText(const String& newText)
 {
     overlayText = newText;

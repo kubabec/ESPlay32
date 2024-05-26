@@ -8,7 +8,8 @@
 
 class SubsystemMonitorService : RuntimeApplication
 {
-    const uint8_t numberOfTicksToDisconnect = 150;
+    const uint8_t numberOfTicksToDisconnect = 70;
+    bool disconnectedPopupSent = false;
     uint8_t currentTickValue = 0;
 
     SubsystemOverview* subsystemOverviewPtr;
@@ -22,6 +23,7 @@ class SubsystemMonitorService : RuntimeApplication
     virtual void touchInput(int x, int y) override;
     virtual void update() override;
     virtual void render(DisplayProvider& display) override;
+    virtual void forceRender(DisplayProvider& display) override;
     virtual void end() override;
     virtual String getAppNameString() override;
     virtual uint16_t getBackgroundColor() override;

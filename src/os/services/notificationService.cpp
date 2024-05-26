@@ -91,6 +91,13 @@ void NotificationService::render(DisplayProvider& display){
                     notificationWidthIncreaseFactor,
                     notificationHeight,
                     currentDisplayedNotification.bgcolor);
+                
+                display.fillRect(
+                    notificationCurrentX,
+                    notificationTopPadding+35,
+                    notificationWidthIncreaseFactor,
+                    3,
+                    0xFFFF8AE4);
 
 
                 notificationCurrentX += notificationWidthIncreaseFactor;
@@ -98,17 +105,17 @@ void NotificationService::render(DisplayProvider& display){
                 if(notificationCurrentX >= (480 - notificationSidePadding))
                 {
                     // Title String
-                    display.setTextColor(TFT_BLACK, currentDisplayedNotification.bgcolor);
+                    display.setTextColor(0x6BD0, currentDisplayedNotification.bgcolor);
                     display.setTextFont(2);
                     display.setTextSize(2);
                     display.drawString(currentDisplayedNotification.title, notificationSidePadding+25, notificationTopPadding+3);
 
-                    display.fillRect(
-                        notificationSidePadding, 
-                        notificationTopPadding+35,
-                        notificationCurrentX-notificationSidePadding,
-                        3,
-                        TFT_BLACK);
+                    // display.fillRect(
+                    //     notificationSidePadding, 
+                    //     notificationTopPadding+35,
+                    //     notificationCurrentX-notificationSidePadding,
+                    //     3,
+                    //     TFT_BLACK);
                     // text string
                     display.setTextSize(1);
                     display.drawString(currentDisplayedNotification.text, notificationSidePadding+5, notificationTopPadding+45);
@@ -121,6 +128,11 @@ void NotificationService::render(DisplayProvider& display){
 
         
     }   
+}
+
+void NotificationService::forceRender(DisplayProvider& display)
+{
+    
 }
 
 void NotificationService::end(){ 

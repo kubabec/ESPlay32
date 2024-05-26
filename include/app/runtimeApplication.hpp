@@ -45,6 +45,7 @@ class RuntimeApplication {
     virtual void touchInput(int x, int y) = 0;
     virtual void update() = 0;
     virtual void render(DisplayProvider& display) = 0;
+    virtual void forceRender(DisplayProvider& display) = 0;
     virtual void end() = 0;
     virtual String getAppNameString() = 0;
     virtual uint16_t getBackgroundColor() = 0;

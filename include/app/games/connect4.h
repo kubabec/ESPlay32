@@ -66,6 +66,7 @@ public:
     void touchInput(int x, int y);
     void update();
     void render(DisplayProvider &display);
+    void forceRender(DisplayProvider& display);
     void end();
     String getAppNameString();
     uint16_t getBackgroundColor();

@@ -47,6 +47,7 @@ class TopOverlay
     void deactivate();
     void setOverlayText(const String& newText);
     void render(DisplayProvider& display);
+    void forceRender(DisplayProvider& display);
     uint16_t getHeight();
     bool isHidingAnimationPending();
 

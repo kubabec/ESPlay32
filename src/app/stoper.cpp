@@ -109,6 +109,11 @@ void Stoper::render(DisplayProvider& display){
 
 }
 
+void Stoper::forceRender(DisplayProvider &display)
+{
+
+}
+
 void Stoper::end(){ 
 
 }

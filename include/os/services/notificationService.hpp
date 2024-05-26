@@ -17,7 +17,7 @@ class NotificationService : public RuntimeApplication{
 
     const int notificationTopPadding = 50; // px
     const int notificationHeight = 200; // px
-    const int notificationWidthIncreaseFactor = 5; // px
+    const int notificationWidthIncreaseFactor = 10; // px
     int notificationSidePadding = 30;
     int notificationCurrentX = notificationSidePadding;
     int notificationCurrentY = notificationTopPadding;
@@ -32,6 +32,7 @@ public:
     virtual void touchInput(int x, int y) override;
     virtual void update() override;
     virtual void render(DisplayProvider& display) override;
+    virtual void forceRender(DisplayProvider& display) override;
     virtual void end() override;
     virtual String getAppNameString() override;
     virtual uint16_t getBackgroundColor() override;

@@ -20,6 +20,7 @@ class SubsystemInspector : public RuntimeApplication
     virtual void touchInput(int x, int y) override;
     virtual void update() override;
     virtual void render(DisplayProvider& display) override;
+    virtual void forceRender(DisplayProvider& display) override;
     virtual void end() override;
     virtual String getAppNameString() override;
     virtual uint16_t getBackgroundColor() override;

@@ -86,6 +86,12 @@
     }
 
 
+    void DisplayProvider::loadFont(const uint8_t array[])
+    {
+        tftDisplay.loadFont(array);
+    }
+
+
 #ifndef EMULATOR
         TFT_eSPI* DisplayProvider::tftDirectAccess()
         {

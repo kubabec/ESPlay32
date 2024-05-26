@@ -134,6 +134,12 @@ void SubsystemInspector::render(DisplayProvider& display){
     
 }
 
+void SubsystemInspector::forceRender(DisplayProvider &display)
+{
+
+}
+
+
 void SubsystemInspector::end(){ 
 
 }

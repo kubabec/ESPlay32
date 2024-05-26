@@ -32,6 +32,8 @@ class Menu {
     
     // Render
     void render(DisplayProvider& display);
+
+    void forceRender(DisplayProvider& display);
     // Update
     void update();
     // Menu input

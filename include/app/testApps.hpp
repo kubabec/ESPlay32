@@ -126,6 +126,10 @@ class SomeOtherApp : public RuntimeApplication {
             needsUpdate = false;
         }
     }
+    virtual void forceRender(DisplayProvider& display) override
+    {
+
+    }
     virtual void end() override{
 
     }
@@ -411,6 +415,10 @@ class UDPSendTestApp : public RuntimeApplication {
 
             needsUpdate = false;
         }
+    }
+    
+    virtual void forceRender(DisplayProvider& display) override{
+
     }
     virtual void end() override{
 

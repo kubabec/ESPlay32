@@ -184,6 +184,13 @@ void FightGame::render(DisplayProvider& display) {
     }
     //needsRepaint = false;
 }
+
+
+void FightGame::forceRender(DisplayProvider &display)
+{
+
+}
+
 void FightGame::end() {
 
 }

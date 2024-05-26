@@ -32,6 +32,7 @@
         void drawLine(int32_t xs, int32_t ys, int32_t xe, int32_t ye, uint32_t color);
         void fillRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color);
         void fillCircle(int32_t x, int32_t y, int32_t r, uint32_t color);
+        void loadFont(const uint8_t array[]);
 
         void setAppDisplayArea(AppDisplayArea displayArea);
         void setOverlayMode(bool isOverlay);
