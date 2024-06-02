@@ -3,6 +3,9 @@
 #include "app/runtimeApplication.hpp"
 
 class UpdateLogs : public RuntimeApplication {
+    String logs[10] = {"02.06.2024 - new update logs added", "2009: A Silly Odyssey", "shreck is cool", "placeholdear_lol", "[SUCCESS] Took 33.37 seconds", "chyba tak, nie?", "hhhHHhhHhHhh", "bez polskich znackow", "CORRUPTION%", "text"};
+    int firstChosenUpdate = 0;
+    bool refreshNeeded = false;
     public:
     
     UpdateLogs();
