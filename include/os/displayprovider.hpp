@@ -1,6 +1,7 @@
 #ifndef DISPLAYPROVIDER_H
 #define DISPLAYPROVIDER_H
 #include "targetDatatypes.hpp"
+#include <PNGdec.h>
 
 
 #ifndef EMULATOR
@@ -17,8 +18,11 @@
     {
         // TFT display instance
         TFT_eSPI tftDisplay;
+        static TFT_eSPI* globalPtrTftDisplay;
         AppDisplayArea currentAppDisplayArea {0, 0, 480, 320};
         bool isOverlayMode = false;
+
+        static void pngDraw(PNGDRAW *pDraw);
 
         public:
         DisplayProvider();
@@ -37,6 +41,12 @@
         void setAppDisplayArea(AppDisplayArea displayArea);
         void setOverlayMode(bool isOverlay);
 
+
+
+        /* PNG test */
+
+        void displayGrassImage();
+        void displayBallImage(int x, int y);
 #ifndef EMULATOR
         TFT_eSPI* tftDirectAccess();
 #endif

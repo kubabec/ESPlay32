@@ -57,6 +57,8 @@ class PortableOS{
     // static bool isSubsystemComunicating;
     static SubsystemOverview subsystemOverview;
     static bool wasNetworkConnectedNotificationShowed;
+
+
     
     public:
     // TFT display instance
