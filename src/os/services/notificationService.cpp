@@ -105,7 +105,7 @@ void NotificationService::render(DisplayProvider& display){
                 if(notificationCurrentX >= (480 - notificationSidePadding))
                 {
                     // Title String
-                    display.setTextColor(0x6BD0, currentDisplayedNotification.bgcolor);
+                    display.setTextColor(TFT_WHITE, currentDisplayedNotification.bgcolor);
                     display.setTextFont(2);
                     display.setTextSize(2);
                     display.drawString(currentDisplayedNotification.title, notificationSidePadding+25, notificationTopPadding+3);

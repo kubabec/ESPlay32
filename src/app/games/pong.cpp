@@ -157,7 +157,8 @@ void Pong::render(DisplayProvider &display)
 {
     if (resetScreenPending) {
         resetScreenPending = false;
-        display.fillScreen(getBackgroundColor());
+        //display.fillScreen(getBackgroundColor());
+        display.displayGrassImage();
     }
     if(ballResetPending)
     {
@@ -183,7 +184,9 @@ void Pong::render(DisplayProvider &display)
     else {
         ball.setColor(0xffffff);
     }
-    ball.draw(display);
+    //ball.draw(display);
+    //display.fillCircle(ball.getLastX(), ball.getLastY(), ball.getSize(), TFT_GREEN);
+    display.displayBallImage(ball.getX()-10, ball.getY()+30-9);
 
 
 

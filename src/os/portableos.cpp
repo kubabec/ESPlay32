@@ -64,6 +64,16 @@ void PortableOS::init(){
     // }
     // delay(200);
     display.fillScreen(TFT_BLACK);
+
+
+
+
+
+    /*Test of BITMAP PRINTING */
+
+    
+
+    /*Test of BITMAP PRINTING */
 }
 
 void PortableOS::osTask10ms()

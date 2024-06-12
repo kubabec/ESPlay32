@@ -1,9 +1,106 @@
 #include "os/displayprovider.hpp"
 
+#include "os/textures/grass.hpp"
+
+
 #ifndef EMULATOR
     // Console code
 
+    // Position variables must be global (PNGdec does not handle position coordinates)
+    int16_t xpos = 0;
+    int16_t ypos = 0;
+
+    
+    TFT_eSPI* DisplayProvider::globalPtrTftDisplay;
+
+    int grassW = 40;
+    int grassH = 30;
+
+    // TFT_eSPI DisplayProvider::tftDisplay;
+
+    PNG png;
+
+    #define MAX_IMAGE_WIDTH 480 // Sets rendering line buffer lengths, adjust for your images
+
+
+    void DisplayProvider::pngDraw(PNGDRAW *pDraw) {
+        uint16_t lineBuffer[MAX_IMAGE_WIDTH];          // Line buffer for rendering
+        uint8_t  maskBuffer[1 + MAX_IMAGE_WIDTH / 8];  // Mask buffer
+
+        png.getLineAsRGB565(pDraw, lineBuffer, PNG_RGB565_BIG_ENDIAN, 0xffffffff);
+
+        if (png.getAlphaMask(pDraw, maskBuffer, 255)) {
+            // Note: pushMaskedImage is for pushing to the TFT and will not work pushing into a sprite
+            globalPtrTftDisplay->pushMaskedImage(xpos, ypos + pDraw->y, pDraw->iWidth, 1, lineBuffer, maskBuffer);
+        }
+    }
+
+
+    void DisplayProvider::displayBallImage(int x, int y)
+    {
+        xpos = x;
+        ypos = y;
+        uint16_t pngw = 0, pngh = 0; // To store width and height of image
+        int16_t rc = png.openFLASH((uint8_t *)ballPng, sizeof(ballPng), pngDraw);
+        
+        if (rc == PNG_SUCCESS) {
+        //Serial.println("Successfully opened png file");
+        pngw = png.getWidth();
+        pngh = png.getHeight();
+        //Serial.printf("Image metrics: (%d x %d), %d bpp, pixel type: %d\n", pngw, pngh, png.getBpp(), png.getPixelType());
+    
+        tftDisplay.startWrite();
+        uint32_t dt = millis();
+        rc = png.decode(NULL, 0);
+        tftDisplay.endWrite();
+        //Serial.print(millis() - dt); Serial.println("ms");
+    //    tft.endWrite();
+    
+        // png.close(); // Required for files, not needed for FLASH arrays
+        }
+    }
+
+
+    void DisplayProvider::displayGrassImage()
+    {
+        uint16_t pngw = 0, pngh = 0; // To store width and height of image
+
+        while(ypos < 320)
+        {
+
+            while(xpos < 480){
+                int16_t rc = png.openFLASH((uint8_t *)grass, sizeof(grass), pngDraw);
+        
+                if (rc == PNG_SUCCESS) {
+                //Serial.println("Successfully opened png file");
+                pngw = png.getWidth();
+                pngh = png.getHeight();
+                //Serial.printf("Image metrics: (%d x %d), %d bpp, pixel type: %d\n", pngw, pngh, png.getBpp(), png.getPixelType());
+            
+                tftDisplay.startWrite();
+                uint32_t dt = millis();
+                rc = png.decode(NULL, 0);
+                tftDisplay.endWrite();
+                //Serial.print(millis() - dt); Serial.println("ms");
+            //    tft.endWrite();
+            
+                // png.close(); // Required for files, not needed for FLASH arrays
+                }
+
+                xpos += grassW;
+            }
+            xpos = 0;
+            ypos += grassH;
+            
+        }
+
+        xpos = 0;
+        ypos = 0;
+    }
+
+
     DisplayProvider::DisplayProvider(){
+        globalPtrTftDisplay = &(this->tftDisplay);
         tftDisplay.init();
         tftDisplay.setRotation(1);
 
