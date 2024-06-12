@@ -188,6 +188,32 @@
         tftDisplay.loadFont(array);
     }
 
+    void DisplayProvider::displaySegmentedBg(SegmentedBg& bg) { 
+        while(bg.isAnySegmentPending()) {
+            BgSegmentDetails details = bg.getPendingSegmentDetails();
+            xpos = details.x;
+            ypos = details.y;
+            //to do: map texture id to correct array
+            int16_t rc = png.openFLASH((uint8_t *)grass, sizeof(grass), pngDraw);
+
+
+            if (rc == PNG_SUCCESS) {
+        
+                tftDisplay.startWrite();
+                uint32_t dt = millis();
+                rc = png.decode(NULL, 0);
+                tftDisplay.endWrite();
+        
+            // png.close(); // Required for files, not needed for FLASH arrays
+            }
+            bg.goToNextSegment();
+        }
+        
+
+    }
+            
+
+
 
 #ifndef EMULATOR
         TFT_eSPI* DisplayProvider::tftDirectAccess()

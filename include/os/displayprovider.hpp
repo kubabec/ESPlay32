@@ -1,6 +1,7 @@
 #ifndef DISPLAYPROVIDER_H
 #define DISPLAYPROVIDER_H
 #include "targetDatatypes.hpp"
+#include "app/tools/segmentedBg.hpp"
 #include <PNGdec.h>
 
 
@@ -40,7 +41,7 @@
 
         void setAppDisplayArea(AppDisplayArea displayArea);
         void setOverlayMode(bool isOverlay);
-
+        void displaySegmentedBg(SegmentedBg& bg);
 
 
         /* PNG test */
