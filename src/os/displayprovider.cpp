@@ -69,7 +69,7 @@
         {
 
             while(xpos < 480){
-                int16_t rc = png.openFLASH((uint8_t *)newBg, sizeof(newBg), pngDraw);
+                int16_t rc = png.openFLASH((uint8_t *)grass, sizeof(grass), pngDraw);
         
                 if (rc == PNG_SUCCESS) {
                 //Serial.println("Successfully opened png file");
@@ -198,7 +198,7 @@
                 ypos += currentAppDisplayArea.y;
             }
             //to do: map texture id to correct array
-            int16_t rc = png.openFLASH((uint8_t *)newBg, sizeof(newBg), pngDraw);
+            int16_t rc = png.openFLASH((uint8_t *)grass, sizeof(grass), pngDraw);
 
 
             if (rc == PNG_SUCCESS) {
