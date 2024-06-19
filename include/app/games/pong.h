@@ -96,6 +96,8 @@ private:
 
     bool resetScreenPending = true;
     bool countdownClearPending = false;
+
+    SegmentedBg segmentedBackground{1, 40, 30};
 };
 
 class PongLauncher : public RuntimeApplication

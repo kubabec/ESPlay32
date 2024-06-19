@@ -116,6 +116,7 @@ void Pong::update()
     switch (stanGry) {
     case GAME_PLAYING:
         ball.update();
+        segmentedBackground.setStickySegment((uint16_t)ball.getX(), (uint16_t)ball.getY());
         break;
     case GAME_STOPPED:
         if (counter >= 60) {
@@ -158,7 +159,7 @@ void Pong::render(DisplayProvider &display)
     if (resetScreenPending) {
         resetScreenPending = false;
         //display.fillScreen(getBackgroundColor());
-        display.displayGrassImage();
+        // display.displayGrassImage();
     }
     if(ballResetPending)
     {
@@ -186,6 +187,7 @@ void Pong::render(DisplayProvider &display)
     }
     //ball.draw(display);
     //display.fillCircle(ball.getLastX(), ball.getLastY(), ball.getSize(), TFT_GREEN);
+    display.displaySegmentedBg(segmentedBackground);
     display.displayBallImage(ball.getX()-10, ball.getY()+30-9);
 
 

@@ -75,7 +75,7 @@
                 //Serial.println("Successfully opened png file");
                 pngw = png.getWidth();
                 pngh = png.getHeight();
-                //Serial.printf("Image metrics: (%d x %d), %d bpp, pixel type: %d\n", pngw, pngh, png.getBpp(), png.getPixelType());
+                Serial.printf("Image metrics: (%d x %d), %d bpp, pixel type: %d\n", pngw, pngh, png.getBpp(), png.getPixelType());
             
                 tftDisplay.startWrite();
                 uint32_t dt = millis();
@@ -193,6 +193,10 @@
             BgSegmentDetails details = bg.getPendingSegmentDetails();
             xpos = details.x;
             ypos = details.y;
+            if(!isOverlayMode){
+                xpos += currentAppDisplayArea.x;
+                ypos += currentAppDisplayArea.y;
+            }
             //to do: map texture id to correct array
             int16_t rc = png.openFLASH((uint8_t *)grass, sizeof(grass), pngDraw);
 
