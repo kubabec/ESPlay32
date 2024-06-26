@@ -25,6 +25,9 @@ public:
     bool reflect(Character2D& character);
     void draw(DisplayProvider& display);
     void update();
+    bool isPosChanged();
+    void setPosNotChanged();
+    float getLastPosY();
     float getReflectionX();
     float getTopY();
     float getBottomY();
@@ -85,8 +88,8 @@ private:
     void updateOverlayText();
     void randomizeBallDir();
 
-    float speed = 4.f;
-    const uint8_t maxSpeed = 6.f;
+    float speed = 3.f;
+    const uint8_t maxSpeed = 4.f;
     int scoreLeft = 0;
     int scoreRight = 0;
     String overlayText = "";

@@ -91,6 +91,8 @@ void Pong::update()
 {
     static uint8_t counter = 0;
 
+    const uint16_t leftPlatformCenterX = 20, rightPlatformCenterX = 460;
+
     // Handle right platform move when button on keyboard is pressed
     handleRightPlatformMoveOnButtonsPressed();
 
@@ -115,30 +117,42 @@ void Pong::update()
 
     switch (stanGry) {
     case GAME_PLAYING:
+        static unsigned delayTo100 = 0;
+
+
+        // if(delayTo100 >= 50)
+        // {
         ball.update();
         static uint8_t countTo3 = 0;
         static uint8_t countTo6 = 0;
-        if(countTo6 >= 6)
-        {
-            static uint16_t ballLastX = 0;
-            static uint16_t ballLastY = 0;
-            segmentedBackground.setStickySegment(ballLastX, ballLastY, ball.getSize());
+        // if(countTo6 >= 6)
+        // {
+        //     static uint16_t ballLastX = 0;
+        //     static uint16_t ballLastY = 0;
 
-            ballLastX = (uint16_t)ball.getLastX();
-            ballLastY = (uint16_t)ball.getLastY();
-            countTo6 = 0;
-        }
-        countTo6++;
+        //     ballLastX = (uint16_t)ball.getLastX();
+        //     ballLastY = (uint16_t)ball.getLastY();
+        //     countTo6 = 0;
+        // }
+        // countTo6++;
 
-        if(countTo3 >= 3){
+        if(countTo3 >= 4){
             
-            segmentedBackground.setStickySegment((uint16_t)ball.getX(), (uint16_t)ball.getY(), ball.getSize());
+        segmentedBackground.setStickySegment(
+            (uint16_t)ball.getLastX(), 
+            (uint16_t)ball.getLastY(), 
+            ball.getSize()+7);
+        //segmentedBackground.setStickySegment((uint16_t)ball.getX(), (uint16_t)ball.getY(), ball.getSize()+(ball.getSize()/2));
 
             countTo3 = 0;
             
         }
         countTo3 ++;
 
+        // delayTo100 = 0;
+        // }
+
+        // delayTo100 ++;
         break;
     case GAME_STOPPED:
         if (counter >= 60) {
@@ -163,6 +177,38 @@ void Pong::update()
     // Update platforms movement
     platformLeft.update();
     platformRight.update();
+
+   
+    // Set sticky background segment whenever any platform was moved
+    static uint8_t leftPlatformCountTo7 = 4;
+    
+    if(leftPlatformCountTo7 >= 6 && platformLeft.isPosChanged())
+    {
+        static float lastPosLeftPlatform = 0;
+
+        segmentedBackground.setStickySegment(leftPlatformCenterX, lastPosLeftPlatform, 10);
+
+        platformLeft.setPosNotChanged();
+        leftPlatformCountTo7 = 0;
+
+        lastPosLeftPlatform = platformLeft.getLastPosY();
+    }
+    leftPlatformCountTo7++;
+
+
+    static uint8_t rightPlatformCountTo7 = 3;
+    if(rightPlatformCountTo7 >= 6 && platformRight.isPosChanged())
+    {
+        static float lastPosRightPlatform = 0.f;
+
+        segmentedBackground.setStickySegment(rightPlatformCenterX, lastPosRightPlatform, 10);
+
+        platformRight.setPosNotChanged();
+        rightPlatformCountTo7 = 0;
+        lastPosRightPlatform = platformRight.getLastPosY();
+    }
+    rightPlatformCountTo7++;
+    
 
 
     // Check if ball is reflected by platforms
@@ -190,16 +236,15 @@ void Pong::render(DisplayProvider &display)
 
     }
     if (stanGry == GAME_STOPPED) {
-        display.setTextColor(TFT_WHITE, getBackgroundColor());
+        display.setTextColor(TFT_BLACK);
         display.drawString(countdown, 230, 100);
     }
     if (countdownClearPending) {
-        display.fillRect(200, 90, 50, 50, getBackgroundColor());
+        // display.fillRect(200, 90, 50, 50, getBackgroundColor());
         countdownClearPending = false;
     }
 
-    platformLeft.draw(display);
-    platformRight.draw(display);
+    
     if (speed == maxSpeed) {
         ball.setColor(ballColor);
         ballColor += 50;
@@ -213,7 +258,8 @@ void Pong::render(DisplayProvider &display)
     display.displayBallImage(ball.getX()-10, ball.getY()+30-9);
 
 
-
+    platformLeft.draw(display);
+    platformRight.draw(display);
 }
 
 void Pong::forceRender(DisplayProvider &display)
@@ -378,11 +424,14 @@ void Pong::checkIfScoreAchieved()
     if (ball.getX() >= (480 + ball.getSize())) {
         gameReset();
         scoreLeft++;
+        segmentedBackground.forceRepaintAll();
         updateOverlayText();
+        
     }
     else if (ball.getX() <= (0 - ball.getSize())) {
         gameReset();
         scoreRight++;
+        segmentedBackground.forceRepaintAll();
         updateOverlayText();
     }
 
@@ -503,11 +552,27 @@ bool BouncePlatform::reflect(Character2D &character)
 
 void BouncePlatform::draw(DisplayProvider &display)
 {
-    if (lastDiffChanged) {
-        lastDiffChanged = false;
-        display.fillRect(pos.getX(), lastPosDiff.getY(), width, abs(lastSpeed), TFT_BLACK);
-    }
+    // if (lastDiffChanged) {
+    //     lastDiffChanged = false;
+    //     //display.fillRect(pos.getX(), lastPosDiff.getY(), width, abs(lastSpeed), TFT_BLACK);
+    // }
     display.fillRect(pos.getX(), pos.getY(), width, height, TFT_WHITE);
+}
+
+
+bool BouncePlatform::isPosChanged()
+{
+    return lastDiffChanged;
+}
+
+float BouncePlatform::getLastPosY()
+{
+    return lastPosDiff.getY();
+}
+
+void BouncePlatform::setPosNotChanged()
+{
+    lastDiffChanged = false;
 }
 
 void BouncePlatform::moveUp(uint8_t pixels)

@@ -189,6 +189,9 @@
     }
 
     void DisplayProvider::displaySegmentedBg(SegmentedBg& bg) { 
+
+        uint32_t randomColor = random();
+
         while(bg.isAnySegmentPending()) {
             BgSegmentDetails details = bg.getPendingSegmentDetails();
             xpos = details.x;
@@ -197,19 +200,26 @@
                 xpos += currentAppDisplayArea.x;
                 ypos += currentAppDisplayArea.y;
             }
-            //to do: map texture id to correct array
-            int16_t rc = png.openFLASH((uint8_t *)grass, sizeof(grass), pngDraw);
+            if(ypos >= 30)
+            {
+                // /tftDisplay.fillRect(xpos, ypos, 40, 30, randomColor);
+                //to do: map texture id to correct array
+                int16_t rc = png.openFLASH((uint8_t *)grass, sizeof(grass), pngDraw);
 
 
-            if (rc == PNG_SUCCESS) {
-        
-                tftDisplay.startWrite();
-                uint32_t dt = millis();
-                rc = png.decode(NULL, 0);
-                tftDisplay.endWrite();
-        
-            // png.close(); // Required for files, not needed for FLASH arrays
+                if (rc == PNG_SUCCESS) {
+            
+                    tftDisplay.startWrite();
+                    uint32_t dt = millis();
+                    rc = png.decode(NULL, 0);
+                    tftDisplay.endWrite();
+            
+                // png.close(); // Required for files, not needed for FLASH arrays
+                }
+
             }
+
+            
             bg.goToNextSegment();
         }
         

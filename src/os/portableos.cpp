@@ -387,7 +387,7 @@ void PortableOS::subsystemStatusReceived(SubsystemStatusData& data)
     // Notify subsystemMonitor that slave is communicating
     subsystemMonitor.subsystemStatusReceived();
 
-    Serial.println(String(subsystemOverview.data.ipOctet1) + "." + String(subsystemOverview.data.ipOctet2) + "." + String(subsystemOverview.data.ipOctet3) + "." + String(subsystemOverview.data.ipOctet4));
+    //Serial.println(String(subsystemOverview.data.ipOctet1) + "." + String(subsystemOverview.data.ipOctet2) + "." + String(subsystemOverview.data.ipOctet3) + "." + String(subsystemOverview.data.ipOctet4));
 
     //Serial.print("=");
 }

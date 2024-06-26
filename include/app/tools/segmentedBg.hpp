@@ -22,6 +22,7 @@ class SegmentedBg {
     SegmentedBg(uint8_t aid, uint8_t asegmentWidth, uint8_t asegmentHeight);
     bool isAnySegmentPending();
     BgSegmentDetails getPendingSegmentDetails();
+    void forceRepaintAll();
     void goToNextSegment();
     void setStickySegment(uint16_t x, uint16_t y, uint8_t affectedRadius);
     private:
