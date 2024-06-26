@@ -244,7 +244,7 @@
     #endif
 
     #define SPI_FREQUENCY   CONFIG_TFT_SPI_FREQUENCY
-
+    
     #if CONFIG_TFT_SPI_READ_FREQ != -1
         #define SPI_READ_FREQUENCY CONFIG_TFT_SPI_READ_FREQ
     #endif

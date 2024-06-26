@@ -44,24 +44,55 @@ void SegmentedBg::goToNextSegment() {
     }
 }
 
-void SegmentedBg::setStickySegment(uint16_t x, uint16_t y) {
+void SegmentedBg::setStickySegment(uint16_t x, uint16_t y, uint8_t affectedRadius) {
     uint16_t xFactor = x / segmentWidth;
     uint16_t yFactor = y / segmentHeight;
     BgSegmentDetails details;
     details.textureID = 1;
-    if(xFactor > 0) {
-        xFactor -= 1;
+
+    if(getTouchedSegmentsMask(x, y, affectedRadius) == 0)
+    {
+        details.x = xFactor * segmentWidth;
+        details.y = yFactor * segmentHeight;
+        stickySegments.push(details);
+    }else {
+        if(xFactor > 0) {
+            xFactor -= 1;
+        }
+        if(yFactor > 0) {
+            yFactor -= 1;
+        }
+        details.x = xFactor * segmentWidth;
+        details.y = yFactor * segmentHeight;
+        stickySegments.push(details);
+        details.x += segmentWidth;
+        stickySegments.push(details);
+        details.y += segmentHeight;
+        stickySegments.push(details);
+        details.x -= segmentWidth;
+        stickySegments.push(details);
     }
-    if(yFactor > 0) {
-        yFactor -= 1;
+}
+
+uint8_t SegmentedBg::getTouchedSegmentsMask(uint16_t x, uint16_t y, uint8_t affectedRadius)
+{
+    int resultX = ((segmentWidth/2) - affectedRadius);
+    int resultY = ((segmentWidth/2) - affectedRadius);
+
+    if(((resultX > 0 ) && (resultY > 0)))
+    {
+        return 0;
     }
-    details.x = xFactor * segmentWidth;
-    details.y = yFactor * segmentHeight;
-    stickySegments.push(details);
-    details.x += segmentWidth;
-    stickySegments.push(details);
-    details.y += segmentHeight;
-    stickySegments.push(details);
-    details.x -= segmentWidth;
-    stickySegments.push(details);
+
+    uint8_t returnMask = 0x00;
+
+    //Check left side collision
+    // Collision with left side
+    if(resultX < 0)
+    {
+        // set 0000 0010
+        returnMask &= (1 << 1);
+    }else if (resultX + affectedRadius)
+
+    return returnMask;
 }

@@ -278,6 +278,9 @@ const PROGMEM fontinfo fontdata [] = {
   #endif
 };
 
+#define SPI_FREQUENCY 50000000
+#define SPI_READ_FREQUENCY 1000000
+
 /***************************************************************************************
 **                         Section 5: Font datum enumeration
 ***************************************************************************************/

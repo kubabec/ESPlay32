@@ -116,13 +116,29 @@ void Pong::update()
     switch (stanGry) {
     case GAME_PLAYING:
         ball.update();
-        static uint8_t countTo4 = 0;
-        if(countTo4 >= 4){
-            segmentedBackground.setStickySegment((uint16_t)ball.getLastX(), (uint16_t)ball.getLastY());
-            segmentedBackground.setStickySegment((uint16_t)ball.getX(), (uint16_t)ball.getY());
-            countTo4 = 0;
+        static uint8_t countTo3 = 0;
+        static uint8_t countTo6 = 0;
+        if(countTo6 >= 6)
+        {
+            static uint16_t ballLastX = 0;
+            static uint16_t ballLastY = 0;
+            segmentedBackground.setStickySegment(ballLastX, ballLastY, ball.getSize());
+
+            ballLastX = (uint16_t)ball.getLastX();
+            ballLastY = (uint16_t)ball.getLastY();
+            countTo6 = 0;
         }
-        countTo4 ++;
+        countTo6++;
+
+        if(countTo3 >= 3){
+            
+            segmentedBackground.setStickySegment((uint16_t)ball.getX(), (uint16_t)ball.getY(), ball.getSize());
+
+            countTo3 = 0;
+            
+        }
+        countTo3 ++;
+
         break;
     case GAME_STOPPED:
         if (counter >= 60) {
