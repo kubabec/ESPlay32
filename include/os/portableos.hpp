@@ -17,6 +17,7 @@
 #include "networkTools/uartCommunicator.hpp"
 #include "os/mainloadingscreen.h"
 #include "os/osDatatypes.hpp"
+#include "app/marcinPaint.hpp"
 
 // Services
 #include "os/services/subsystemMonitor.hpp"

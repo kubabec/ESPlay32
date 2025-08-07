@@ -10,6 +10,7 @@ class TFT_eSPI;
 
 typedef enum {
     SETTINGS,
+    MARCINPAINT,
     LED_COMMUNICATION,
     STOPER,
     FIGHT_GAME,
