@@ -1,7 +1,9 @@
 #include "app/marcinPaint.hpp"
 
 MarcinPaint::MarcinPaint() {
-
+vec_buttons.emplace_back(10,10,75,40,"shape");
+vec_buttons.emplace_back(10,120,75,40,"size");
+vec_buttons.emplace_back(10,240,75,40,"color");
 }
 
 void MarcinPaint::start(int w, int h){ 
@@ -46,35 +48,56 @@ void MarcinPaint::longPressRelease(InputType input){
 
 void MarcinPaint::analogInput(int x, int y) 
 {
-    this->x += x;
-    this->y -= y;
+
 }
 
-void MarcinPaint::touchInput(int x, int y) {
-    this->x = x;
-    this->y = y;
+void MarcinPaint::touchInput(int touch_x, int touch_y) {
+    if (touch_x >= 120) {
+        drawingPoints.push_back({touch_x, touch_y});
+    }
+    x = touch_x;
+    y = touch_y;
+    // Process touch input areas for buttons
+    for (auto& btn : vec_buttons) {
+        btn.touchArea(x, y);
+    }
 }
 
 void MarcinPaint::update() {
-
+    
 }
 
 void MarcinPaint::render(DisplayProvider& display){
 
-    display.fillCircle(x, y, 10, ballCol);
-    if (clearScreen){
-        MarcinPaint::createMenu(display);
-        clearScreen = false; 
+    if (clearScreen) {
+        for(auto &btn : vec_buttons){
+            btn.needsRedraw = true;
+        }
+        display.fillScreen(backgroundcolor);  // Clear the whole screen or background
+        clearScreen = false;
     }
-}
 
+    // Draw all the points in your stroke (painting area)
+    for (auto& pt : drawingPoints) {
+        display.fillCircle(pt.x, pt.y, 10, ballCol); 
+    }
+    drawingPoints.clear();
+
+    // Always draw buttons (to avoid flicker)
+    if(!isDrawing){
+        for (auto& btn : vec_buttons) {
+            btn.drawButton(display);
+        }
+    }
+    
+}
 void MarcinPaint::forceRender(DisplayProvider &display)
 {
 
 }
 
 void MarcinPaint::end(){ 
-
+    
 }
 
 
@@ -86,28 +109,4 @@ String MarcinPaint::getAppNameString()
 uint16_t MarcinPaint::getBackgroundColor(){
 
     return TFT_WHITE;
-}
-
-
-void MarcinPaint::paintShape(DisplayProvider &display) {
-    display.fillCircle(30, 50, 20, TFT_RED);
-}
-
-void MarcinPaint::paintSize(DisplayProvider &display) {
-    display.fillRect(10, 130, 40, 3, TFT_BLACK);
-    display.fillRect(10, 140, 40, 10, TFT_BLACK);
-}
-
-void MarcinPaint::paintColor(DisplayProvider &display) {
-    display.fillRect(10, 220, 40, 10, TFT_GREEN);
-    display.fillRect(10, 230, 40, 10, TFT_BLUE);
-    display.fillRect(10, 240, 40, 10, TFT_YELLOW);
-    display.fillRect(10, 250, 40, 10, TFT_ORANGE);
-}
-
-void MarcinPaint::createMenu(DisplayProvider &display) {
-    display.fillScreen(TFT_WHITE);
-    paintShape(display);
-    paintSize(display);
-    paintColor(display);
 }

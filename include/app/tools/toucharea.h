@@ -13,6 +13,7 @@ class TouchArea
 public:
     TouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t ah, std::function<void ()> a_onTouchCallback);
     TouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t ah, std::function<void (int)> a_onTouchCallback, int aidentifier);
+    TouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t ah);
     uint16_t getX();
     uint16_t getY();
     uint16_t getWidth();

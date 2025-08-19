@@ -1,10 +1,22 @@
 #ifndef MARCINPAINT_H
 #define MARCINPAINT_H
 #include "app/runtimeApplication.hpp"
+#include "app/tools/button.hpp"
+#include <vector>
 
 class MarcinPaint : public RuntimeApplication {
     public:
     
+    std::vector<Button> vec_buttons;
+
+    bool isDrawing = false;
+
+    struct Point {
+        int x;
+        int y;
+    };
+    std::vector<Point> drawingPoints;
+
     MarcinPaint();
     virtual void start(int w, int h) override;
     virtual void input(InputType input) override;
@@ -21,18 +33,14 @@ class MarcinPaint : public RuntimeApplication {
     void udpDataReceived(int messageID, std::vector<uint8_t> data);
     private:
 
-    int x, y;
+    int x, y, w, h;
     int backgroundcolor = TFT_WHITE;
     int clearScreen = true;
     int ballCol = TFT_BLACK;
 
     bool isScreenDrawn = false;
 
-    void createMenu(DisplayProvider &display);
-    void paintShape(DisplayProvider &display);
-    void paintSize(DisplayProvider &display);
-    void paintColor(DisplayProvider &display);
-
+    
 
 };
 

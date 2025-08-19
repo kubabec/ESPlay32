@@ -15,6 +15,11 @@ void TouchInputProxy::addTouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16
     touchAreaContainer.push_back({ax, ay, aw, ah, a_onTouchCallback, aidentifier});
 }
 
+void TouchInputProxy::addTouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t ah)
+{
+    touchAreaContainer.push_back({ax, ay, aw, ah});
+}
+
 void TouchInputProxy::clearTouchAreas()
 {
     touchAreaContainer.clear();

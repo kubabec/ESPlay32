@@ -12,6 +12,12 @@ TouchArea::TouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t ah, std::fu
 
 }
 
+TouchArea::TouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t ah)
+:x(ax), y(ay), w(aw), h(ah)
+{
+
+}
+
 uint16_t TouchArea::getX()
 {
     return x;

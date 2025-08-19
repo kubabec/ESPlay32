@@ -11,6 +11,7 @@ public:
     TouchInputProxy();
     void addTouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t ah, std::function<void ()> a_onTouchCallback);
     void addTouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t ah, std::function<void (int)> a_onTouchCallback, int aidentifier);
+    void addTouchArea(uint16_t ax, uint16_t ay, uint16_t aw, uint16_t ah);
     void clearTouchAreas();
     uint8_t getTouchAreasCount();
 
