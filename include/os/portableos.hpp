@@ -7,6 +7,7 @@
 #include "app/testApps.hpp"
 #include "app/games/fightgame.hpp"
 #include "app/games/pong.h"
+#include "app/games/HumanRun.h"
 #include "app/games/connect4.h"
 #include "app/ledCommunicator.hpp"
 #include "app/updateLogs.hpp"

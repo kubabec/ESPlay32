@@ -15,10 +15,11 @@ typedef enum {
     FIGHT_GAME,
     PONG,
     CONNECT_4,
-    UPDATE_LOGS,
+    // UPDATE_LOGS,
     SOME_OTHER_APP,
+    HUMAN_RUN,
 //    MENU_TEST_APP,
-    UDP_SEND_TEST_APP,
+    // UDP_SEND_TEST_APP,
 //    TOUCH_TEST_APP,
     NONE
 }RuntimeApplications;

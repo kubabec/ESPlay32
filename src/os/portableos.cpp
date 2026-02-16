@@ -1,6 +1,6 @@
 #include "os/portableOs.hpp"
 
-std::vector<String> appNames = {"Ustawienia", "Led communicator", "Stoper", "Fight Game", "Pong", "Connect 4", "Update Logs", "Color Picker", "UDP test app"};
+std::vector<String> appNames = {"Ustawienia", "Led communicator", "Stoper", "Fight Game", "Pong", "Connect 4", "Color Picker", "Human Run"};
 
 // Create static objects instances
 DisplayProvider PortableOS::display = DisplayProvider();
@@ -285,8 +285,12 @@ void PortableOS::mainMenuChoice(int8_t choice)
             currentRunningAppPtr = new Connect4();
             newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;
-        case UPDATE_LOGS:
-            currentRunningAppPtr = new UpdateLogs();
+            // case UPDATE_LOGS:
+            //     currentRunningAppPtr = new UpdateLogs();
+            //     newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+            //     break;
+        case HUMAN_RUN:
+            currentRunningAppPtr = new HumanRun();
             newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;
         case LED_COMMUNICATION:
@@ -298,11 +302,11 @@ void PortableOS::mainMenuChoice(int8_t choice)
             currentRunningAppPtr = new SomeOtherApp();
             newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;
-        case UDP_SEND_TEST_APP:
-            // TouchInputDriver::enableTouch();
-            currentRunningAppPtr = new UDPSendTestApp();
-            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
-            break;
+        // case UDP_SEND_TEST_APP:
+        //     // TouchInputDriver::enableTouch();
+        //     currentRunningAppPtr = new UDPSendTestApp();
+        //     newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+        //     break;
         case SETTINGS:
             currentRunningAppPtr = new Settings();
             newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
