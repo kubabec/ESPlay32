@@ -18,7 +18,7 @@
 TFT_eSPI* TouchInputDriver::ptr_tft = nullptr;
 #endif
 bool TouchInputDriver::touchEnabled = false;
-uint16_t TouchInputDriver::calibrationData[5] = {233, 3657, 199, 3679, 7};
+uint16_t TouchInputDriver::calibrationData[5] = {255, 3616, 221, 3616, 1};
 
 // void TouchInputDriver::force_calibration()
 // {

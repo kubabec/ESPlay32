@@ -7,15 +7,14 @@
 #define USING_ESP32
 
 #ifdef USING_ESP32
-    #define KEY_C_PIN 34
-    #define KEY_A_PIN 35
-    #define KEY_F_PIN 32
-    #define KEY_K_PIN 33
-    #define KEY_B_PIN 25
-    #define KEY_D_PIN 26
-
-    #define ANALOG_X_PIN 27
-    #define ANALOG_Y_PIN 14
+    #define KEY_C_PIN GPIO_NUM_13
+    #define KEY_A_PIN GPIO_NUM_25
+    #define KEY_F_PIN GPIO_NUM_26
+    #define KEY_K_PIN GPIO_NUM_27
+    #define KEY_B_PIN GPIO_NUM_32
+    #define KEY_D_PIN GPIO_NUM_14
+    #define ANALOG_X_PIN GPIO_NUM_34
+    #define ANALOG_Y_PIN GPIO_NUM_35
 #else
     #define KEY_C_PIN PIN_D0
     #define KEY_A_PIN PIN_D1

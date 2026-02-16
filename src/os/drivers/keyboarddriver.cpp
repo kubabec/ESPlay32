@@ -1,6 +1,6 @@
 #include "os/drivers/keyboarddriver.hpp"
 
-HwButton KeyboardDriver::buttons[6];
+HwButton KeyboardDriver::buttons[NUMBER_OF_BUTTONS];
 
 
 void KeyboardDriver::init()
@@ -11,7 +11,6 @@ void KeyboardDriver::init()
     pinMode(KEY_K_PIN, INPUT);
     pinMode(KEY_B_PIN, INPUT);
     pinMode(KEY_D_PIN, INPUT);
-
     KeyboardDriver::buttons[0].btnType = BUTTON_A;
     KeyboardDriver::buttons[0].btnPin = KEY_A_PIN;
     KeyboardDriver::buttons[0].btnName = 'A';
@@ -94,7 +93,7 @@ void KeyboardDriver::task()
                     // Make it pressable again
                     KeyboardDriver::buttons[i].isPressable = true;
 
-                    digitalWrite(12, LOW);
+                    // digitalWrite(12, LOW);
                 }
             }
         }
@@ -114,7 +113,7 @@ void KeyboardDriver::task()
             KeyboardDriver::buttons[i].isPressable = false;
             KeyboardDriver::buttons[i].btnPressedTime = millis();
 
-            digitalWrite(12, HIGH);
+            // digitalWrite(12, HIGH);
         }
 
 

@@ -1,5 +1,4 @@
 #include "app/settings/settingsMainApp.hpp"
-#include "app/settings/subsystemInspector.hpp"
 #include "app/settings/wifiListConnector.hpp"
 #include "os/portableos.hpp"
 
@@ -44,17 +43,8 @@ void Settings::checkSelections()
 
         switch(currentState)
         {
-            case SETTINGS_SUBSYSTEM_INSPECTOR:
-                subApp = new SubsystemInspector();
-                break;
             case SETTINGS_NETWORK_CONNECTION_MENU:
-                // Network connection only allowed when subsystem is communicating
-                if(OS_API::getSubsystemOverview().isCommunicating){
-                    subApp = new WiFiListConnector();
-                }else 
-                {
                     currentState = SETTINGS_MENU;
-                }
                 break;
             case SETTINGS_DISCONNECT_FROM_NETWORK:
                     OS_API::disconnectWiFiNetwork();
@@ -236,16 +226,7 @@ void Settings::update(){
     // networkConnectionMenu->update();
 
     // checkSelections();
-    // if(currentState == SETTINGS_SUBSYSTEM_INSPECTOR)
-    // {
-    //     static long timer200 = 0;
 
-    //     if(millis() - timer200 > 200){
-    //         currentOverview = OS_API::getSubsystemOverview();
-    //         timer200 = millis();
-    //     }
-        
-    // }
 
     if(currentState == SETTINGS_MENU)
     {

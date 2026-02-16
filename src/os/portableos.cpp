@@ -1,6 +1,5 @@
 #include "os/portableOs.hpp"
 
-
 std::vector<String> appNames = {"Ustawienia", "Led communicator", "Stoper", "Fight Game", "Pong", "Connect 4", "Update Logs", "Color Picker", "UDP test app"};
 
 // Create static objects instances
@@ -8,8 +7,8 @@ DisplayProvider PortableOS::display = DisplayProvider();
 Menu PortableOS::mainMenu = Menu(appNames);
 bool PortableOS::isMainMenuActive = true;
 bool PortableOS::isContextTakenOverMode = false;
-RuntimeApplication* PortableOS::contextOvertaker = nullptr;
-RuntimeApplication* PortableOS::currentRunningAppPtr = nullptr;
+RuntimeApplication *PortableOS::contextOvertaker = nullptr;
+RuntimeApplication *PortableOS::currentRunningAppPtr = nullptr;
 TopOverlay PortableOS::topOverlay = TopOverlay();
 int PortableOS::fpsCounter = 0;
 uint8_t PortableOS::appTextTimeout = 0;
@@ -21,35 +20,30 @@ bool PortableOS::wasNetworkConnectedNotificationShowed = false;
 //     .wasWiFiRequestedFlag = false
 // };
 // NetworkCredentials PortableOS::currentConnectedNetworkCredentials;
-// bool PortableOS::isSubsystemComunicating = false;
-SubsystemOverview PortableOS::subsystemOverview;
-    // .isCommunicating = false,
-    // .data = { 
-    //     .isWiFiConnectedFlag = false, 
-    //     .isWiFiRequestedFlag = false,
-    //     .ipOctet1 = 0,
-    //     .ipOctet2 = 0,
-    //     .ipOctet3 = 0,
-    //     .ipOctet4 = 0
-    // },
-    // .credentials =
-    // {
-    //     .ssid = "none",
-    //     .password = "none"
-    // }
 
-SubsystemMonitorService PortableOS::subsystemMonitor(&subsystemOverview);
+// .isCommunicating = false,
+// .data = {
+//     .isWiFiConnectedFlag = false,
+//     .isWiFiRequestedFlag = false,
+//     .ipOctet1 = 0,
+//     .ipOctet2 = 0,
+//     .ipOctet3 = 0,
+//     .ipOctet4 = 0
+// },
+// .credentials =
+// {
+//     .ssid = "none",
+//     .password = "none"
+// }
+
 NotificationService PortableOS::notificationService;
 
-void PortableOS::init(){
-    subsystemOverview.isCommunicating = false;
-    subsystemOverview.data = { 0};
-    subsystemOverview.credentials = {"none", "none"};
-
+void PortableOS::init()
+{
 #ifdef EMULATOR
     display.generateScene();
 #else
-        TouchInputDriver::setTftAccess(display.tftDirectAccess());
+    TouchInputDriver::setTftAccess(display.tftDirectAccess());
 #endif
 
     // Register callback to let Menu object run any application in the future
@@ -65,68 +59,75 @@ void PortableOS::init(){
     // delay(200);
     display.fillScreen(TFT_BLACK);
 
-
-
-
-
     /*Test of BITMAP PRINTING */
-
-    
 
     /*Test of BITMAP PRINTING */
 }
 
-void PortableOS::osTask10ms()
+void PortableOS::osTaskUnlimited()
 {
-    internalServicesTask();
-
-    if(!isContextTakenOverMode){
+    if (!isContextTakenOverMode)
+    {
         // Depending if Menu is active
-        if (isMainMenuActive) {
-            // Render Menu
-            if(topOverlay.isHidingAnimationPending())
-            {
-                mainMenu.forceRefresh();
-            }
-            mainMenu.update();
-            mainMenu.render(display);
-        }
-        else {
+        if (!isMainMenuActive)
+        {
             // Otherwise render and update currently running application
-            currentRunningAppPtr->update();
+            // currentRunningAppPtr->update();
             currentRunningAppPtr->render(display);
-
-    #ifndef EMULATOR
-            // Timeouted deactivation of App overlay text
-            if(appTextTimeout > 0)
-            {     
-                if(millis() - appTextTimeoutMs > 1000)
-                {
-                    appTextTimeout --;
-                    appTextTimeoutMs = millis();
-
-                    if(appTextTimeout == 0)
-                    {
-                        topOverlay.deactivateAppTextMode();
-                    }
-                }
-
-            }
-    #endif
         }
 
         display.setOverlayMode(true);
         topOverlay.render(display);
         display.setOverlayMode(false);
-    }else
+    }
+    else
     {
-        if(contextOvertaker != nullptr)
+        if (contextOvertaker != nullptr)
         {
             display.setOverlayMode(true);
             contextOvertaker->render(display);
             display.setOverlayMode(false);
         }
     }
+}
+
+void PortableOS::osTask10ms()
+{
+    internalServicesTask();
+
+    if (!isContextTakenOverMode)
+    {
+        // Depending if Menu is active
+        if (isMainMenuActive)
+        {
+            // Render Menu
+            if (topOverlay.isHidingAnimationPending())
+            {
+                mainMenu.forceRefresh();
+            }
+            mainMenu.update();
+            mainMenu.render(display);
+        }
+        else
+        {
+            // Otherwise render and update currently running application
+            currentRunningAppPtr->update();
+            // currentRunningAppPtr->render(display);
+        }
+
+        // display.setOverlayMode(true);
+        // topOverlay.render(display);
+        // display.setOverlayMode(false);
+    }
+    // else
+    // {
+    //     if (contextOvertaker != nullptr)
+    //     {
+    //         display.setOverlayMode(true);
+    //         contextOvertaker->render(display);
+    //         display.setOverlayMode(false);
+    //     }
+    // }
 
     // Count FPS
     fpsCounter++;
@@ -134,7 +135,6 @@ void PortableOS::osTask10ms()
 
 void PortableOS::internalServicesTask()
 {
-    subsystemMonitor.update();
     notificationService.update();
 }
 
@@ -153,17 +153,19 @@ void PortableOS::osTask1s()
 
 void PortableOS::input(InputType systemInput)
 {
-    if(!isContextTakenOverMode){
+    if (!isContextTakenOverMode)
+    {
         // Exception for killing app
-        if(systemInput == BUTTON_F){
+        if (systemInput == BUTTON_F)
+        {
             // We got app running (no menu active and ptr is not nullptr)
-            if(!isMainMenuActive && (currentRunningAppPtr != nullptr) && !topOverlay.isActivationAnimation())
+            if (!isMainMenuActive && (currentRunningAppPtr != nullptr) && !topOverlay.isActivationAnimation())
             {
                 // Request app finish
                 currentRunningAppPtr->end();
 
                 // Set Menu display area
-                display.setAppDisplayArea({0,0,480,320});
+                display.setAppDisplayArea({0, 0, 480, 320});
                 display.setTextColor(TFT_WHITE, TFT_BLACK);
                 // // Request menu to get activated
                 mainMenu.requestActivation();
@@ -174,26 +176,31 @@ void PortableOS::input(InputType systemInput)
                 topOverlay.deactivate();
                 appTextTimeout = 0;
 
-                if(TouchInputDriver::isTouchEnabled())
+                if (TouchInputDriver::isTouchEnabled())
                 {
                     TouchInputDriver::disableTouch();
                 }
             }
-        }else {
+        }
+        else
+        {
             // Forward input to Menu or App depending on what is active
-            if (isMainMenuActive){
-                if (!topOverlay.isHidingAnimationPending()) {
+            if (isMainMenuActive)
+            {
+                if (!topOverlay.isHidingAnimationPending())
+                {
                     mainMenu.input(systemInput);
                 }
-
-            }else {
+            }
+            else
+            {
                 currentRunningAppPtr->input(systemInput);
             }
         }
-
-    }else 
+    }
+    else
     {
-        if(contextOvertaker != nullptr)
+        if (contextOvertaker != nullptr)
         {
             contextOvertaker->input(systemInput);
         }
@@ -202,45 +209,51 @@ void PortableOS::input(InputType systemInput)
 
 void PortableOS::longPressInput(InputType input)
 {
-    if(currentRunningAppPtr != nullptr){
+    if (currentRunningAppPtr != nullptr)
+    {
         currentRunningAppPtr->longPressInput(input);
     }
-   
 }
 
 void PortableOS::longPressRelease(InputType input)
 {
-    if(currentRunningAppPtr != nullptr){
+    if (currentRunningAppPtr != nullptr)
+    {
         currentRunningAppPtr->longPressRelease(input);
     }
-
 }
 
-void PortableOS::analogInput(int x, int y) {
-    if (isMainMenuActive){
-        if (!topOverlay.isHidingAnimationPending()) {
+void PortableOS::analogInput(int x, int y)
+{
+    if (isMainMenuActive)
+    {
+        if (!topOverlay.isHidingAnimationPending())
+        {
             mainMenu.analogInput(x, y);
         }
-
-        }
-    else {
-        if(currentRunningAppPtr != nullptr){
+    }
+    else
+    {
+        if (currentRunningAppPtr != nullptr)
+        {
             currentRunningAppPtr->analogInput(x, y);
         }
     }
-
 }
-
 
 void PortableOS::touchInput(int x, int y)
 {
-    if (!isContextTakenOverMode) {
-        if(currentRunningAppPtr != nullptr){
+    if (!isContextTakenOverMode)
+    {
+        if (currentRunningAppPtr != nullptr)
+        {
             currentRunningAppPtr->touchInput(x, y - topOverlay.getHeight());
         }
-    }else
+    }
+    else
     {
-        if(contextOvertaker != nullptr){
+        if (contextOvertaker != nullptr)
+        {
             contextOvertaker->touchInput(x, y);
         }
     }
@@ -249,58 +262,59 @@ void PortableOS::touchInput(int x, int y)
 void PortableOS::mainMenuChoice(int8_t choice)
 {
     // We received correct request
-    if(choice != -1){
+    if (choice != -1)
+    {
         AppDisplayArea newDisplayArea;
-        switch(choice)
+        switch (choice)
         {
-            // Run requested application
-            case STOPER:
-                currentRunningAppPtr = new Stoper();
-                newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
-                break;
-            case FIGHT_GAME:
-                currentRunningAppPtr = new FightGame();
-                newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
-                break;
-            case PONG:
-                currentRunningAppPtr = new PongLauncher();
-                newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+        // Run requested application
+        case STOPER:
+            currentRunningAppPtr = new Stoper();
+            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;
-            case CONNECT_4:
-                TouchInputDriver::enableTouch();
-                currentRunningAppPtr = new Connect4();
-                newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+        case FIGHT_GAME:
+            currentRunningAppPtr = new FightGame();
+            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;
-            case UPDATE_LOGS:
-                currentRunningAppPtr = new UpdateLogs();
-                newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+        case PONG:
+            currentRunningAppPtr = new PongLauncher();
+            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;
-            case LED_COMMUNICATION:
-                TouchInputDriver::enableTouch();
-                currentRunningAppPtr = new LedCommunicator();
-                newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+        case CONNECT_4:
+            TouchInputDriver::enableTouch();
+            currentRunningAppPtr = new Connect4();
+            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;
-            case SOME_OTHER_APP: // color picker
-                currentRunningAppPtr = new SomeOtherApp();
-                newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
-                break;
-            case UDP_SEND_TEST_APP:
-                // TouchInputDriver::enableTouch();
-                currentRunningAppPtr = new UDPSendTestApp();
-                newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
-                break;
-            case SETTINGS:
-                currentRunningAppPtr = new Settings();
-                newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
-                break;
-            
-            default:
-                break;
+        case UPDATE_LOGS:
+            currentRunningAppPtr = new UpdateLogs();
+            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+            break;
+        case LED_COMMUNICATION:
+            TouchInputDriver::enableTouch();
+            currentRunningAppPtr = new LedCommunicator();
+            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+            break;
+        case SOME_OTHER_APP: // color picker
+            currentRunningAppPtr = new SomeOtherApp();
+            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+            break;
+        case UDP_SEND_TEST_APP:
+            // TouchInputDriver::enableTouch();
+            currentRunningAppPtr = new UDPSendTestApp();
+            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+            break;
+        case SETTINGS:
+            currentRunningAppPtr = new Settings();
+            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+            break;
+
+        default:
+            break;
         }
 
-
         // Check if application is correctly created
-        if(currentRunningAppPtr != nullptr){
+        if (currentRunningAppPtr != nullptr)
+        {
             display.setAppDisplayArea(newDisplayArea);
             // Request app start up
             currentRunningAppPtr->start(newDisplayArea.w, newDisplayArea.h);
@@ -308,7 +322,8 @@ void PortableOS::mainMenuChoice(int8_t choice)
             topOverlay.activate();
             display.fillScreen(currentRunningAppPtr->getBackgroundColor());
             isMainMenuActive = false;
-        }else
+        }
+        else
         {
             // Otherwise, request Menu to gets active again
             mainMenu.requestActivation();
@@ -318,40 +333,38 @@ void PortableOS::mainMenuChoice(int8_t choice)
     }
 }
 
-
 uint32_t PortableOS::getSystemColor(SystemColor col)
 {
-    switch(col)
+    switch (col)
     {
-        case SELECTION_COLOR:
-            return systemColors[0];
-        case BG_COLOR:
-            return systemColors[1];
-        case MOTIVE_COLOR:
-            return systemColors[2];
+    case SELECTION_COLOR:
+        return systemColors[0];
+    case BG_COLOR:
+        return systemColors[1];
+    case MOTIVE_COLOR:
+        return systemColors[2];
 
-        default:
-            return 0;
+    default:
+        return 0;
     }
 }
 
-
 void PortableOS::setSystemColor(SystemColor col, uint32_t value)
 {
-    switch(col)
+    switch (col)
     {
-        case SELECTION_COLOR:
-            systemColors[SELECTION_COLOR] = value;
-            break;
-        case BG_COLOR:
-            systemColors[BG_COLOR] = value;
-            break;
-        case MOTIVE_COLOR:
-            systemColors[MOTIVE_COLOR] = value;
-            break;
+    case SELECTION_COLOR:
+        systemColors[SELECTION_COLOR] = value;
+        break;
+    case BG_COLOR:
+        systemColors[BG_COLOR] = value;
+        break;
+    case MOTIVE_COLOR:
+        systemColors[MOTIVE_COLOR] = value;
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
@@ -370,133 +383,44 @@ bool PortableOS::deactivateAppTextMode()
     return PortableOS::topOverlay.deactivateAppTextMode();
 }
 
-void PortableOS::udpMessageRecieved(MessageUDP& msg) {
-    if (currentRunningAppPtr != nullptr) {
-        currentRunningAppPtr->udpDataReceived(msg.getId(), msg.getPayload());
-    }
-
-    // Notify subsystemMonitor that slave is communicating
-    subsystemMonitor.subsystemStatusReceived();
+bool PortableOS::sendUDP(MessageUDP &data)
+{
+    // TODO
+    return true;
 }
 
-void PortableOS::subsystemStatusReceived(SubsystemStatusData& data)
+bool PortableOS::sendBroadcast(MessageUDP &data)
 {
-    memcpy(&subsystemOverview.data, &data, sizeof(data));
-    subsystemOverview.isCommunicating = true;
+    // MessageUDP::IPAddr ipRef = data.getIPAddress();
 
-    // Notify subsystemMonitor that slave is communicating
-    subsystemMonitor.subsystemStatusReceived();
+    // ipRef.element1 = subsystemOverview.data.ipOctet1;
+    // ipRef.element2 = subsystemOverview.data.ipOctet2;
+    // ipRef.element3 = subsystemOverview.data.ipOctet3;
 
-    //Serial.println(String(subsystemOverview.data.ipOctet1) + "." + String(subsystemOverview.data.ipOctet2) + "." + String(subsystemOverview.data.ipOctet3) + "." + String(subsystemOverview.data.ipOctet4));
-
-    //Serial.print("=");
-}
-
-void PortableOS::networkSsidReceived(String& ssid)
-{
-    //currentConnectedNetworkCredentials.ssid = ssid;
-    subsystemOverview.credentials.ssid = ssid;
-
-    // Notify subsystemMonitor that slave is communicating
-    subsystemMonitor.subsystemStatusReceived();
-}
-
-void PortableOS::networkPasswordReceived(String& password)
-{
-    //currentConnectedNetworkCredentials.password = password;
-    subsystemOverview.credentials.password = password;
-
-    // Notify subsystemMonitor that slave is communicating
-    subsystemMonitor.subsystemStatusReceived();
-}
-
-void PortableOS::networkDataReceived(NetworkDataUARTMessage& data)
-{
-    StringBuffer ssid(data.ssid);
-    String ssidString = ssid.toString();
-    StringBuffer password(data.password);
-    String passwordString = password.toString();
-
-    //Serial.println("Received network Data : " + ssidString + " , " + passwordString);
-
-    subsystemOverview.credentials.ssid = ssidString;
-    subsystemOverview.credentials.password = passwordString;
-
-
-    // if(!wasNetworkConnectedNotificationShowed && subsystemOverview.data.isWiFiConnectedFlag)
+    // // Workaround for Iphone network
+    // if (subsystemOverview.data.ipOctet1 != 172)
     // {
-    //     Notification connectedNotification {
-    //         .title = "WiFi connected!",
-    //         .text = "You have been connected to " + ssidString,
-    //         .bgcolor = TFT_GREENYELLOW
-    //     };
-    //     OS_API::pushNotification(connectedNotification);
-
-    //     wasNetworkConnectedNotificationShowed = true;
+    //     ipRef.element4 = 255;
+    // }
+    // else
+    // {
+    //     ipRef.element4 = 15;
     // }
 
-}
-
-
-
-bool PortableOS::sendUDP(MessageUDP& data)
-{
-    MessageUART transmissionMsg(UDP_OUTGOING_PACKAGE);
-    data.resetByteIterationCount();
-    while(data.switchToNextByte())
-    {
-        transmissionMsg.pushData(data.getCurrentByte());
-    }
-    UARTCommunicator::transmit(transmissionMsg);
+    // data.setIpAddress(ipRef);
+    // PortableOS::sendUDP(data);
 
     return true;
 }
 
-bool PortableOS::sendBroadcast(MessageUDP& data)
+void PortableOS::connectToNetwork(std::string ssid, std::string password)
 {
-    MessageUDP::IPAddr ipRef = data.getIPAddress();
-
-    ipRef.element1 = subsystemOverview.data.ipOctet1;
-    ipRef.element2 = subsystemOverview.data.ipOctet2;
-    ipRef.element3 = subsystemOverview.data.ipOctet3;
-
-    // Workaround for Iphone network
-    if(subsystemOverview.data.ipOctet1 != 172){
-        ipRef.element4 = 255;
-    }
-    else 
-    {
-        ipRef.element4 = 15;
-    }
-    
-    data.setIpAddress(ipRef);
-    PortableOS::sendUDP(data);
-
-    return true;
-}
-
-void PortableOS::connectToNetwork(std::string ssid, std::string password) {
-    MessageUART transmissionSsid(CONNECT_TO_NETWORK_SSID);
-    MessageUART transmissionPassword(CONNECT_TO_NETWORK_PASSWORD);
-
-    String ssidStringTmp(ssid.c_str());
-    String pwdStringTmp(password.c_str());
-
-    StringBuffer ssidTmp(ssidStringTmp);
-    StringBuffer passwordTmp(pwdStringTmp);
-
-    transmissionSsid.pushData((uint8_t*)ssidTmp.getBuffer(), 40);
-    transmissionPassword.pushData((uint8_t*)passwordTmp.getBuffer(), 40);
-
-    UARTCommunicator::transmit(transmissionSsid);
-    delay(5);
-    UARTCommunicator::transmit(transmissionPassword);
+    // TODO
 }
 
 void PortableOS::disconnectWiFiNetwork()
 {
-    MessageUART disconnectRequest(NETWORK_DISCONNECT_REQUEST);
-    UARTCommunicator::transmit(disconnectRequest);
+    // TODO
 
     // Notification networkDisconnected{
     //     .title = "Network disconnected",
@@ -507,27 +431,15 @@ void PortableOS::disconnectWiFiNetwork()
 
     // wasNetworkConnectedNotificationShowed = false;
 }
- 
 
-const SubsystemOverview PortableOS::getSubsystemOverview()
+void PortableOS::pushNotification(Notification &notif)
 {
-    // SubsystemOverview retVal;
-    // retVal.data = currentSubsystemStatus;
-    // retVal.isCommunicating = isSubsystemComunicating;
-    // retVal.credentials = currentConnectedNetworkCredentials;
-
-    return subsystemOverview;
-}
-
-void PortableOS::pushNotification(Notification& notif) {
     notificationService.pushNotification(notif);
 }
 
-
-
-bool PortableOS::contextOvertake(RuntimeApplication* overtaker)
+bool PortableOS::contextOvertake(RuntimeApplication *overtaker)
 {
-    if(overtaker != nullptr)
+    if (overtaker != nullptr)
     {
         contextOvertaker = overtaker;
         isContextTakenOverMode = true;
@@ -544,13 +456,14 @@ void PortableOS::contextRelease()
     isContextTakenOverMode = false;
     contextOvertaker = nullptr;
 
-    if(isMainMenuActive)
+    if (isMainMenuActive)
     {
         mainMenu.forceRender(display);
-    }else
+    }
+    else
     {
         topOverlay.forceRender(display);
-        if(currentRunningAppPtr != nullptr)
+        if (currentRunningAppPtr != nullptr)
         {
             currentRunningAppPtr->forceRender(display);
         }

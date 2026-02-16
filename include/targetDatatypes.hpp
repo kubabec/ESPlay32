@@ -5,11 +5,11 @@
 
 #ifndef EMULATOR
     // Console code
+    #include <FS.h>
     #include <TFT_eSPI.h>
     #include <SPI.h>
     #include <Arduino.h>
     #include <Vector.h>
-    #include <FS.h>
 #else
     // Emulator code
     #include <QString>

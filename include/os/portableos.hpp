@@ -13,12 +13,10 @@
 #include "app/settings/settingsMainApp.hpp"
 #include "os/drivers/touchinputdriver.hpp"
 #include "networkTools/messageUDP.hpp"
-#include "networkTools/uartCommunicator.hpp"
 #include "os/mainloadingscreen.h"
 #include "os/osDatatypes.hpp"
 
 // Services
-#include "os/services/subsystemMonitor.hpp"
 #include "os/services/notificationService.hpp"
 
 
@@ -55,7 +53,6 @@ class PortableOS{
     // static SubsystemStatusData currentSubsystemStatus;
     // static NetworkCredentials currentConnectedNetworkCredentials;
     // static bool isSubsystemComunicating;
-    static SubsystemOverview subsystemOverview;
     static bool wasNetworkConnectedNotificationShowed;
 
 
@@ -65,12 +62,12 @@ class PortableOS{
     static DisplayProvider display;
 
     /**** SERVICES *****/
-    static SubsystemMonitorService subsystemMonitor;
     static NotificationService notificationService;
     /**** SERVICES *****/
 
     // Main 25ms task
     static void osTask10ms();
+    static void osTaskUnlimited();
     static void internalServicesTask();
     // 1s task
     static void osTask1s();
@@ -95,13 +92,6 @@ class PortableOS{
     static bool activateAppTextMode(String appText, uint32_t textColor, uint8_t timeout = 0);
     static bool deactivateAppTextMode();
 
-    static void udpMessageRecieved(MessageUDP& msg);
-    static void subsystemStatusReceived(SubsystemStatusData& data);
-    static void networkSsidReceived(String& ssid);
-    static void networkPasswordReceived(String& password);
-    static void networkDataReceived(NetworkDataUARTMessage& data);
-
-
     // OS Service API
     static bool contextOvertake(RuntimeApplication* overtaker);
     static void contextRelease();
@@ -111,7 +101,6 @@ class PortableOS{
     static bool sendBroadcast(MessageUDP& data);
     static void connectToNetwork(std::string ssid, std::string password);
     static void disconnectWiFiNetwork();
-    static const SubsystemOverview getSubsystemOverview();
     static void pushNotification(Notification& notif);
 };
 

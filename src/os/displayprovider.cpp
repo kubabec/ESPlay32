@@ -102,7 +102,7 @@
     DisplayProvider::DisplayProvider(){
         globalPtrTftDisplay = &(this->tftDisplay);
         tftDisplay.init();
-        tftDisplay.setRotation(1);
+        tftDisplay.setRotation(3);
 
         // Initialize screen with BLACK color
         tftDisplay.fillScreen(TFT_BLACK);

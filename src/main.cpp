@@ -1,17 +1,14 @@
 #include "os/portableos.hpp"
 #include "os/drivers/keyboarddriver.hpp"
 #include "os/drivers/touchinputdriver.hpp"
-#include "networkTools/uartCommunicator.hpp"
 #include "networkTools/messageUDP.hpp"
+
+#include <WiFi.h>
+
 
 #define MS_50 50
 #define MS_200 200
 
-void uartUdpRouterTask() 
-{
-    UARTCommunicator::task();
-    DispatcherUART::task();
-}
 
 // Initial arduino function
 void setup()
@@ -20,8 +17,24 @@ void setup()
     Serial.begin(115200);
     // Serial2.begin(115200, SERIAL_8N1, 13, 12);
 
-    DispatcherUART::readIncommingMessagesBuffer = UARTCommunicator::getReceivedMessagesBufferReference;
-    UARTCommunicator::init();
+    delay(1000);
+
+//   Serial.println();
+//   Serial.print("Laczenie z WiFi: ");
+//   Serial.println("XXX");
+
+//   WiFi.mode(WIFI_STA);
+//   WiFi.begin("XXX", "XXX");
+
+//   while (WiFi.status() != WL_CONNECTED) {
+//     delay(500);
+//     Serial.print(".");
+//   }
+
+//   Serial.println();
+//   Serial.println("WiFi polaczone!");
+//   Serial.print("IP: ");
+//   Serial.println(WiFi.localIP());
 
     // Initialize PortableOS
     PortableOS::init();
@@ -82,7 +95,6 @@ void loop()
     // Process keyboard
     KeyboardDriver::task();
     TouchInputDriver::task();
-    uartUdpRouterTask();
 
     // Process 25ms timer event
     if (millis() - timer10 >= 10) {
@@ -90,6 +102,8 @@ void loop()
         PortableOS::osTask10ms();
         timer10 = millis();
     } 
+
+    PortableOS::osTaskUnlimited();
 
     // Process 1000ms timer event
     if (millis() - timer1000 >= 1000) {

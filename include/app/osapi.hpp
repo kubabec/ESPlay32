@@ -1,6 +1,7 @@
 #ifndef OS_API_H
 #define OS_API_H
 #include <functional>
+#include <string>
 #include "networkTools/messageUDP.hpp"
 #include "os/osDatatypes.hpp"
 
@@ -11,7 +12,6 @@ class OS_API
     static const std::function<bool(MessageUDP& data)> sendUdpBroadcastMessage;
     static const std::function<void(std::string ssid, std::string password)> connectToNetwork;
     static const std::function<void(void)> disconnectWiFiNetwork;
-    static const std::function<const SubsystemOverview(void)> getSubsystemOverview;
     static const std::function<void(Notification&)> pushNotification;
 };
 

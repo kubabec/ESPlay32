@@ -209,12 +209,27 @@
 // For ESP32 Dev board (only tested with ILI9341 display)
 // The hardware SPI can be mapped to any pins
 
+// #define TFT_MISO 19
+// #define TFT_MOSI 23
+// #define TFT_SCLK 18
+// #define TFT_CS   15  // Chip select control pin
+// #define TFT_DC    2  // Data Command control pin
+// #define TFT_RST   4  // Reset pin (could connect to RST pin)
+
+// User Setup for the ESP32 TouchDown V1.0 and V1.1
+// ILI9488 using 4-wire SPI and using an FT6206 touch controller
+
+
 #define TFT_MISO 19
 #define TFT_MOSI 23
 #define TFT_SCLK 18
-#define TFT_CS   15  // Chip select control pin
-#define TFT_DC    2  // Data Command control pin
-#define TFT_RST   4  // Reset pin (could connect to RST pin)
+#define TFT_CS   21
+#define TFT_DC   16
+#define TFT_RST  17
+
+#define TOUCH_CS 22
+
+
 //#define TFT_RST  -1  // Set TFT_RST to -1 if display RESET is connected to ESP32 board RST
 
 // For ESP32 Dev board (only tested with GC9A01 display)
@@ -227,7 +242,7 @@
 //#define TFT_RST  33  // Reset pin (could connect to Arduino RESET pin)
 //#define TFT_BL   22  // LED back-light
 
-#define TOUCH_CS 21     // Chip select pin (T_CS) of touch screen
+// #define TOUCH_CS 21     // Chip select pin (T_CS) of touch screen
 
 //#define TFT_WR 22    // Write strobe for modified Raspberry Pi TFT only
 
@@ -318,7 +333,7 @@
 
 // Comment out the #define below to stop the SPIFFS filing system and smooth font code being loaded
 // this will save ~20kbytes of FLASH
-#define SMOOTH_FONT
+// #define SMOOTH_FONT
 
 
 // ##################################################################################

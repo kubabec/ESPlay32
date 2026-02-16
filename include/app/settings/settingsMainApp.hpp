@@ -8,7 +8,6 @@ class Settings : public RuntimeApplication
     enum SettingState
     {
         SETTINGS_MENU,
-        SETTINGS_SUBSYSTEM_INSPECTOR,
         SETTINGS_NETWORK_CONNECTION_MENU,
         SETTINGS_DISCONNECT_FROM_NETWORK,
         SETTINGS_SELECTION_COLOR_MENU,
