@@ -75,6 +75,9 @@ private:
     int gamesOverCount = 0;
     ProgramState programState = SELECTION;
     Mode gameMode = SINGLE;
+    int appHeight = 0;
+    int appWidth = 0;
+    const int obstacleWidth = 30;
 
     bool isObstOnPlayerX(Game& game) ;
     bool isCollision(Game& game);

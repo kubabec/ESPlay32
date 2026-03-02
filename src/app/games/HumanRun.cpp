@@ -7,6 +7,11 @@ HumanRun::HumanRun()
 void HumanRun::start(int w, int h)
 {
     initializeGame(gameArray[0], 0, 15, 10);
+    appHeight = h;
+    appWidth = w;
+    for (int g = 0;g < 5; g++){
+    gameArray[0].obstacles[g].x = appWidth+obstacleWidth;
+    }
 }
 
 void HumanRun::input(InputType input)
@@ -57,9 +62,10 @@ void HumanRun::render(DisplayProvider &display)
     {
         if (gameArray[0].obstacles[i].isActive)
         {
-            display.fillCircle(gameArray[0].obstacles[i].x, 10, 5, TFT_BLUE);
+            display.fillCircle(gameArray[0].obstacles[i].x, appHeight-50,50,TFT_BLUE);
         }
     }
+    // display.fillCircle(100,appHeight-50,50,TFT_BLUE);
 }
 
 void HumanRun::forceRender(DisplayProvider &display)
