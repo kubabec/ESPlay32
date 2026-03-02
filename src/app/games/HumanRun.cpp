@@ -9,8 +9,10 @@ void HumanRun::start(int w, int h)
     initializeGame(gameArray[0], 0, 15, 10);
     appHeight = h;
     appWidth = w;
-    for (int g = 0;g < 5; g++){
-    gameArray[0].obstacles[g].x = appWidth+obstacleWidth;
+    for (int g = 0; g < 5; g++)
+    {
+        gameArray[0].obstacles[g].x = appWidth + obstacleWidth;
+        gameArray[0].obstacles[g].oldX = appWidth + obstacleWidth;
     }
 }
 
@@ -62,7 +64,12 @@ void HumanRun::render(DisplayProvider &display)
     {
         if (gameArray[0].obstacles[i].isActive)
         {
-            display.fillCircle(gameArray[0].obstacles[i].x, appHeight-50,50,TFT_BLUE);
+            if (gameArray[0].obstacles[i].oldX != gameArray[0].obstacles[i].x)
+            {
+                display.fillCircle(gameArray[0].obstacles[i].oldX, appHeight - 50, 50, getBackgroundColor());
+                gameArray[0].obstacles[i].oldX = gameArray[0].obstacles[i].x;
+            }
+            display.fillCircle(gameArray[0].obstacles[i].x, appHeight - 50, 50, TFT_BLUE);
         }
     }
     // display.fillCircle(100,appHeight-50,50,TFT_BLUE);
@@ -128,10 +135,12 @@ void HumanRun::processObstacleMove(Game &game)
         {
             if (game.obstacles[i].x > 0)
             {
-                game.obstacles[i].x--;
+                game.obstacles[i].oldX = game.obstacles[i].x;
+                game.obstacles[i].x -= 10;
             }
             else
             {
+                game.obstacles[i].oldX = game.obstacles[i].x;
                 game.obstacles[i].x = game.boardEndX;
                 game.obstacles[i].isActive = false;
             }

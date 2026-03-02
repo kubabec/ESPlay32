@@ -27,6 +27,7 @@ struct RunObstacle {
   bool isActive = false;
   CustomCharacter type = OBSTACLE1;
   int x = 15;
+  int oldX = 15;
 };
 
 struct Player {
