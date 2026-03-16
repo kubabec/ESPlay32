@@ -37,8 +37,6 @@ struct Player {
 };
 
 struct Game {
-  unsigned long mainTaskTimer = 0;
-  int mainTaskDelay = 700;
   bool isGameOver = false;
   int ticksToGenerateNewObst = 4;
   RunObstacle obstacles[5];
@@ -80,6 +78,7 @@ private:
     int appWidth = 0;
     const int obstacleWidth = 30;
 
+    void renderObstacle(int indeks,DisplayProvider &display);
     bool isObstOnPlayerX(Game& game) ;
     bool isCollision(Game& game);
     void resetGameOver(Game& game);

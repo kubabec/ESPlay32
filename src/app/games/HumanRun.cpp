@@ -47,7 +47,7 @@ void HumanRun::touchInput(int x, int y)
 void HumanRun::update()
 {
     static long timer = 0;
-    if (millis() - timer > 500)
+    if (millis() - timer > 100)
     {
         int gamesCount = (gameMode == DUEL) ? 2 : 1;
         for (int i = 0; i < gamesCount; i++)
@@ -57,19 +57,22 @@ void HumanRun::update()
         timer = millis();
     }
 }
-
+void HumanRun::renderObstacle(int indeks, DisplayProvider &display)
+{
+    if (gameArray[0].obstacles[indeks].oldX != gameArray[0].obstacles[indeks].x)
+    {
+        display.fillCircle(gameArray[0].obstacles[indeks].oldX, appHeight - 50, 50, getBackgroundColor());
+        gameArray[0].obstacles[indeks].oldX = gameArray[0].obstacles[indeks].x;
+        display.fillCircle(gameArray[0].obstacles[indeks].x, appHeight - 50, 50, TFT_BLUE);
+    }
+}
 void HumanRun::render(DisplayProvider &display)
 {
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 1; i++)
     {
         if (gameArray[0].obstacles[i].isActive)
         {
-            if (gameArray[0].obstacles[i].oldX != gameArray[0].obstacles[i].x)
-            {
-                display.fillCircle(gameArray[0].obstacles[i].oldX, appHeight - 50, 50, getBackgroundColor());
-                gameArray[0].obstacles[i].oldX = gameArray[0].obstacles[i].x;
-            }
-            display.fillCircle(gameArray[0].obstacles[i].x, appHeight - 50, 50, TFT_BLUE);
+            renderObstacle(i, display);
         }
     }
     // display.fillCircle(100,appHeight-50,50,TFT_BLUE);
@@ -240,10 +243,10 @@ void HumanRun::generateObstacle(Game &game)
         if (game.obstacles[i].isActive == false)
         {
             game.obstacles[i].isActive = true;
-            int randValue = random(10);
+            int randValue = random(200);
             while (randValue < 2 || randValue == 4)
             {
-                randValue = random(10);
+                randValue = random(200);
             }
             game.ticksToGenerateNewObst = randValue;
             return;
@@ -253,7 +256,7 @@ void HumanRun::generateObstacle(Game &game)
 
 void HumanRun::processGame(Game &game)
 {
-    if ((millis() - game.mainTaskTimer > game.mainTaskDelay) && game.isGameOver == false)
+    if (game.isGameOver == false)
     {
         processObstacleMove(game);
         if (game.ticksToGenerateNewObst == 0)
@@ -269,15 +272,6 @@ void HumanRun::processGame(Game &game)
             gamesOverCount++;
             return;
         }
-        game.mainTaskTimer = millis();
-        if (game.mainTaskDelay > 300)
-        {
-            game.ticksToSpeedUp--;
-            if (game.ticksToSpeedUp == 0)
-            {
-                game.mainTaskDelay -= 20;
-                game.ticksToSpeedUp = 5;
-            }
-        }
+        
     }
 }
