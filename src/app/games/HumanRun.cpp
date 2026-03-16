@@ -61,21 +61,20 @@ void HumanRun::renderObstacle(int indeks, DisplayProvider &display)
 {
     if (gameArray[0].obstacles[indeks].oldX != gameArray[0].obstacles[indeks].x)
     {
-        display.fillCircle(gameArray[0].obstacles[indeks].oldX, appHeight - 50, 50, getBackgroundColor());
+        display.fillCircle(gameArray[0].obstacles[indeks].oldX, appHeight - OBSTACLE_SIZE, OBSTACLE_SIZE, getBackgroundColor());
         gameArray[0].obstacles[indeks].oldX = gameArray[0].obstacles[indeks].x;
-        display.fillCircle(gameArray[0].obstacles[indeks].x, appHeight - 50, 50, TFT_BLUE);
+        display.fillCircle(gameArray[0].obstacles[indeks].x, appHeight - OBSTACLE_SIZE, OBSTACLE_SIZE, TFT_BLUE);
     }
 }
 void HumanRun::render(DisplayProvider &display)
 {
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 5; i++)
     {
         if (gameArray[0].obstacles[i].isActive)
         {
             renderObstacle(i, display);
         }
     }
-    // display.fillCircle(100,appHeight-50,50,TFT_BLUE);
 }
 
 void HumanRun::forceRender(DisplayProvider &display)
@@ -136,15 +135,15 @@ void HumanRun::processObstacleMove(Game &game)
     {
         if (game.obstacles[i].isActive == true)
         {
-            if (game.obstacles[i].x > 0)
+            if (game.obstacles[i].x > -60)
             {
                 game.obstacles[i].oldX = game.obstacles[i].x;
                 game.obstacles[i].x -= 10;
             }
             else
             {
-                game.obstacles[i].oldX = game.obstacles[i].x;
-                game.obstacles[i].x = game.boardEndX;
+                game.obstacles[i].oldX = appWidth + obstacleWidth;
+                game.obstacles[i].x = appWidth + obstacleWidth;
                 game.obstacles[i].isActive = false;
             }
         }
@@ -240,15 +239,15 @@ void HumanRun::generateObstacle(Game &game)
 {
     for (int i = 0; i < 5; i++)
     {
+        Serial.println("Looking for empty obstacle slot");
         if (game.obstacles[i].isActive == false)
         {
             game.obstacles[i].isActive = true;
-            int randValue = random(200);
-            while (randValue < 2 || randValue == 4)
-            {
-                randValue = random(200);
-            }
+            int randValue = random(20);
+            randValue += ((OBSTACLE_SIZE / 10) + 3);
+
             game.ticksToGenerateNewObst = randValue;
+            Serial.println("Generating new obstacle!");
             return;
         }
     }

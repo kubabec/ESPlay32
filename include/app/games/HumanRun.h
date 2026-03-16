@@ -51,6 +51,10 @@ enum Mode {
   SINGLE,
   DUEL
 };
+
+#define OBSTACLE_SIZE 50
+
+
 class HumanRun : public RuntimeApplication
 {
 public:
