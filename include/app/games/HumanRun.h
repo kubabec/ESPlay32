@@ -15,7 +15,6 @@ enum CustomCharacter {
 enum PlayerState {
   RUNNING1,
   RUNNING2,
-  JUMP_START,
   JUMP,
   JUMP_DOWN
 };
@@ -34,7 +33,9 @@ struct Player {
   PlayerState state = RUNNING1;
   int posX = 100;
   int posY = 0;
+  int oldY = 0;
   int score = 0;
+  
 };
 
 struct Game {
@@ -95,7 +96,7 @@ private:
     void generateObstacle(Game& game);
     void processGame(Game& game);
 
-    void renderPlayer(DisplayProvider &display);
+    void renderPlayer(DisplayProvider &display,uint32_t bodyColor,uint32_t headColor,int y);
     int getY (float y);
 };
 

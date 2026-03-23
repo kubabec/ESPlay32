@@ -68,7 +68,8 @@ void HumanRun::renderObstacle(int indeks, DisplayProvider &display)
 }
 void HumanRun::render(DisplayProvider &display)
 {
-    renderPlayer(display);
+    renderPlayer(display,TFT_BLACK,TFT_BLACK,gameArray[0].player.oldY);
+    renderPlayer(display,TFT_GOLD,TFT_PURPLE,gameArray[0].player.posY);
     for (int i = 0; i < 5; i++)
     {
         if (gameArray[0].obstacles[i].isActive)
@@ -163,39 +164,24 @@ void HumanRun::processHumanMove(Game &game)
         game.player.state = RUNNING1;
         break;
 
-    case JUMP_START:
-        if (game.stateCompleted == true)
-        {
-            game.player.state = JUMP;
-            game.stateCompleted = false;
-        }
-        else
-        {
-            game.stateCompleted = true;
-        }
-        break;
-
     case JUMP:
-        if (game.stateCompleted == true)
+        if (gameArray[0].player.posY < 150)
         {
-            game.player.state = JUMP_DOWN;
-            game.stateCompleted = false;
-        }
-        else
-        {
-            game.stateCompleted = true;
+            gameArray[0].player.oldY = gameArray[0].player.posY;
+            gameArray[0].player.posY += 10;
+        }else{
+            gameArray[0].player.state = JUMP_DOWN;
         }
         break;
 
     case JUMP_DOWN:
-        if (game.stateCompleted == true)
+        if (gameArray[0].player.posY > 0)
         {
-            game.player.state = RUNNING1;
-            game.stateCompleted = false;
-        }
-        else
-        {
-            game.stateCompleted = true;
+            gameArray[0].player.oldY = gameArray[0].player.posY;
+            gameArray[0].player.posY -= 10;
+        }else{
+            gameArray[0].player.oldY = 0;
+            gameArray[0].player.state = RUNNING1;
         }
         break;
     }
@@ -217,7 +203,7 @@ void HumanRun::processButton(Game &game)
 {
     if (game.player.state == RUNNING1 || game.player.state == RUNNING2)
     {
-        game.player.state = JUMP_START;
+        game.player.state = JUMP;
     }
     if (game.isGameOver == true)
     {
@@ -266,7 +252,7 @@ void HumanRun::processGame(Game &game)
         game.ticksToGenerateNewObst--;
         processHumanMove(game);
         processScore(game);
-        game.isGameOver = isCollision(game);
+        // game.isGameOver = isCollision(game);
         if (game.isGameOver == true)
         {
             gamesOverCount++;
@@ -280,7 +266,7 @@ int HumanRun::getY(float y)
     return appHeight - (int)y;
 }
 
-void HumanRun::renderPlayer(DisplayProvider &display)
+void HumanRun::renderPlayer(DisplayProvider &display,uint32_t bodyColor,uint32_t headColor,int y)
 {
     const float playerHeight = 100;
     const float headRadius = playerHeight * 0.25;
@@ -294,21 +280,20 @@ void HumanRun::renderPlayer(DisplayProvider &display)
     const float bodyWidth = playerWidth * 0.3;
     const float legWidth = playerWidth * 0.5;
     int x = gameArray[0].player.posX;
-    int y = gameArray[0].player.posY;
-    display.drawLine(x, getY(legHeight + y), x + (int)(legWidth * 0.5), getY(y), TFT_GOLD);
-    display.drawLine(x + (int)(legWidth * 0.5), getY(y), x + (int)(legWidth), getY(5 + y), TFT_GOLD);
-    display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + y),x + (int)(legWidth * 0.5), getY(5 + y), TFT_GOLD);
-    display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + y), x + (int)(legWidth * 0.5), getY(legHeight + bodyHeight + y), TFT_GOLD);
-    display.drawLine(x + playerWidth *0.5, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6), getY(legHeight + bodyHeight + y), TFT_GOLD);
-    display.drawLine(x + playerWidth *0.5, getY(legHeight + bodyHeight + y + 5), x + playerWidth *0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), TFT_GOLD);
-    
-    display.drawLine(x + playerWidth *0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight),x - playerWidth*0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), TFT_GOLD);
+    display.drawLine(x, getY(legHeight + y), x + (int)(legWidth * 0.5), getY(y), bodyColor);
+    display.drawLine(x + (int)(legWidth * 0.5), getY(y), x + (int)(legWidth), getY(5 + y), bodyColor);
+    display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + y), x + (int)(legWidth * 0.5), getY(5 + y), bodyColor);
+    display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + y), x + (int)(legWidth * 0.5), getY(legHeight + bodyHeight + y), bodyColor);
+    display.drawLine(x + playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6), getY(legHeight + bodyHeight + y), bodyColor);
+    display.drawLine(x + playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5), x + playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), bodyColor);
 
-    display.drawLine(x - playerWidth*0.5, getY(legHeight + bodyHeight + y + 5 ), x - playerWidth*0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), TFT_GOLD);
-    display.drawLine(x - playerWidth*0.5, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6), getY(legHeight + bodyHeight + y), TFT_GOLD);
-    display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + y), x - (int)(legWidth * 0.5), getY(legHeight + bodyHeight + y ), TFT_GOLD);
-    display.drawLine(x - (int)(legWidth), getY(legHeight + y), x - (int)(legWidth * 0.5), getY(y), TFT_GOLD);
-    display.drawLine(x - (int)(legWidth * 0.5), getY(y), x - (int)(legWidth), getY(5 + y), TFT_GOLD);
-    display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + y), x, getY(5 + y), TFT_GOLD);
-    display.fillCircle(x, getY(legHeight + bodyHeight + y + 5 + fingersHeight + headRadius), headRadius, TFT_PURPLE);
+    display.drawLine(x + playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), x - playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), bodyColor);
+
+    display.drawLine(x - playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5), x - playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), bodyColor);
+    display.drawLine(x - playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6), getY(legHeight + bodyHeight + y), bodyColor);
+    display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + y), x - (int)(legWidth * 0.5), getY(legHeight + bodyHeight + y), bodyColor);
+    display.drawLine(x - (int)(legWidth), getY(legHeight + y), x - (int)(legWidth * 0.5), getY(y), bodyColor);
+    display.drawLine(x - (int)(legWidth * 0.5), getY(y), x - (int)(legWidth), getY(5 + y), bodyColor);
+    display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + y), x, getY(5 + y), bodyColor);
+    display.fillCircle(x, getY(legHeight + bodyHeight + y + 5 + fingersHeight + headRadius), headRadius, headColor);
 }
