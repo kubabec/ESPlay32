@@ -47,7 +47,7 @@ void HumanRun::touchInput(int x, int y)
 void HumanRun::update()
 {
     static long timer = 0;
-    if (millis() - timer > 100)
+    if (millis() - timer > 10)
     {
         int gamesCount = (gameMode == DUEL) ? 2 : 1;
         for (int i = 0; i < gamesCount; i++)
@@ -142,7 +142,7 @@ void HumanRun::processObstacleMove(Game &game)
             if (game.obstacles[i].x > -60)
             {
                 game.obstacles[i].oldX = game.obstacles[i].x;
-                game.obstacles[i].x -= 10;
+                game.obstacles[i].x -= 5;
             }
             else
             {
@@ -170,7 +170,7 @@ void HumanRun::processHumanMove(Game &game)
         if (gameArray[0].player.posY < 150)
         {
             gameArray[0].player.oldY = gameArray[0].player.posY;
-            gameArray[0].player.posY += 10;
+            gameArray[0].player.posY += 5;
         }else{
             gameArray[0].player.state = JUMP_DOWN;
         }
@@ -180,7 +180,7 @@ void HumanRun::processHumanMove(Game &game)
         if (gameArray[0].player.posY > 0)
         {
             gameArray[0].player.oldY = gameArray[0].player.posY;
-            gameArray[0].player.posY -= 10;
+            gameArray[0].player.posY -= 5;
         }else{
             gameArray[0].player.oldY = 0;
             gameArray[0].player.state = RUNNING1;
@@ -271,31 +271,41 @@ int HumanRun::getY(float y)
 void HumanRun::renderPlayer(DisplayProvider &display,uint32_t bodyColor,uint32_t headColor,int y)
 {
     const float playerHeight = 100;
-    const float headRadius = playerHeight * 0.25;
-    const float armHeight = playerHeight * 0.1;
+    const float headRadius = playerHeight * 0.20;
+    const float armHeight = playerHeight * 0.15;
     const float bodyHeight = playerHeight * 0.35;
     const float legHeight = playerHeight * 0.3;
-    const int fingersHeight = (int)(armHeight * 0.7);
 
     const float playerWidth = 60;
-    const float handWidth = playerWidth * 0.35;
+    const float handWidth = playerWidth * 0.5;
     const float bodyWidth = playerWidth * 0.3;
     const float legWidth = playerWidth * 0.5;
     int x = gameArray[0].player.posX;
+    // Right leg
     display.drawLine(x, getY(legHeight + y), x + (int)(legWidth * 0.5), getY(y), bodyColor);
     display.drawLine(x + (int)(legWidth * 0.5), getY(y), x + (int)(legWidth), getY(5 + y), bodyColor);
-    display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + y), x + (int)(legWidth * 0.5), getY(5 + y), bodyColor);
+    display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + y), x + (int)(legWidth), getY(5 + y), bodyColor);
+
+    // Body right side
     display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + y), x + (int)(legWidth * 0.5), getY(legHeight + bodyHeight + y), bodyColor);
-    display.drawLine(x + playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6), getY(legHeight + bodyHeight + y), bodyColor);
-    display.drawLine(x + playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5), x + playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), bodyColor);
+    display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + bodyHeight + y), x + handWidth, getY(legHeight + (bodyHeight * 0.4) + y), bodyColor);
+    display.drawLine(x + handWidth, getY(legHeight + (bodyHeight * 0.4) + y), x + handWidth + (handWidth*0.4), getY(legHeight + (bodyHeight * 0.64) + y), bodyColor);
+    display.drawLine(x + handWidth + (handWidth*0.4), getY(legHeight + (bodyHeight * 0.64) + y), x + bodyWidth, getY(legHeight + bodyHeight + armHeight + y), bodyColor);
 
-    display.drawLine(x + playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), x - playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), bodyColor);
+    // Neck
+    display.drawLine(x + bodyWidth, getY(legHeight + bodyHeight + armHeight + y),  x - bodyWidth, getY(legHeight + bodyHeight + armHeight + y), bodyColor);
 
-    display.drawLine(x - playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5), x - playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), bodyColor);
-    display.drawLine(x - playerWidth * 0.5, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6), getY(legHeight + bodyHeight + y), bodyColor);
+    // Body left side 
     display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + y), x - (int)(legWidth * 0.5), getY(legHeight + bodyHeight + y), bodyColor);
-    display.drawLine(x - (int)(legWidth), getY(legHeight + y), x - (int)(legWidth * 0.5), getY(y), bodyColor);
+    display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + bodyHeight + y), x - handWidth, getY(legHeight + (bodyHeight * 0.4) + y), bodyColor);
+    display.drawLine(x - handWidth, getY(legHeight + (bodyHeight * 0.4) + y), x - handWidth - (handWidth*0.4), getY(legHeight + (bodyHeight * 0.64) + y), bodyColor);
+    display.drawLine(x - handWidth - (handWidth*0.4), getY(legHeight + (bodyHeight * 0.64) + y), x - bodyWidth, getY(legHeight + bodyHeight + armHeight + y), bodyColor);
+
+    // Left leg
+    display.drawLine(x, getY(legHeight + y), x - (int)(legWidth * 0.5), getY(y), bodyColor);
     display.drawLine(x - (int)(legWidth * 0.5), getY(y), x - (int)(legWidth), getY(5 + y), bodyColor);
-    display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + y), x, getY(5 + y), bodyColor);
-    display.fillCircle(x, getY(legHeight + bodyHeight + y + 5 + fingersHeight + headRadius), headRadius, headColor);
+    display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + y), x - (int)(legWidth), getY(5 + y), bodyColor);
+
+    // Head
+    display.fillCircle(x, getY(y + legHeight + bodyHeight + armHeight + headRadius + 1), headRadius, headColor);
 }
