@@ -52,7 +52,7 @@ enum Mode {
   DUEL
 };
 
-#define OBSTACLE_SIZE 50
+#define OBSTACLE_SIZE 30
 
 
 class HumanRun : public RuntimeApplication
@@ -93,6 +93,9 @@ private:
     void processScore(Game& game);
     void generateObstacle(Game& game);
     void processGame(Game& game);
+
+    void renderPlayer(DisplayProvider &display);
+    int getY (float y);
 };
 
 #endif // PONG_H

@@ -68,6 +68,7 @@ void HumanRun::renderObstacle(int indeks, DisplayProvider &display)
 }
 void HumanRun::render(DisplayProvider &display)
 {
+    renderPlayer(display);
     for (int i = 0; i < 5; i++)
     {
         if (gameArray[0].obstacles[i].isActive)
@@ -243,8 +244,8 @@ void HumanRun::generateObstacle(Game &game)
         if (game.obstacles[i].isActive == false)
         {
             game.obstacles[i].isActive = true;
-            int randValue = random(20);
-            randValue += ((OBSTACLE_SIZE / 10) + 3);
+            int randValue = random(30);
+            randValue += ((OBSTACLE_SIZE / 10) + 15);
 
             game.ticksToGenerateNewObst = randValue;
             Serial.println("Generating new obstacle!");
@@ -271,6 +272,38 @@ void HumanRun::processGame(Game &game)
             gamesOverCount++;
             return;
         }
-        
     }
+}
+
+ int HumanRun::getY (float y){
+    return appHeight-(int)y;
+ }
+
+void HumanRun::renderPlayer(DisplayProvider &display)
+{
+    const float playerHeight = 100;
+    const float headRadius = playerHeight * 0.25;
+    const float armHeight = playerHeight * 0.1;
+    const float bodyHeight = playerHeight * 0.35;
+    const float legHeight = playerHeight * 0.3;
+
+    const float playerWidth = 60;
+    const float handWidth = playerWidth * 0.35;
+    const float bodyWidth = playerWidth * 0.3;
+    const float legWidth = playerWidth * 0.5;
+    int x = gameArray[0].player.posX;
+    display.drawLine(x + 85, getY(legHeight), x + (int)(legWidth*0.5) + 100, getY(0), TFT_GOLD);
+    display.drawLine(x + (int)(legWidth*0.5) + 100, getY(0), x + (int)(legWidth) + 100, getY(5), TFT_GOLD);
+    display.drawLine(gameArray[0].player.posX + (int)(legWidth*0.5) + 100,getY(legHeight),gameArray[0].player.posX + (playerWidth/2) + 100,getY(5), TFT_GOLD);
+    display.drawLine(gameArray[0].player.posX + (int)(bodyHeight*0.5) + 100,getY(legHeight),gameArray[0].player.posX + (bodyHeight/2) + 100,getY(105), TFT_GOLD);
+    display.drawLine(210,getY(110),gameArray[0].player.posX + (armHeight*1.6) + 100,getY(105), TFT_GOLD);
+    display.drawLine(210,getY(110),210,getY(125), TFT_GOLD);
+    display.drawLine(210,getY(125),0,getY(125), TFT_GOLD);
+    display.drawLine(0,getY(110),0,getY(125), TFT_GOLD);
+    display.drawLine(0,getY(110),gameArray[0].player.posX + (armHeight*1.6) + 50,getY(105), TFT_GOLD);
+    display.drawLine(gameArray[0].player.posX + (int)(bodyHeight*0.5) + 50,getY(legHeight),gameArray[0].player.posX + (bodyHeight/2) + 50,getY(105), TFT_GOLD);
+    display.drawLine(x + 65, getY(legHeight), x + (int)(legWidth*0.5) + 25, getY(0), TFT_GOLD);
+    display.drawLine(x + (int)(legWidth*0.5) + 25, getY(0), x + (int)(legWidth) + 35, getY(5), TFT_GOLD);
+    display.drawLine(gameArray[0].player.posX + (int)(legWidth*0.5) + 75,getY(legHeight),gameArray[0].player.posX + (playerWidth/2) + 35,getY(5), TFT_GOLD);
+    display.fillCircle(100,getY(165),40,TFT_PURPLE);
 }
