@@ -275,9 +275,10 @@ void HumanRun::processGame(Game &game)
     }
 }
 
- int HumanRun::getY (float y){
-    return appHeight-(int)y;
- }
+int HumanRun::getY(float y)
+{
+    return appHeight - (int)y;
+}
 
 void HumanRun::renderPlayer(DisplayProvider &display)
 {
@@ -286,24 +287,26 @@ void HumanRun::renderPlayer(DisplayProvider &display)
     const float armHeight = playerHeight * 0.1;
     const float bodyHeight = playerHeight * 0.35;
     const float legHeight = playerHeight * 0.3;
+    const int fingersHeight = (int)(armHeight * 0.7);
 
     const float playerWidth = 60;
     const float handWidth = playerWidth * 0.35;
     const float bodyWidth = playerWidth * 0.3;
     const float legWidth = playerWidth * 0.5;
     int x = gameArray[0].player.posX;
-    display.drawLine(x + 85, getY(legHeight), x + (int)(legWidth*0.5) + 100, getY(0), TFT_GOLD);
-    display.drawLine(x + (int)(legWidth*0.5) + 100, getY(0), x + (int)(legWidth) + 100, getY(5), TFT_GOLD);
-    display.drawLine(gameArray[0].player.posX + (int)(legWidth*0.5) + 100,getY(legHeight),gameArray[0].player.posX + (playerWidth/2) + 100,getY(5), TFT_GOLD);
-    display.drawLine(gameArray[0].player.posX + (int)(bodyHeight*0.5) + 100,getY(legHeight),gameArray[0].player.posX + (bodyHeight/2) + 100,getY(105), TFT_GOLD);
-    display.drawLine(210,getY(110),gameArray[0].player.posX + (armHeight*1.6) + 100,getY(105), TFT_GOLD);
-    display.drawLine(210,getY(110),210,getY(125), TFT_GOLD);
-    display.drawLine(210,getY(125),0,getY(125), TFT_GOLD);
-    display.drawLine(0,getY(110),0,getY(125), TFT_GOLD);
-    display.drawLine(0,getY(110),gameArray[0].player.posX + (armHeight*1.6) + 50,getY(105), TFT_GOLD);
-    display.drawLine(gameArray[0].player.posX + (int)(bodyHeight*0.5) + 50,getY(legHeight),gameArray[0].player.posX + (bodyHeight/2) + 50,getY(105), TFT_GOLD);
-    display.drawLine(x + 65, getY(legHeight), x + (int)(legWidth*0.5) + 25, getY(0), TFT_GOLD);
-    display.drawLine(x + (int)(legWidth*0.5) + 25, getY(0), x + (int)(legWidth) + 35, getY(5), TFT_GOLD);
-    display.drawLine(gameArray[0].player.posX + (int)(legWidth*0.5) + 75,getY(legHeight),gameArray[0].player.posX + (playerWidth/2) + 35,getY(5), TFT_GOLD);
-    display.fillCircle(100,getY(165),40,TFT_PURPLE);
+    int y = gameArray[0].player.posY;
+    display.drawLine(x + 85, getY(legHeight + y), x + (int)(legWidth * 0.5) + 100, getY(y), TFT_GOLD);
+    display.drawLine(x + (int)(legWidth * 0.5) + 100, getY(y), x + (int)(legWidth) + 100, getY(5 + y), TFT_GOLD);
+    display.drawLine(x + (int)(legWidth * 0.5) + 100, getY(legHeight + y), x + (playerWidth / 2) + 100, getY(5 + y), TFT_GOLD);
+    display.drawLine(x + (int)(bodyHeight * 0.5) + 100, getY(legHeight + y), x + (bodyHeight / 2) + 100, getY(legHeight + bodyHeight + y), TFT_GOLD);
+    display.drawLine(210, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6) + 100, getY(legHeight + bodyHeight + y), TFT_GOLD);
+    display.drawLine(210, getY(legHeight + bodyHeight + y + 5), 210, getY(legHeight + bodyHeight + y + 5 + fingersHeight), TFT_GOLD);
+    display.drawLine(210, getY(legHeight + bodyHeight + y + 5 + fingersHeight), 0, getY(legHeight + bodyHeight + y + 5 + fingersHeight), TFT_GOLD);
+    display.drawLine(0, getY(legHeight + bodyHeight + y + 5 ), 0, getY(legHeight + bodyHeight + y + 5 + fingersHeight), TFT_GOLD);
+    display.drawLine(0, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6) + 50, getY(legHeight + bodyHeight + y), TFT_GOLD);
+    display.drawLine(x + (int)(bodyHeight * 0.5) + 50, getY(legHeight + y), x + (bodyHeight / 2) + 50, getY(legHeight + bodyHeight + y ), TFT_GOLD);
+    display.drawLine(x + 65, getY(legHeight + y), x + (int)(legWidth * 0.5) + 25, getY(y), TFT_GOLD);
+    display.drawLine(x + (int)(legWidth * 0.5) + 25, getY(y), x + (int)(legWidth) + 35, getY(5 + y), TFT_GOLD);
+    display.drawLine(x + (int)(legWidth * 0.5) + 75, getY(legHeight + y), x + (playerWidth / 2) + 35, getY(5 + y), TFT_GOLD);
+    display.fillCircle(100, getY(legHeight + bodyHeight + y + 5 + fingersHeight + headRadius), headRadius, TFT_PURPLE);
 }

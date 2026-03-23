@@ -33,6 +33,7 @@ struct RunObstacle {
 struct Player {
   PlayerState state = RUNNING1;
   int posX = 2;
+  int posY = 0;
   int score = 0;
 };
 
