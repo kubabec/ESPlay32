@@ -205,7 +205,7 @@ void HumanRun::initializeGame(Game &game, int begin, int end, int btnPin)
 {
     game.boardBeginX = begin;
     game.boardEndX = end;
-    game.player.posX = begin + 2;
+    game.player.posX = 100;
     for (int i = 0; i < 5; i++)
     {
         game.obstacles[i].x = game.boardEndX;
@@ -295,20 +295,20 @@ void HumanRun::renderPlayer(DisplayProvider &display)
     const float legWidth = playerWidth * 0.5;
     int x = gameArray[0].player.posX;
     int y = gameArray[0].player.posY;
-    display.drawLine(x + 85, getY(legHeight + y), x + (int)(legWidth * 0.5) + 100, getY(y), TFT_GOLD);
-    display.drawLine(x + (int)(legWidth * 0.5) + 100, getY(y), x + (int)(legWidth) + 100, getY(5 + y), TFT_GOLD);
-    display.drawLine(x + (int)(legWidth * 0.5) + 100, getY(legHeight + y), x + (playerWidth / 2) + 100, getY(5 + y), TFT_GOLD);
-    display.drawLine(x + (int)(bodyHeight * 0.5) + 100, getY(legHeight + y), x + (bodyHeight / 2) + 100, getY(legHeight + bodyHeight + y), TFT_GOLD);
-    display.drawLine(x + playerWidth *0.5, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6) + 100, getY(legHeight + bodyHeight + y), TFT_GOLD);
+    display.drawLine(x, getY(legHeight + y), x + (int)(legWidth * 0.5), getY(y), TFT_GOLD);
+    display.drawLine(x + (int)(legWidth * 0.5), getY(y), x + (int)(legWidth), getY(5 + y), TFT_GOLD);
+    display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + y),x + (int)(legWidth * 0.5), getY(5 + y), TFT_GOLD);
+    display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + y), x + (int)(legWidth * 0.5), getY(legHeight + bodyHeight + y), TFT_GOLD);
+    display.drawLine(x + playerWidth *0.5, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6), getY(legHeight + bodyHeight + y), TFT_GOLD);
     display.drawLine(x + playerWidth *0.5, getY(legHeight + bodyHeight + y + 5), x + playerWidth *0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), TFT_GOLD);
     
     display.drawLine(x + playerWidth *0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight),x - playerWidth*0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), TFT_GOLD);
 
     display.drawLine(x - playerWidth*0.5, getY(legHeight + bodyHeight + y + 5 ), x - playerWidth*0.5, getY(legHeight + bodyHeight + y + 5 + fingersHeight), TFT_GOLD);
-    display.drawLine(x - playerWidth*0.5, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6) + 50, getY(legHeight + bodyHeight + y), TFT_GOLD);
-    display.drawLine(x + (int)(bodyHeight * 0.5) + 50, getY(legHeight + y), x + (bodyHeight / 2) + 50, getY(legHeight + bodyHeight + y ), TFT_GOLD);
-    display.drawLine(x + 65, getY(legHeight + y), x + (int)(legWidth * 0.5) + 25, getY(y), TFT_GOLD);
-    display.drawLine(x + (int)(legWidth * 0.5) + 25, getY(y), x + (int)(legWidth) + 35, getY(5 + y), TFT_GOLD);
-    display.drawLine(x + (int)(legWidth * 0.5) + 75, getY(legHeight + y), x + (playerWidth / 2) + 35, getY(5 + y), TFT_GOLD);
+    display.drawLine(x - playerWidth*0.5, getY(legHeight + bodyHeight + y + 5), x + (armHeight * 1.6), getY(legHeight + bodyHeight + y), TFT_GOLD);
+    display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + y), x - (int)(legWidth * 0.5), getY(legHeight + bodyHeight + y ), TFT_GOLD);
+    display.drawLine(x - (int)(legWidth), getY(legHeight + y), x - (int)(legWidth * 0.5), getY(y), TFT_GOLD);
+    display.drawLine(x - (int)(legWidth * 0.5), getY(y), x - (int)(legWidth), getY(5 + y), TFT_GOLD);
+    display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + y), x, getY(5 + y), TFT_GOLD);
     display.fillCircle(x, getY(legHeight + bodyHeight + y + 5 + fingersHeight + headRadius), headRadius, TFT_PURPLE);
 }
