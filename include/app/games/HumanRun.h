@@ -1,5 +1,6 @@
 #ifndef HUMAN_RUN_H
 #define HUMAN_RUN_H
+#include <vector>
 
 #include "app/runtimeApplication.hpp"
 enum CustomCharacter {
@@ -22,11 +23,25 @@ enum ProgramState {
   SELECTION,
   GAME
 };
+
+#define OBSTACLE_SIZE 30
+
 struct RunObstacle {
   bool isActive = false;
   CustomCharacter type = OBSTACLE1;
   int x = 15;
   int oldX = 15;
+  int radius = OBSTACLE_SIZE;
+};
+
+struct CollisionPoint{
+  int x = 0;
+  int y = 0;
+  
+  CollisionPoint(int newX, int newY){
+      x = newX;
+      y = newY;
+  }
 };
 
 struct Player {
@@ -54,7 +69,6 @@ enum Mode {
   DUEL
 };
 
-#define OBSTACLE_SIZE 30
 
 
 class HumanRun : public RuntimeApplication
@@ -83,6 +97,7 @@ private:
     int appHeight = 0;
     int appWidth = 0;
     const int obstacleWidth = 30;
+    std::vector<CollisionPoint> collisionPoints;
 
     void renderObstacle(int indeks,DisplayProvider &display);
     bool isObstOnPlayerX(Game& game) ;
@@ -98,6 +113,8 @@ private:
 
     void renderPlayer(DisplayProvider &display,uint32_t bodyColor,uint32_t headColor,int y);
     int getY (float y);
+
+    void calculateCollisionPoints();
 };
 
 #endif // PONG_H
