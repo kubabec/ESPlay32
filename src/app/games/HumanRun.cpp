@@ -118,6 +118,11 @@ bool HumanRun::isObstOnPlayerX(Game &game)
     return false;
 }
 
+float distance2D(float x1, float y1, float x2, float y2) {
+    float dx = x2 - x1;
+    float dy = y2 - y1;
+    return sqrt(dx * dx + dy * dy);
+}
 
 bool HumanRun::isCollision(Game &game)
 {
@@ -129,15 +134,13 @@ bool HumanRun::isCollision(Game &game)
         }
         for (CollisionPoint &point : collisionPoints)
         {
-            float distance = sqrt(
-                                 (point.x - game.obstacles[i].x) *
-                                 (point.x - game.obstacles[i].x)) -
-                             ((point.y - getY(game.obstacles[i].radius)) *
-                              (point.y - getY(game.obstacles[i].radius)));
+            float distance = distance2D(point.x,point.y,game.obstacles[i].x, getY(game.obstacles[i].radius));
+
             // std::cout << elementWektora << " ";
 
             if (distance < game.obstacles[i].radius)
             {
+                Serial.println("distance: "+ String(distance)+ "radius: " + String(game.obstacles[i].radius));
                 point1 = CollisionPoint(point.x, point.y);
                 point2 = CollisionPoint(game.obstacles[i].x, getY(game.obstacles[i].radius));
 
