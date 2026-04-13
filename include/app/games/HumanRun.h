@@ -24,7 +24,7 @@ enum ProgramState {
   GAME
 };
 
-#define OBSTACLE_SIZE 30
+#define OBSTACLE_SIZE 25
 
 struct RunObstacle {
   bool isActive = false;
@@ -32,6 +32,7 @@ struct RunObstacle {
   int x = 15;
   int oldX = 15;
   int radius = OBSTACLE_SIZE;
+  bool scoreAdded = false;
 };
 
 struct CollisionPoint{
@@ -112,7 +113,7 @@ private:
     void processScore(Game& game);
     void generateObstacle(Game& game);
     void processGame(Game& game);
-
+    void renderScore(DisplayProvider &display);
     void renderPlayer(DisplayProvider &display,uint32_t bodyColor,uint32_t headColor,int y);
     int getY (float y);
 

@@ -86,6 +86,14 @@ void HumanRun::render(DisplayProvider &display)
     {
         display.drawLine(point1.x, point1.y, point2.x, point2.y, TFT_RED);
     }
+    renderScore(display);
+}
+
+void HumanRun::renderScore(DisplayProvider &display){
+    display.fillRect(350,5,120,50,TFT_GREEN);
+    display.fillRect(355,10,115,45,TFT_BLACK);
+    String score = String (gameArray[0].player.score);
+    display.drawString(score,360,15);
 }
 
 void HumanRun::forceRender(DisplayProvider &display)
@@ -159,6 +167,7 @@ void HumanRun::resetGameOver(Game &game)
     {
         game.obstacles[i].x = game.boardEndX;
         game.obstacles[i].isActive = false;
+        game.obstacles[i].scoreAdded = false;
     }
     gamesOverCount--;
     game.isGameOver = false;
@@ -180,6 +189,8 @@ void HumanRun::processObstacleMove(Game &game)
                 game.obstacles[i].oldX = appWidth + obstacleWidth;
                 game.obstacles[i].x = appWidth + obstacleWidth;
                 game.obstacles[i].isActive = false;
+                game.obstacles[i].scoreAdded = false;
+                
             }
         }
     }
@@ -201,7 +212,7 @@ void HumanRun::processHumanMove(Game &game)
         if (gameArray[0].player.posY < 150)
         {
             gameArray[0].player.oldY = gameArray[0].player.posY;
-            gameArray[0].player.posY += 5;
+            gameArray[0].player.posY += 10;
         }
         else
         {
@@ -254,8 +265,9 @@ void HumanRun::processScore(Game &game)
 {
     for (int i = 0; i < 5; i++)
     {
-        if (game.obstacles[i].isActive && game.obstacles[i].x == (game.player.posX - 1))
+        if (game.obstacles[i].isActive && game.obstacles[i].x  < (game.player.posX - 1) && !game.obstacles[i].scoreAdded )
         {
+            game.obstacles[i].scoreAdded = true;
             game.player.score++;
         }
     }
@@ -270,7 +282,7 @@ void HumanRun::generateObstacle(Game &game)
         {
             game.obstacles[i].isActive = true;
             int randValue = random(30);
-            randValue += ((OBSTACLE_SIZE / 10) + 15);
+            randValue += ((OBSTACLE_SIZE / 10) + 50);
 
             game.ticksToGenerateNewObst = randValue;
             Serial.println("Generating new obstacle!");
