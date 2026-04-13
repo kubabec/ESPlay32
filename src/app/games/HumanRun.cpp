@@ -14,6 +14,7 @@ void HumanRun::start(int w, int h)
         gameArray[0].obstacles[g].x = appWidth + obstacleWidth;
         gameArray[0].obstacles[g].oldX = appWidth + obstacleWidth;
     }
+    calculateCollisionPoints();
 }
 
 void HumanRun::input(InputType input)
@@ -80,6 +81,11 @@ void HumanRun::render(DisplayProvider &display)
             renderObstacle(i, display);
         }
     }
+
+    if (gameArray[0].isGameOver)
+    {
+        display.drawLine(point1.x, point1.y, point2.x, point2.y, TFT_RED);
+    }
 }
 
 void HumanRun::forceRender(DisplayProvider &display)
@@ -112,17 +118,29 @@ bool HumanRun::isObstOnPlayerX(Game &game)
     return false;
 }
 
+
 bool HumanRun::isCollision(Game &game)
 {
     for (int i = 0; i < 5; i++)
     {
+        if (game.obstacles[i].isActive == false)
+        {
+            continue;
+        }
         for (CollisionPoint &point : collisionPoints)
         {
-            float distance = sqrt((point.x - game.obstacles[i].x) * (point.x - game.obstacles[i].x)) - ((point.y - getY(game.obstacles[i].radius)) * (point.y - getY(game.obstacles[i].radius)));
+            float distance = sqrt(
+                                 (point.x - game.obstacles[i].x) *
+                                 (point.x - game.obstacles[i].x)) -
+                             ((point.y - getY(game.obstacles[i].radius)) *
+                              (point.y - getY(game.obstacles[i].radius)));
             // std::cout << elementWektora << " ";
 
             if (distance < game.obstacles[i].radius)
             {
+                point1 = CollisionPoint(point.x, point.y);
+                point2 = CollisionPoint(game.obstacles[i].x, getY(game.obstacles[i].radius));
+
                 return true;
             }
         }
@@ -324,6 +342,13 @@ void HumanRun::renderPlayer(DisplayProvider &display, uint32_t bodyColor, uint32
 
     // Head
     display.fillCircle(x, getY(y + legHeight + bodyHeight + armHeight + headRadius + 1), headRadius, headColor);
+
+    // display.drawLine(x + (int)(legWidth * 0.5), getY(y), gameArray[0].obstacles[indeks].x, appHeight - OBSTACLE_SIZE, TFT_RED);
+    // display.drawLine(x + (int)(legWidth * 0.5), getY(legHeight + y), gameArray[0].obstacles[indeks].x, appHeight - OBSTACLE_SIZE, TFT_RED);
+    // display.drawLine(x + handWidth, getY(legHeight + (bodyHeight * 0.4) + y), gameArray[0].obstacles[indeks].x, appHeight - OBSTACLE_SIZE, TFT_RED);
+    // display.drawLine(x - handWidth, getY(legHeight + (bodyHeight * 0.4) + y), gameArray[0].obstacles[indeks].x, appHeight - OBSTACLE_SIZE, TFT_RED);
+    // display.drawLine(x - (int)(legWidth * 0.5), getY(y), gameArray[0].obstacles[indeks].x, appHeight - OBSTACLE_SIZE, TFT_RED);
+    // display.drawLine(x - (int)(legWidth * 0.5), getY(legHeight + y), gameArray[0].obstacles[indeks].x, appHeight - OBSTACLE_SIZE, TFT_RED);
 }
 
 void HumanRun::calculateCollisionPoints()

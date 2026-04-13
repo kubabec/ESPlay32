@@ -98,6 +98,8 @@ private:
     int appWidth = 0;
     const int obstacleWidth = 30;
     std::vector<CollisionPoint> collisionPoints;
+    CollisionPoint point1 =CollisionPoint(0,0);
+    CollisionPoint point2 =CollisionPoint(0,0);
 
     void renderObstacle(int indeks,DisplayProvider &display);
     bool isObstOnPlayerX(Game& game) ;
