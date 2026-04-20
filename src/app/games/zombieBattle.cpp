@@ -6,12 +6,10 @@ ZombieBattle::ZombieBattle()
 
 void ZombieBattle::start(int w, int h)
 {
-
 }
 
 void ZombieBattle::input(InputType input)
 {
-
 }
 
 void ZombieBattle::udpDataReceived(int messageID, std::vector<uint8_t> data)
@@ -40,6 +38,16 @@ void ZombieBattle::update()
 
 void ZombieBattle::render(DisplayProvider &display)
 {
+    renderBG(display);
+}
+
+void ZombieBattle::renderBG(DisplayProvider &display)
+{
+    if (flags.needDrawBG == true)
+    {
+        display.fillRect(0, groundLevelY, 480, 50, TFT_BROWN);
+        flags.needDrawBG = false;
+    }
 }
 
 void ZombieBattle::forceRender(DisplayProvider &display)
