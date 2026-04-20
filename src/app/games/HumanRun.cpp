@@ -92,13 +92,12 @@ void HumanRun::render(DisplayProvider &display)
             renderObstacle(i, display);
         }
     }
-
+    renderScore(display);
     if (gameArray[0].isGameOver)
     {
         display.drawLine(point1.x, point1.y, point2.x, point2.y, TFT_RED);
         drawGameOver(gameArray[0], display);
     }
-    renderScore(display);
 }
 
 void HumanRun::renderScore(DisplayProvider &display)
