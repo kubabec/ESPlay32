@@ -69,6 +69,17 @@ void HumanRun::renderObstacle(int indeks, DisplayProvider &display)
 }
 void HumanRun::render(DisplayProvider &display)
 {
+    if (isGameOverDisplayed == true)
+    {
+        return;
+    }
+
+    if (clearScreenPending == true)
+    {
+        display.fillScreen(TFT_BLACK);
+        clearScreenPending = false;
+    }
+
     if (gameArray[0].player.oldY != gameArray[0].player.posY)
     {
         renderPlayer(display, TFT_BLACK, TFT_BLACK, gameArray[0].player.oldY);
@@ -85,15 +96,17 @@ void HumanRun::render(DisplayProvider &display)
     if (gameArray[0].isGameOver)
     {
         display.drawLine(point1.x, point1.y, point2.x, point2.y, TFT_RED);
+        drawGameOver(gameArray[0], display);
     }
     renderScore(display);
 }
 
-void HumanRun::renderScore(DisplayProvider &display){
-    display.fillRect(350,5,120,50,TFT_GREEN);
-    display.fillRect(355,10,115,45,TFT_BLACK);
-    String score = String (gameArray[0].player.score);
-    display.drawString(score,360,15);
+void HumanRun::renderScore(DisplayProvider &display)
+{
+    display.fillRect(350, 5, 120, 50, TFT_GREEN);
+    display.fillRect(355, 10, 115, 45, TFT_BLACK);
+    String score = String(gameArray[0].player.score);
+    display.drawString(score, 360, 15);
 }
 
 void HumanRun::forceRender(DisplayProvider &display)
@@ -126,7 +139,8 @@ bool HumanRun::isObstOnPlayerX(Game &game)
     return false;
 }
 
-float distance2D(float x1, float y1, float x2, float y2) {
+float distance2D(float x1, float y1, float x2, float y2)
+{
     float dx = x2 - x1;
     float dy = y2 - y1;
     return sqrt(dx * dx + dy * dy);
@@ -142,13 +156,13 @@ bool HumanRun::isCollision(Game &game)
         }
         for (CollisionPoint &point : collisionPoints)
         {
-            float distance = distance2D(point.x,point.y,game.obstacles[i].x, getY(game.obstacles[i].radius));
+            float distance = distance2D(point.x, point.y, game.obstacles[i].x, getY(game.obstacles[i].radius));
 
             // std::cout << elementWektora << " ";
 
             if (distance < game.obstacles[i].radius)
             {
-                Serial.println("distance: "+ String(distance)+ "radius: " + String(game.obstacles[i].radius));
+                Serial.println("distance: " + String(distance) + "radius: " + String(game.obstacles[i].radius));
                 point1 = CollisionPoint(point.x, point.y);
                 point2 = CollisionPoint(game.obstacles[i].x, getY(game.obstacles[i].radius));
 
@@ -171,6 +185,22 @@ void HumanRun::resetGameOver(Game &game)
     }
     gamesOverCount--;
     game.isGameOver = false;
+    isGameOverDisplayed = false;
+    clearScreenPending = true;
+}
+
+void HumanRun::drawGameOver(Game &game, DisplayProvider &display)
+{
+    if (game.isGameOver == true)
+    {
+        display.fillScreen(TFT_BLACK);
+        display.fillRect(150, 60, 90, 30, TFT_GREEN);
+        display.fillRect(155, 70, 200, 50, TFT_ORANGE);
+        display.setTextFont(4);
+        display.drawString("GAME OVER", 152, 35);
+
+        isGameOverDisplayed = true;
+    }
 }
 
 void HumanRun::processObstacleMove(Game &game)
@@ -190,7 +220,6 @@ void HumanRun::processObstacleMove(Game &game)
                 game.obstacles[i].x = appWidth + obstacleWidth;
                 game.obstacles[i].isActive = false;
                 game.obstacles[i].scoreAdded = false;
-                
             }
         }
     }
@@ -265,7 +294,7 @@ void HumanRun::processScore(Game &game)
 {
     for (int i = 0; i < 5; i++)
     {
-        if (game.obstacles[i].isActive && game.obstacles[i].x  < (game.player.posX - 1) && !game.obstacles[i].scoreAdded )
+        if (game.obstacles[i].isActive && game.obstacles[i].x < (game.player.posX - 1) && !game.obstacles[i].scoreAdded)
         {
             game.obstacles[i].scoreAdded = true;
             game.player.score++;

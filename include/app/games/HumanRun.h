@@ -57,6 +57,7 @@ struct Player {
 struct Game {
   bool isGameOver = false;
   int ticksToGenerateNewObst = 4;
+  bool gameOver = false;
   RunObstacle obstacles[5];
   bool stateCompleted = false;
   int ticksToSpeedUp = 5;
@@ -101,6 +102,8 @@ private:
     std::vector<CollisionPoint> collisionPoints;
     CollisionPoint point1 =CollisionPoint(0,0);
     CollisionPoint point2 =CollisionPoint(0,0);
+    bool isGameOverDisplayed =false;
+    bool clearScreenPending = true;
 
     void renderObstacle(int indeks,DisplayProvider &display);
     bool isObstOnPlayerX(Game& game) ;
@@ -116,7 +119,7 @@ private:
     void renderScore(DisplayProvider &display);
     void renderPlayer(DisplayProvider &display,uint32_t bodyColor,uint32_t headColor,int y);
     int getY (float y);
-
+    void drawGameOver(Game &game,DisplayProvider &display);
     void calculateCollisionPoints();
 };
 
