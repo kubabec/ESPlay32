@@ -18,6 +18,7 @@ typedef enum {
     // UPDATE_LOGS,
     SOME_OTHER_APP,
     HUMAN_RUN,
+    ZOMBIE_BATTLE,
 //    MENU_TEST_APP,
     // UDP_SEND_TEST_APP,
 //    TOUCH_TEST_APP,

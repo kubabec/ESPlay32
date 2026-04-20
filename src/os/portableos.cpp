@@ -1,6 +1,6 @@
 #include "os/portableOs.hpp"
 
-std::vector<String> appNames = {"Ustawienia", "Led communicator", "Stoper", "Fight Game", "Pong", "Connect 4", "Color Picker", "Human Run"};
+std::vector<String> appNames = {"Ustawienia", "Led communicator", "Stoper", "Fight Game", "Pong", "Connect 4", "Color Picker", "Human Run", "Zombie Battle"};
 
 // Create static objects instances
 DisplayProvider PortableOS::display = DisplayProvider();
@@ -291,6 +291,10 @@ void PortableOS::mainMenuChoice(int8_t choice)
             //     break;
         case HUMAN_RUN:
             currentRunningAppPtr = new HumanRun();
+            newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
+            break;
+        case ZOMBIE_BATTLE:
+            currentRunningAppPtr = new ZombieBattle();
             newDisplayArea = {0, topOverlay.getHeight(), 480, (uint16_t)(320 - topOverlay.getHeight())};
             break;
         case LED_COMMUNICATION:

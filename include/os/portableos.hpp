@@ -9,6 +9,7 @@
 #include "app/games/pong.h"
 #include "app/games/HumanRun.h"
 #include "app/games/connect4.h"
+#include "app/games/zombieBattle.hpp"
 #include "app/ledCommunicator.hpp"
 #include "app/updateLogs.hpp"
 #include "app/settings/settingsMainApp.hpp"
