@@ -1,11 +1,35 @@
 #ifndef ZOMBIEBATTLE_H
 #define ZOMBIEBATTLE_H
 #include "app/runtimeApplication.hpp"
+#include <array>
 
 struct ZombieBattleFlags
 {
     bool needDrawBG = true;
 };
+
+class Point2D
+{
+public:
+    Point2D(int ax, int ay);
+
+    int x;
+    int y;
+};
+
+
+class RotatingGun
+{
+public:
+    RotatingGun(Point2D pos, int rot);
+    void render(DisplayProvider &display);
+
+private:
+    std::vector<Point2D> gunPoints;
+    Point2D position{0,0};
+    int rotation;
+};
+
 
 class ZombieBattle : public RuntimeApplication
 {
@@ -28,6 +52,7 @@ public:
 private:
     ZombieBattleFlags flags;
     const int groundLevelY = 240;
+    RotatingGun gun{{100,100},0};
 
     void renderBG(DisplayProvider &display);
 };
