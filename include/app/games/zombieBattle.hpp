@@ -27,7 +27,7 @@ public:
 
 private:
     ZombieBattleFlags flags;
-    const int groundLevelY = 230;
+    const int groundLevelY = 240;
 
     void renderBG(DisplayProvider &display);
 };

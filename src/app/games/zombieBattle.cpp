@@ -46,6 +46,8 @@ void ZombieBattle::renderBG(DisplayProvider &display)
     if (flags.needDrawBG == true)
     {
         display.fillRect(0, groundLevelY, 480, 50, TFT_BROWN);
+        display.fillRect(0,350,60,280,TFT_ORANGE);
+        display.drawLine(60,300,70,300,TFT_GREENYELLOW);
         flags.needDrawBG = false;
     }
 }
