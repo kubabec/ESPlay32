@@ -6,6 +6,7 @@ ZombieBattle::ZombieBattle()
 
 void ZombieBattle::start(int w, int h)
 {
+    gun.rotate(40);
 }
 
 void ZombieBattle::input(InputType input)
@@ -26,6 +27,30 @@ void ZombieBattle::longPressRelease(InputType input)
 
 void ZombieBattle::analogInput(int x, int y)
 {
+    // if(x != 0 || y != 0)
+    // {
+    //     Serial.println(String(x) + " " + String(y));
+    // }
+
+    int absoluteForce = abs(y);
+    int angle = 0;
+    if(absoluteForce >= 5)
+    {
+        angle = 1;
+    }else if(absoluteForce >= 7){
+        angle = 2;
+    }else if(absoluteForce == 10){
+        angle = 3;
+    }
+
+    if (y >= 5)
+    {
+        gun.rotate(-angle);
+    }
+    else if (y <= -5)
+    {
+        gun.rotate(angle);
+    }
 }
 
 void ZombieBattle::touchInput(int x, int y)
@@ -40,6 +65,7 @@ void ZombieBattle::render(DisplayProvider &display)
 {
     renderBG(display);
     gun.render(display);
+    renderPlayer(display);
 }
 
 void ZombieBattle::renderBG(DisplayProvider &display)
@@ -51,6 +77,11 @@ void ZombieBattle::renderBG(DisplayProvider &display)
         // display.drawLine(60,,70,,TFT_GREENYELLOW);
         flags.needDrawBG = false;
     }
+}
+
+void ZombieBattle::renderPlayer(DisplayProvider &display)
+{
+    display.fillCircle(40, groundLevelY - 150, 30, TFT_CYAN);
 }
 
 void ZombieBattle::forceRender(DisplayProvider &display)
@@ -82,19 +113,73 @@ RotatingGun::RotatingGun(Point2D pos, int rot)
     position = pos;
     rotation = rot;
 
-    gunPoints.push_back(pos);
-    gunPoints.push_back({pos.x + 15, pos.y - 2});
-    gunPoints.push_back({pos.x + 18, pos.y - 7});
-    gunPoints.push_back({pos.x - 4, pos.y - 7});
-    gunPoints.push_back({pos.x - 4, pos.y + 10});
-    gunPoints.push_back({pos.x - 1, pos.y + 10});
+    defaultPoints.push_back(pos);
+    defaultPoints.push_back({pos.x + 15, pos.y - 2});
+    defaultPoints.push_back({pos.x + 18, pos.y - 7});
+    defaultPoints.push_back({pos.x - 4, pos.y - 7});
+    defaultPoints.push_back({pos.x - 4, pos.y + 10});
+    defaultPoints.push_back({pos.x - 1, pos.y + 10});
+
+    gunPoints = defaultPoints;
 }
 
 void RotatingGun::render(DisplayProvider &display)
 {
+    if(!wasRotation)
+    {
+        return;
+    }
+    wasRotation = false;
+
+    if (!lastRenderGunPoints.empty())
+    {
+        for (int i = 1; i < lastRenderGunPoints.size(); i++)
+        {
+            display.drawLine(lastRenderGunPoints.at(i - 1).x, lastRenderGunPoints.at(i - 1).y, lastRenderGunPoints.at(i).x, lastRenderGunPoints.at(i).y, TFT_YELLOW);
+        }
+        display.drawLine(lastRenderGunPoints.at(lastRenderGunPoints.size() - 1).x, lastRenderGunPoints.at(lastRenderGunPoints.size() - 1).y, lastRenderGunPoints.at(0).x, lastRenderGunPoints.at(0).y, TFT_YELLOW);
+    }
+
     for (int i = 1; i < gunPoints.size(); i++)
     {
         display.drawLine(gunPoints.at(i - 1).x, gunPoints.at(i - 1).y, gunPoints.at(i).x, gunPoints.at(i).y, TFT_BLACK);
     }
     display.drawLine(gunPoints.at(gunPoints.size() - 1).x, gunPoints.at(gunPoints.size() - 1).y, gunPoints.at(0).x, gunPoints.at(0).y, TFT_BLACK);
+    lastRenderGunPoints = gunPoints;
+}
+
+void RotatingGun::rotate(float angle)
+{
+    int finalAngle = rotation + angle;
+
+    if (finalAngle < -80 || finalAngle > 80)
+    {
+        return;
+    }
+
+    gunPoints = defaultPoints;
+
+    double angleRad = finalAngle * M_PI / 180.0;
+
+    double cosA = std::cos(angleRad);
+    double sinA = std::sin(angleRad);
+
+    for (auto &p : gunPoints)
+    {
+        double x = (double)p.x - (double)position.x;
+        double y = (double)p.y - (double)position.y;
+
+        double xNew = x * cosA - y * sinA;
+        double yNew = x * sinA + y * cosA;
+
+        p.x = (int)xNew + position.x;
+        p.y = (int)yNew + position.y;
+    }
+    rotation = finalAngle;
+    wasRotation = true;
+}
+
+int RotatingGun::getRotation()
+{
+    return rotation;
 }

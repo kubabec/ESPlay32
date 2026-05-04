@@ -23,11 +23,16 @@ class RotatingGun
 public:
     RotatingGun(Point2D pos, int rot);
     void render(DisplayProvider &display);
+    void rotate(float angle);
+    int getRotation();
 
 private:
     std::vector<Point2D> gunPoints;
+    std::vector<Point2D> lastRenderGunPoints;
+    std::vector<Point2D> defaultPoints;
     Point2D position{0,0};
     int rotation;
+    bool wasRotation = true;
 };
 
 
@@ -55,6 +60,7 @@ private:
     RotatingGun gun{{100,100},0};
 
     void renderBG(DisplayProvider &display);
+    void renderPlayer(DisplayProvider &display);
 };
 
 #endif
