@@ -27,6 +27,7 @@ public:
     void rotate(float angle);
     int getRotation();
     void shot();
+    std::vector<GunShot>& getShots();
 
 private:
     std::vector<Point2D> gunPoints;
@@ -38,6 +39,7 @@ private:
     Vector2D right;
     Vector2D up;
     Point2D shotPos{0,0};
+    std::vector<GunShot> gunShots;
 
     void getBasisDegrees();
 };
