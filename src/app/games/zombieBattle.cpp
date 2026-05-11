@@ -11,6 +11,10 @@ void ZombieBattle::start(int w, int h)
 
 void ZombieBattle::input(InputType input)
 {
+    if(input == BUTTON_A)
+    {
+        gun.shot();
+    }
 }
 
 void ZombieBattle::udpDataReceived(int messageID, std::vector<uint8_t> data)
@@ -181,9 +185,7 @@ void RotatingGun::rotate(float angle)
     wasRotation = true;
 
 
-    getBasisDegrees();
-    shotPos.x = position.x + (int)up.getX();
-    shotPos.y = position.y + (int)up.getY();
+    
 
 }
 
@@ -199,12 +201,18 @@ void RotatingGun::getBasisDegrees()
     double cosA = std::cos(angleRad);
     double sinA = std::sin(angleRad);
 
-    right = { cosA, sinA };
-    up    = { -sinA, cosA };
+    right = { (float)cosA, (float)sinA };
+    up    = { (float)-sinA, (float)cosA };
 
 }
 
 void RotatingGun::shot()
 {
+    getBasisDegrees();
+    shotPos.x = position.x - ((int)(up.getX()*100));
+    shotPos.y = position.y - ((int)(up.getY()*100));
 
+
+    Serial.println("Shot at angle: " + String(rotation) + " with right vector: " + String(right.getX()) + " " + String(right.getY()) + " and up vector: " + String(up.getX()) + " " + String(up.getY()));
+    Serial.println("Shot position: " + String(shotPos.x) + " " + String(shotPos.y));
 }
