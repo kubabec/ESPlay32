@@ -146,6 +146,8 @@ void RotatingGun::render(DisplayProvider &display)
     }
     display.drawLine(gunPoints.at(gunPoints.size() - 1).x, gunPoints.at(gunPoints.size() - 1).y, gunPoints.at(0).x, gunPoints.at(0).y, TFT_BLACK);
     lastRenderGunPoints = gunPoints;
+
+    display.fillCircle(shotPos.x,shotPos.y,5,TFT_BLACK);
 }
 
 void RotatingGun::rotate(float angle)
@@ -177,9 +179,32 @@ void RotatingGun::rotate(float angle)
     }
     rotation = finalAngle;
     wasRotation = true;
+
+
+    getBasisDegrees();
+    shotPos.x = position.x + (int)up.getX();
+    shotPos.y = position.y + (int)up.getY();
+
 }
 
 int RotatingGun::getRotation()
 {
     return rotation;
+}
+
+void RotatingGun::getBasisDegrees()
+{
+    double angleRad = rotation * M_PI / 180.0;
+
+    double cosA = std::cos(angleRad);
+    double sinA = std::sin(angleRad);
+
+    right = { cosA, sinA };
+    up    = { -sinA, cosA };
+
+}
+
+void RotatingGun::shot()
+{
+
 }

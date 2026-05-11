@@ -2,6 +2,7 @@
 #define ZOMBIEBATTLE_H
 #include "app/runtimeApplication.hpp"
 #include <array>
+#include "app/tools/gunshot.h"
 
 struct ZombieBattleFlags
 {
@@ -25,6 +26,7 @@ public:
     void render(DisplayProvider &display);
     void rotate(float angle);
     int getRotation();
+    void shot();
 
 private:
     std::vector<Point2D> gunPoints;
@@ -33,6 +35,11 @@ private:
     Point2D position{0,0};
     int rotation;
     bool wasRotation = true;
+    Vector2D right;
+    Vector2D up;
+    Point2D shotPos{0,0};
+
+    void getBasisDegrees();
 };
 
 
