@@ -151,7 +151,7 @@ void RotatingGun::render(DisplayProvider &display)
     display.drawLine(gunPoints.at(gunPoints.size() - 1).x, gunPoints.at(gunPoints.size() - 1).y, gunPoints.at(0).x, gunPoints.at(0).y, TFT_BLACK);
     lastRenderGunPoints = gunPoints;
 
-    display.fillCircle(shotPos.x,shotPos.y,5,TFT_BLACK);
+    display.fillCircle(shotPos.x,shotPos.y,3,TFT_BLACK);
 }
 
 void RotatingGun::rotate(float angle)
@@ -209,9 +209,13 @@ void RotatingGun::getBasisDegrees()
 void RotatingGun::shot()
 {
     getBasisDegrees();
-    shotPos.x = position.x - ((int)(up.getX()*100));
-    shotPos.y = position.y - ((int)(up.getY()*100));
+    // Move up
+    shotPos.x = position.x - ((int)((up.getX()*100))/12);
+    shotPos.y = position.y - ((int)((up.getY()*100))/12);
 
+    // Move to the right
+    shotPos.x += ((int)((right.getX()*100))/5);
+    shotPos.y += ((int)((right.getY()*100))/5);
 
     Serial.println("Shot at angle: " + String(rotation) + " with right vector: " + String(right.getX()) + " " + String(right.getY()) + " and up vector: " + String(up.getX()) + " " + String(up.getY()));
     Serial.println("Shot position: " + String(shotPos.x) + " " + String(shotPos.y));
