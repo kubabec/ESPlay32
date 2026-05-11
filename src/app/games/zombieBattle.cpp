@@ -210,12 +210,12 @@ void RotatingGun::shot()
 {
     getBasisDegrees();
     // Move up
-    shotPos.x = position.x - ((int)((up.getX()*100))/12);
-    shotPos.y = position.y - ((int)((up.getY()*100))/12);
+    shotPos.x = position.x - ((int)((up.getX()*100))/14);
+    shotPos.y = position.y - ((int)((up.getY()*100))/14);
 
     // Move to the right
-    shotPos.x += ((int)((right.getX()*100))/5);
-    shotPos.y += ((int)((right.getY()*100))/5);
+    shotPos.x += ((int)((right.getX()*100))/4);
+    shotPos.y += ((int)((right.getY()*100))/4);
 
     Serial.println("Shot at angle: " + String(rotation) + " with right vector: " + String(right.getX()) + " " + String(right.getY()) + " and up vector: " + String(up.getX()) + " " + String(up.getY()));
     Serial.println("Shot position: " + String(shotPos.x) + " " + String(shotPos.y));
