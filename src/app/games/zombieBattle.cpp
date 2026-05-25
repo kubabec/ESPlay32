@@ -7,6 +7,8 @@ ZombieBattle::ZombieBattle()
 void ZombieBattle::start(int w, int h)
 {
     gun.rotate(40);
+    Vector2D pos(350,groundLevelY - 20);
+    zombies.push_back({pos});
 }
 
 void ZombieBattle::input(InputType input)
@@ -67,6 +69,11 @@ void ZombieBattle::update()
     {
         shot.update();
     }
+
+    for(auto& zombie: zombies)
+    {
+        zombie.update();
+    }
 }
 
 void ZombieBattle::render(DisplayProvider &display)
@@ -76,7 +83,17 @@ void ZombieBattle::render(DisplayProvider &display)
     renderPlayer(display);
     for(auto& shot: gun.getShots())
     {
-        shot.draw(display);
+        shot.draw(display,TFT_BLACK,TFT_YELLOW);
+    }
+
+    gun.getShots().erase(std::remove_if(gun.getShots().begin(),
+                                          gun.getShots().end(),
+                                          [](GunShot& element) { return element.destroyed(); }),
+                           gun.getShots().end());
+
+    for(auto& zombie: zombies)
+    {
+        zombie.draw(display,TFT_YELLOW);
     }
 }
 
@@ -223,7 +240,7 @@ void RotatingGun::getBasisDegrees()
 void RotatingGun::shot()
 {
     Vector2D pos{shotPos.x,shotPos.y};
-    gunShots.push_back({pos,right});
+    gunShots.push_back({pos,right,230,60});
     // Serial.println("Shot at angle: " + String(rotation) + " with right vector: " + String(right.getX()) + " " + String(right.getY()) + " and up vector: " + String(up.getX()) + " " + String(up.getY()));
     // Serial.println("Shot position: " + String(shotPos.x) + " " + String(shotPos.y));
 }

@@ -3,6 +3,8 @@
 #include "app/runtimeApplication.hpp"
 #include <array>
 #include "app/tools/gunshot.h"
+#include "app/tools/zombie.h"
+
 
 struct ZombieBattleFlags
 {
@@ -67,6 +69,7 @@ private:
     ZombieBattleFlags flags;
     const int groundLevelY = 240;
     RotatingGun gun{{100,100},0};
+    std::vector<Zombie> zombies;
 
     void renderBG(DisplayProvider &display);
     void renderPlayer(DisplayProvider &display);

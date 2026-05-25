@@ -6,8 +6,24 @@ GunShot::GunShot(Vector2D& apos, Vector2D& ashotDir, uint16_t attl) :
 
 }
 
+GunShot::GunShot(Vector2D& apos, Vector2D& ashotDir,int bottomLimit, uint16_t attl) :
+    pos(apos), dir(ashotDir), bottomLimitY(bottomLimit), ttl(attl)
+{
+
+}
+
+void GunShot::setBottomLimit(int y)
+{
+ bottomLimitY = y;
+}
+
 void GunShot::update()
 {
+    if(pos.getY() > bottomLimitY)
+    {
+        ttl = 0;
+    }
+
     if(ttl > 0)
     {
         lastPos = pos;
@@ -36,6 +52,18 @@ void GunShot::draw(DisplayProvider &display)
         display.fillCircle(pos.getX(), pos.getY(), 2, TFT_BLACK);
     }
 }
+
+void GunShot::draw(DisplayProvider& display,uint16_t shotColor,uint16_t bgColor)
+{
+    display.fillCircle(lastPos.getX(), lastPos.getY(), 2, bgColor);
+    if(!isDestroyed){
+        display.fillCircle(pos.getX(), pos.getY(), 2,shotColor);
+    }else
+    {
+        display.fillCircle(pos.getX(), pos.getY(), 2, bgColor);
+    }
+}
+
 
 bool GunShot::destroyed()
 {

@@ -12,14 +12,20 @@ class GunShot
     float acceleration = 3.f;
     int minY = 2;
     bool isDestroyed = false;
+
+    int bottomLimitY = 500;
+
 public:
     GunShot(Vector2D& apos, Vector2D& ashotDir, uint16_t attl = 30);
+    GunShot(Vector2D& apos, Vector2D& ashotDir,int bottomLimit, uint16_t attl = 30);
 
     void update();
     void draw(DisplayProvider& display);
+    void draw(DisplayProvider& display,uint16_t shotColor,uint16_t bgColor);
     bool destroyed();
     void destroy();
     Vector2D getPos();
+    void setBottomLimit(int y);
 
 };
 

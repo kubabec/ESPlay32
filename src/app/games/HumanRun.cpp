@@ -62,7 +62,7 @@ void HumanRun::renderObstacle(int indeks, DisplayProvider &display)
 {
     if (gameArray[0].obstacles[indeks].oldX != gameArray[0].obstacles[indeks].x)
     {
-        display.fillCircle(gameArray[0].obstacles[indeks].oldX, appHeight - OBSTACLE_SIZE, OBSTACLE_SIZE, getBackgroundColor());
+        display.fillCircle(gameArray[0].obstacles[indeks].oldX, appHeight - OBSTACLE_SIZE, OBSTACLE_SIZE, TFT_CYAN);
         gameArray[0].obstacles[indeks].oldX = gameArray[0].obstacles[indeks].x;
         display.fillCircle(gameArray[0].obstacles[indeks].x, appHeight - OBSTACLE_SIZE, OBSTACLE_SIZE, TFT_BLUE);
     }
@@ -76,13 +76,14 @@ void HumanRun::render(DisplayProvider &display)
 
     if (clearScreenPending == true)
     {
-        display.fillScreen(TFT_BLACK);
+        display.fillScreen(TFT_CYAN);
+        display.fillCircle(80,60,60,TFT_WHITE);
         clearScreenPending = false;
     }
 
     if (gameArray[0].player.oldY != gameArray[0].player.posY)
     {
-        renderPlayer(display, TFT_BLACK, TFT_BLACK, gameArray[0].player.oldY);
+        renderPlayer(display, TFT_CYAN, TFT_CYAN, gameArray[0].player.oldY);
     }
     renderPlayer(display, TFT_GOLD, TFT_PURPLE, gameArray[0].player.posY);
     for (int i = 0; i < 5; i++)
