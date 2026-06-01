@@ -15,6 +15,7 @@ public:
     void update();
     void draw(DisplayProvider& display,uint16_t bgColor);
     Vector2D getPos();
+    void renderZombie(DisplayProvider &display);
 
 };
 
