@@ -13,18 +13,20 @@ void Zombie::update()
 
 void Zombie::draw(DisplayProvider &display, uint16_t bgColor)
 {
-    display.fillCircle(lastPos.getX(), lastPos.getY(), 2, bgColor);
-    display.fillCircle(pos.getX(), pos.getY(), 2, 0xFFFFFF);
+    // display.fillCircle(lastPos.getX(), lastPos.getY(), 2, bgColor);
+    // display.fillCircle(pos.getX(), pos.getY(), 2, 0xFFFFFF);
 
-    renderZombie(display);
+    renderZombie(display,bgColor);
 }
-void Zombie::renderZombie(DisplayProvider &display)
+void Zombie::renderZombie(DisplayProvider &display, uint16_t bgColor)
 {
     int groundLevelY = 240;
 
-    display.fillCircle(280, groundLevelY, 30, TFT_DARKGREEN);
-    display.drawLine(225, groundLevelY ,290,groundLevelY - 10,TFT_DARKGREEN);
-    display.drawLine(225, groundLevelY - 10,280,groundLevelY - 15,TFT_DARKGREEN);
+    display.fillRect(lastPos.getX(),lastPos.getY() - 30, 30, 30, bgColor);
+    display.fillRect(lastPos.getX(),lastPos.getY(), 30, 30, TFT_BROWN);
+    display.fillCircle(pos.getX(), groundLevelY, 30, TFT_GREEN);
+    display.drawLine(pos.getX() - 55, groundLevelY ,pos.getX() + 10,groundLevelY - 10,TFT_GREEN);
+    display.drawLine(pos.getX() - 55, groundLevelY - 10,pos.getX(),groundLevelY - 15,TFT_GREEN);
 
 }
 Vector2D Zombie::getPos()
