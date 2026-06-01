@@ -7,7 +7,7 @@ ZombieBattle::ZombieBattle()
 void ZombieBattle::start(int w, int h)
 {
     gun.rotate(40);
-    Vector2D pos(350,groundLevelY - 20);
+    Vector2D pos(350,groundLevelY);
     zombies.push_back({pos});
 }
 
