@@ -21,14 +21,42 @@ void Zombie::draw(DisplayProvider &display, uint16_t bgColor)
 void Zombie::renderZombie(DisplayProvider &display, uint16_t bgColor)
 {
 
-    display.fillRect(lastPos.getX(),lastPos.getY() - 30, 30, 30, bgColor);
-    display.fillRect(lastPos.getX(),lastPos.getY(), 30, 30, TFT_BROWN);
+    static int clearCounter = 0;
+
+    if(clearCounter < 10)
+    {
+        clearCounter++;
+    }
+
+    if(clearCounter >= 10)
+    {
+        clearCounter = 0;
+        display.fillRect(lastPos.getX(),lastPos.getY() - 30, 60, 30, bgColor);
+        display.fillRect(lastPos.getX(),lastPos.getY(), 60, 35, TFT_BROWN);
+    }
+    
     display.fillCircle(pos.getX(), pos.getY(), 30, TFT_GREEN);
+
     display.drawLine(pos.getX() - 55, pos.getY() ,pos.getX() + 10,pos.getY() - 10,TFT_GREEN);
     display.drawLine(pos.getX() - 55, pos.getY() - 10,pos.getX(),pos.getY() - 15,TFT_GREEN);
+
+    display.setTextColor(TFT_RED,TFT_GREEN);
+    display.setTextSize(1);
+    display.drawString(String(hp), pos.getX() - 20,pos.getY() - 10);
 
 }
 Vector2D Zombie::getPos()
 {
     return pos;
+}
+
+int Zombie::hit(int damage)
+{
+    hp = hp - damage;
+    if(hp < 0)
+    {
+        hp = 0;
+    }
+
+    return hp;
 }

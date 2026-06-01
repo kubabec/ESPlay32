@@ -8,6 +8,7 @@ class Zombie
     Vector2D lastPos{0.f,0.f};
     Vector2D pos;
     float acceleration = 0.5f;
+    int hp = 100;
 
 public:
     Zombie(Vector2D& apos);
@@ -16,6 +17,7 @@ public:
     void draw(DisplayProvider& display,uint16_t bgColor);
     Vector2D getPos();
     void renderZombie(DisplayProvider &display, uint16_t bgColor);
+    int hit(int damage);
 
 };
 

@@ -73,6 +73,7 @@ private:
 
     void renderBG(DisplayProvider &display);
     void renderPlayer(DisplayProvider &display);
+    void updateShotsCollisions();
 };
 
 #endif

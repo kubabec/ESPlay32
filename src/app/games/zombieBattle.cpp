@@ -7,13 +7,13 @@ ZombieBattle::ZombieBattle()
 void ZombieBattle::start(int w, int h)
 {
     gun.rotate(40);
-    Vector2D pos(350,groundLevelY);
+    Vector2D pos(350, groundLevelY);
     zombies.push_back({pos});
 }
 
 void ZombieBattle::input(InputType input)
 {
-    if(input == BUTTON_A)
+    if (input == BUTTON_A)
     {
         gun.shot();
     }
@@ -40,12 +40,16 @@ void ZombieBattle::analogInput(int x, int y)
 
     int absoluteForce = abs(y);
     int angle = 0;
-    if(absoluteForce >= 5)
+    if (absoluteForce >= 5)
     {
         angle = 1;
-    }else if(absoluteForce >= 7){
+    }
+    else if (absoluteForce >= 7)
+    {
         angle = 2;
-    }else if(absoluteForce == 10){
+    }
+    else if (absoluteForce == 10)
+    {
         angle = 3;
     }
 
@@ -65,15 +69,16 @@ void ZombieBattle::touchInput(int x, int y)
 
 void ZombieBattle::update()
 {
-    for(auto& shot: gun.getShots())
+    for (auto &shot : gun.getShots())
     {
         shot.update();
     }
 
-    for(auto& zombie: zombies)
+    for (auto &zombie : zombies)
     {
         zombie.update();
     }
+    updateShotsCollisions();
 }
 
 void ZombieBattle::render(DisplayProvider &display)
@@ -81,19 +86,20 @@ void ZombieBattle::render(DisplayProvider &display)
     renderBG(display);
     gun.render(display);
     renderPlayer(display);
-    for(auto& shot: gun.getShots())
+    for (auto &shot : gun.getShots())
     {
-        shot.draw(display,TFT_BLACK,TFT_YELLOW);
+        shot.draw(display, TFT_BLACK, TFT_YELLOW);
     }
 
     gun.getShots().erase(std::remove_if(gun.getShots().begin(),
-                                          gun.getShots().end(),
-                                          [](GunShot& element) { return element.destroyed(); }),
-                           gun.getShots().end());
+                                        gun.getShots().end(),
+                                        [](GunShot &element)
+                                        { return element.destroyed(); }),
+                         gun.getShots().end());
 
-    for(auto& zombie: zombies)
+    for (auto &zombie : zombies)
     {
-        zombie.draw(display,TFT_YELLOW);
+        zombie.draw(display, TFT_YELLOW);
     }
 }
 
@@ -154,7 +160,7 @@ RotatingGun::RotatingGun(Point2D pos, int rot)
 
 void RotatingGun::render(DisplayProvider &display)
 {
-    if(!wasRotation)
+    if (!wasRotation)
     {
         return;
     }
@@ -175,7 +181,6 @@ void RotatingGun::render(DisplayProvider &display)
     }
     display.drawLine(gunPoints.at(gunPoints.size() - 1).x, gunPoints.at(gunPoints.size() - 1).y, gunPoints.at(0).x, gunPoints.at(0).y, TFT_BLACK);
     lastRenderGunPoints = gunPoints;
-
 }
 
 void RotatingGun::rotate(float angle)
@@ -208,16 +213,14 @@ void RotatingGun::rotate(float angle)
     rotation = finalAngle;
     wasRotation = true;
 
-
     getBasisDegrees();
     // Move up
-    shotPos.x = position.x - ((int)((up.getX()*100))/14);
-    shotPos.y = position.y - ((int)((up.getY()*100))/14);
+    shotPos.x = position.x - ((int)((up.getX() * 100)) / 14);
+    shotPos.y = position.y - ((int)((up.getY() * 100)) / 14);
 
     // Move to the right
-    shotPos.x += ((int)((right.getX()*100))/4);
-    shotPos.y += ((int)((right.getY()*100))/4);
-
+    shotPos.x += ((int)((right.getX() * 100)) / 4);
+    shotPos.y += ((int)((right.getY() * 100)) / 4);
 }
 
 int RotatingGun::getRotation()
@@ -232,20 +235,36 @@ void RotatingGun::getBasisDegrees()
     double cosA = std::cos(angleRad);
     double sinA = std::sin(angleRad);
 
-    right = { (float)cosA, (float)sinA };
-    up    = { (float)-sinA, (float)cosA };
-
+    right = {(float)cosA, (float)sinA};
+    up = {(float)-sinA, (float)cosA};
 }
 
 void RotatingGun::shot()
 {
-    Vector2D pos{shotPos.x,shotPos.y};
-    gunShots.push_back({pos,right,230,60});
+    Vector2D pos{shotPos.x, shotPos.y};
+    gunShots.push_back({pos, right, 230, 60});
     // Serial.println("Shot at angle: " + String(rotation) + " with right vector: " + String(right.getX()) + " " + String(right.getY()) + " and up vector: " + String(up.getX()) + " " + String(up.getY()));
     // Serial.println("Shot position: " + String(shotPos.x) + " " + String(shotPos.y));
 }
 
-std::vector<GunShot>& RotatingGun::getShots()
+std::vector<GunShot> &RotatingGun::getShots()
 {
     return gunShots;
+}
+
+void ZombieBattle::updateShotsCollisions()
+{
+    for (auto &shot : gun.getShots())
+    {
+        for (auto &zombie : zombies)
+        {
+            Vector2D l(shot.getPos().getX() - zombie.getPos().getX(), shot.getPos().getY() - zombie.getPos().getY());
+
+            if(l.getLength() <= (2 + 30))
+            {
+                zombie.hit(20);
+                shot.destroy();
+            }
+        }
+    }
 }
