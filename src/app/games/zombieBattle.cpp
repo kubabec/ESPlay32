@@ -101,6 +101,12 @@ void ZombieBattle::render(DisplayProvider &display)
     {
         zombie.draw(display, TFT_YELLOW);
     }
+
+    zombies.erase(std::remove_if(zombies.begin(),
+                                 zombies.end(),
+                                 [](Zombie &element)
+                                 { return element.isDead(); }),
+                  zombies.end());
 }
 
 void ZombieBattle::renderBG(DisplayProvider &display)
@@ -260,7 +266,7 @@ void ZombieBattle::updateShotsCollisions()
         {
             Vector2D l(shot.getPos().getX() - zombie.getPos().getX(), shot.getPos().getY() - zombie.getPos().getY());
 
-            if(l.getLength() <= (2 + 30))
+            if (l.getLength() <= (2 + 30))
             {
                 zombie.hit(20);
                 shot.destroy();

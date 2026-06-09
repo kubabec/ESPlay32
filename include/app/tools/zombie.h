@@ -18,6 +18,8 @@ public:
     Vector2D getPos();
     void renderZombie(DisplayProvider &display, uint16_t bgColor);
     int hit(int damage);
+    void grey(DisplayProvider &display);
+    bool isDead();
 
 };
 
