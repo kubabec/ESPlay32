@@ -41,8 +41,11 @@ void Zombie::renderZombie(DisplayProvider &display, uint16_t bgColor)
     }
     else
     {
-        display.fillRect(lastPos.getX(), lastPos.getY() - 30, 60, 30, bgColor);
-        display.fillRect(lastPos.getX(), lastPos.getY(), 60, 35, TFT_BROWN);
+        display.fillRect(pos.getX() - 30, pos.getY() - 30, 65, 30, bgColor);
+        display.fillRect(pos.getX() - 30, pos.getY(), 65, 35, TFT_BROWN);
+        display.drawLine(pos.getX() - 55, pos.getY(), pos.getX() + 10, pos.getY() - 15, bgColor);
+        display.drawLine(pos.getX() - 55, pos.getY() - 10, pos.getX(), pos.getY() - 20, bgColor);
+
     }
 }
 Vector2D Zombie::getPos()
@@ -89,8 +92,8 @@ void Zombie::grey(DisplayProvider &display)
 
     display.fillCircle(pos.getX(), pos.getY(), 30, bodyColor);
 
-    display.drawLine(pos.getX() - 55, pos.getY(), pos.getX() + 10, pos.getY() - 10, bodyColor);
-    display.drawLine(pos.getX() - 55, pos.getY() - 10, pos.getX(), pos.getY() - 15, bodyColor);
+    display.drawLine(pos.getX() - 55, pos.getY(), pos.getX() + 10, pos.getY() - 15, bodyColor);
+    display.drawLine(pos.getX() - 55, pos.getY() - 10, pos.getX(), pos.getY() - 20, bodyColor);
 
     display.setTextColor(TFT_RED, bodyColor);
     display.setTextSize(1);
