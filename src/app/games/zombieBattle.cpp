@@ -1,4 +1,5 @@
 #include "app/games/ZombieBattle.hpp"
+#include "os/portableos.hpp"
 
 ZombieBattle::ZombieBattle()
 {
@@ -269,6 +270,13 @@ void ZombieBattle::updateShotsCollisions()
             {
                 zombie.hit(20);
                 shot.destroy();
+                if (zombie.isDead() == true)
+                {
+                    score++;
+                    String overlayText = "Score: " + String (score);
+                    PortableOS::activateAppTextMode(overlayText, 0x1070AD);
+
+                }
             }
         }
     }
