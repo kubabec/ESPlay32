@@ -70,10 +70,12 @@ private:
     const int groundLevelY = 240;
     RotatingGun gun{{100,100},0};
     std::vector<Zombie> zombies;
+    unsigned long lastSpawnTime = 0;
 
     void renderBG(DisplayProvider &display);
     void renderPlayer(DisplayProvider &display);
     void updateShotsCollisions();
+    void spawnZombie();
 };
 
 #endif

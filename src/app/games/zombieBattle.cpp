@@ -7,8 +7,6 @@ ZombieBattle::ZombieBattle()
 void ZombieBattle::start(int w, int h)
 {
     gun.rotate(40);
-    Vector2D pos(350, groundLevelY);
-    zombies.push_back({pos});
 }
 
 void ZombieBattle::input(InputType input)
@@ -79,6 +77,7 @@ void ZombieBattle::update()
         zombie.update();
     }
     updateShotsCollisions();
+    spawnZombie();
 }
 
 void ZombieBattle::render(DisplayProvider &display)
@@ -273,4 +272,16 @@ void ZombieBattle::updateShotsCollisions()
             }
         }
     }
+}
+
+void ZombieBattle::spawnZombie()
+{
+    if (millis() - lastSpawnTime > 5000)
+    {
+        Vector2D pos(350, groundLevelY);
+        zombies.push_back({pos});
+
+        lastSpawnTime = millis();
+    }
+
 }

@@ -9,6 +9,10 @@ void Zombie::update()
     lastPos = pos;
     Vector2D posPrim = pos + (Vector2D(-1, 0) * acceleration);
     pos = posPrim;
+    if (pos.getX() <= -35)
+    {
+        hp = 0;
+    }
 }
 
 void Zombie::draw(DisplayProvider &display, uint16_t bgColor)
@@ -41,10 +45,8 @@ void Zombie::renderZombie(DisplayProvider &display, uint16_t bgColor)
     }
     else
     {
-        display.fillRect(pos.getX() - 30, pos.getY() - 30, 65, 30, bgColor);
-        display.fillRect(pos.getX() - 30, pos.getY(), 65, 35, TFT_BROWN);
-        display.drawLine(pos.getX() - 55, pos.getY(), pos.getX() + 10, pos.getY() - 15, bgColor);
-        display.drawLine(pos.getX() - 55, pos.getY() - 10, pos.getX(), pos.getY() - 20, bgColor);
+        display.fillRect(pos.getX() - 55, pos.getY() - 30, 90, 30, bgColor);
+        display.fillRect(pos.getX() - 55, pos.getY(), 90, 35, TFT_BROWN);
 
     }
 }
