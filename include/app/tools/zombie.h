@@ -9,6 +9,8 @@ class Zombie
     Vector2D pos;
     float acceleration = 0.5f;
     int hp = 100;
+    int clearCounter = 0;
+
 
 public:
     Zombie(Vector2D& apos);

@@ -278,7 +278,7 @@ void ZombieBattle::spawnZombie()
 {
     if (millis() - lastSpawnTime > 5000)
     {
-        Vector2D pos(350, groundLevelY);
+        Vector2D pos(480 + 30, groundLevelY);
         zombies.push_back({pos});
 
         lastSpawnTime = millis();

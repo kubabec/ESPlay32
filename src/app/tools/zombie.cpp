@@ -25,8 +25,6 @@ void Zombie::draw(DisplayProvider &display, uint16_t bgColor)
 void Zombie::renderZombie(DisplayProvider &display, uint16_t bgColor)
 {
 
-    static int clearCounter = 0;
-
     if (clearCounter < 10)
     {
         clearCounter++;
